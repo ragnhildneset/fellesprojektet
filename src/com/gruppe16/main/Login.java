@@ -15,8 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.security.MessageDigest;
-
 import com.gruppe16.util.Digest;
 
 public class Login extends Application implements Initializable {

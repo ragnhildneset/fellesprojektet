@@ -2,7 +2,6 @@ package com.gruppe16.main;
 
 import java.io.IOException;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -18,7 +17,6 @@ public class Main {
 			arg0.setScene(scene);
 			arg0.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
