@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="225.0" prefWidth="474.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gruppe16.main.AddEmployee">
+   <children>
+      <TextField fx:id="firstName" layoutX="109.0" layoutY="37.0" />
+      <TextField fx:id="lastName" layoutX="109.0" layoutY="81.0" />
+      <TextField fx:id="email" layoutX="109.0" layoutY="128.0" />
+      <Label layoutX="30.0" layoutY="41.0" text="First name:" />
+      <Label layoutX="31.0" layoutY="85.0" text="Last name:" />
+      <Label layoutX="31.0" layoutY="132.0" text="Email:" />
+      <Button fx:id="button" layoutX="206.0" layoutY="171.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Add" />
+      <ListView fx:id="list" layoutX="281.0" layoutY="24.0" prefHeight="177.0" prefWidth="170.0" />
+   </children>
+</AnchorPane>

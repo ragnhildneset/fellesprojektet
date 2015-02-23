@@ -12,32 +12,23 @@ public class DBConnect {
 	
 	private static Connection con = null;
 	
-	public static void main(String[] args){
+	public static Connection getConnection(){
 		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
+		if(con == null){			
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			
+			try {
+				con = DriverManager.getConnection(url, userid, password);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		try {
-			con = DriverManager.getConnection(url, userid, password);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		String query = "INSERT INTO baresamme ( ettellerannet ) VALUES (?)";
-		try{
-			PreparedStatement p = con.prepareStatement(query);
-			p.setInt(1, 5);
-			p.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	protected static Connection getConnection(){
-        return con;
+		return con;
 	}
 	
 }
