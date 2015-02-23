@@ -3,8 +3,25 @@ package com.gruppe16.util;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
 
 public abstract class Digest {
+	
+	public static void main(String args[]){
+		Scanner in = new Scanner(System.in);
+		while(true){
+			String pe = in.nextLine();
+			print(getHash(pe));
+		}
+	}
+	
+	public static void print(byte[] a){
+		String p = "";
+		for(byte e : a){
+			p += String.valueOf(Character.toChars(e + 128)[0]) + "";
+		}
+		System.out.println(p);
+	}
 
 	public static byte[] getHash(String password) {
 		try {

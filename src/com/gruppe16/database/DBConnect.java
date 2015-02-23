@@ -5,13 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import javax.security.auth.login.Configuration;
-
 public class DBConnect {
 	
 	private static String userid = "toraho", password = "gruppe16ftw";
 	private static String url = "jdbc:mysql://mysql.stud.ntnu.no:3306/toraho_fellesprosjektet";
-	private static String driver = null;
 	
 	private static Connection con = null;
 	
@@ -40,7 +37,6 @@ public class DBConnect {
 	}
 	
 	protected static Connection getConnection(){
-    	
         return con;
 	}
 	
