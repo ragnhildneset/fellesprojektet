@@ -57,7 +57,6 @@ public class AddEmployee extends Application implements Initializable {
 		String[] ls = Employee.getNames();
 		listt.addAll(ls);
 		list.setItems(listt);
-	
 		
 		button.setOnAction(new EventHandler<ActionEvent>(){
 
