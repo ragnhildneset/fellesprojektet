@@ -100,37 +100,20 @@ public class CalendarView {
 	}
 	
 	void update() {
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		int currentMonth = calendar.get(Calendar.MONTH);
-
-		int startDay = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7;
-		int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		Date beforeTime = calendar.getTime();
 		
-		calendar.set(Calendar.MONTH, (calendar.get(Calendar.MONTH) - 1) % 12);
-		int daysInPrevMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		// Set calendar to the first monday
+		calendar.set(Calendar.DAY_OF_MONTH, 1); calendar.getTime(); // Bug workaround
+		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); calendar.getTime();
 
-		calendar.set(Calendar.MONTH, currentMonth);
-
-		int i = -startDay;
 		for(int y = 0; y < 6; ++y) {
 			for(int x = 0; x < 7; ++x) {
 				Label label = dayLabels[x][y];
-				label.setText(Integer.toString((i % daysInMonth) + 1));
-				if(i >= daysInMonth)
-				{
-					label.setTextFill(new Color(0.5, 0.5, 0.5, 1.0));
-					if(x == 6) label.setTextFill(new Color(1.0, 0.5, 0.5, 1.0));
-				}else if(i < 0) {
-					label.setText(Integer.toString(daysInPrevMonth + i + 1));
-					label.setTextFill(new Color(0.5, 0.5, 0.5, 1.0));
-					if(x == 6) label.setTextFill(new Color(1.0, 0.5, 0.5, 1.0));
-				}
-				else {
-					label.setTextFill(new Color(0.0, 0.0, 0.0, 1.0));
-					if(x == 6) label.setTextFill(new Color(1.0, 0.0, 0.0, 1.0));
-				}
-				++i;
+				label.setText(Integer.toString(calendar.get(Calendar.DATE)));
+				calendar.add(Calendar.DATE, 1);
 			}
 		}
+		
+		calendar.setTime(beforeTime);
 	}
 }
