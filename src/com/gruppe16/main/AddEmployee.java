@@ -57,14 +57,13 @@ public class AddEmployee extends Application implements Initializable {
 		String[] ls = Employee.getNames();
 		listt.addAll(ls);
 		list.setItems(listt);
-	
 		
 		button.setOnAction(new EventHandler<ActionEvent>(){
 
 			@Override
 			public void handle(ActionEvent event) {
 				try{
-					Employee.addNew(firstName.getText(), lastName.getText(), email.getText(), username.getText(), Digest.getHash(password.getText()));
+					Employee.addNew(firstName.getText(), lastName.getText(), email.getText(), username.getText(), password.getText());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
