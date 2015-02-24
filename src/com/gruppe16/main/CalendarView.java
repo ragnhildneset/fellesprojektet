@@ -110,6 +110,20 @@ public class CalendarView {
 			for(int x = 0; x < 7; ++x) {
 				Label label = dayLabels[x][y];
 				label.setText(Integer.toString(calendar.get(Calendar.DATE)));
+				if(calendar.get(Calendar.MONTH) == beforeTime.getMonth()) {
+					if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+						label.setTextFill(new Color(1.0, 0.0, 0.0, 1.0));
+					}
+					else {
+						label.setTextFill(new Color(0.0, 0.0, 0.0, 1.0));
+					}
+				}
+				else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+					label.setTextFill(new Color(1.0, 0.5, 0.5, 1.0));
+				}
+				else {
+					label.setTextFill(new Color(0.5, 0.5, 0.5, 1.0));
+				}
 				calendar.add(Calendar.DATE, 1);
 			}
 		}
