@@ -6,7 +6,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
@@ -66,7 +65,7 @@
                   <Button mnemonicParsing="false" text="Find calendar" />
                </children>
             </VBox>
-            <Pane fx:id="mainView" prefHeight="200.0" prefWidth="700.0" />
+            <Pane fx:id="mainView" prefHeight="500.0" prefWidth="700.0" />
          </children>
       </HBox>
    </children>

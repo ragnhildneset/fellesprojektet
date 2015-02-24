@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -42,6 +44,25 @@ public class CalendarMain extends Application implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+	}
+	
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		URL url = getClass().getResource("/com/gruppe16/main/mainPane.fxml");
+		
+		FXMLLoader fxmlLoader = new FXMLLoader();
+		fxmlLoader.setLocation(url);
+		fxmlLoader.setController(this);
+		
+		try {
+			Scene scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1280, 900);
+			
+			primaryStage.setScene(scene);
+			primaryStage.setResizable(false);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		String[] months = {
 				"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
@@ -49,9 +70,6 @@ public class CalendarMain extends Application implements Initializable {
 
 		calendarView = new CalendarView();
 		calendarView.setup(mainView);
-		
-		monthLabel.setText(months[calendarView.getMonth()]);
-		yearLabel.setText(Integer.toString(calendarView.getYear()));
 		
 		nextMonthBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -70,30 +88,12 @@ public class CalendarMain extends Application implements Initializable {
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
 			}
 		});
-	}
-	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		URL url = getClass().getResource("/com/gruppe16/main/mainPane.fxml");
 		
-		FXMLLoader fxmlLoader = new FXMLLoader();
-		fxmlLoader.setLocation(url);
-		fxmlLoader.setController(this);
-		
-		try {
-			Scene scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1280, 900);
-			
-			primaryStage.setScene(scene);
-			primaryStage.setResizable(false);
-			primaryStage.show();
-		} catch (IOException e) {
-			
-			
-		}
+		monthLabel.setText(months[calendarView.getMonth()]);
+		yearLabel.setText(Integer.toString(calendarView.getYear()));
 	}
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
-
 }

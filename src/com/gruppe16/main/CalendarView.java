@@ -8,6 +8,7 @@ import java.util.Locale;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -19,11 +20,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class CalendarView {
 	private Calendar calendar;
-	Label[][] dayLabels = new Label[7][6];
+	private Label[][] dayLabels = new Label[7][6];
+	private GridPane root;
 	
 	CalendarView() {
 		calendar = Calendar.getInstance();
@@ -48,7 +51,7 @@ public class CalendarView {
 	}
 	
 	void setup(Pane mainView) {
-		GridPane root = new GridPane();
+		root = new GridPane();
 		root.setMinHeight(Double.MAX_VALUE);
 		root.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		root.setPrefSize(800, 600);
@@ -60,6 +63,7 @@ public class CalendarView {
 		// Day row (Mon, tue, etc)
 		for(int i = 0; i < 7; ++i) {
 			Label label = new Label(days[i]);
+			label.setFont(new Font("Arial", 18));
 			label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
 			label.setAlignment(Pos.CENTER);
 			label.setStyle("-fx-border-width: 1; -fx-border-color:  transparent #000000 #000000 transparent; -fx-background-color: #CCCCFF;");
@@ -72,19 +76,27 @@ public class CalendarView {
 			for(int x = 0; x < 7; ++x) {
 				root.getColumnConstraints().add(new ColumnConstraints(114));
 				
+				Pane pane = new Pane();
+				pane.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+				pane.setStyle("-fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent; -fx-background-color: #FFFFFF;");
+				
 				Label label = new Label();
+				label.setFont(new Font("Arial", 18));
+				label.setPadding(new Insets(3, 5, 0, 0));
 				label.setAlignment(Pos.TOP_RIGHT);
 				label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				label.setStyle("-fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent; -fx-background-color: #FFFFFF;");
+				
+				root.add(pane, x, y+1);
 				root.add(label, x, y+1);
+				
 				dayLabels[x][y] = label;
-				dayLabels[x][y].setText(x + ", " + y);
 			}
 		}
-		
-		//update();
-		
+		update();
+
+		root.requestLayout();
 		mainView.getChildren().add(root);
+		mainView.requestLayout();
 	}
 	
 	void update() {
@@ -103,17 +115,21 @@ public class CalendarView {
 		for(int y = 0; y < 6; ++y) {
 			for(int x = 0; x < 7; ++x) {
 				Label label = dayLabels[x][y];
-				label.setText("Test");
-				/*
 				label.setText(Integer.toString((i % daysInMonth) + 1));
 				if(i >= daysInMonth)
 				{
 					label.setTextFill(new Color(0.5, 0.5, 0.5, 1.0));
+					if(x == 6) label.setTextFill(new Color(1.0, 0.5, 0.5, 1.0));
 				}else if(i < 0) {
 					label.setText(Integer.toString(daysInPrevMonth + i + 1));
 					label.setTextFill(new Color(0.5, 0.5, 0.5, 1.0));
+					if(x == 6) label.setTextFill(new Color(1.0, 0.5, 0.5, 1.0));
 				}
-				i++;*/
+				else {
+					label.setTextFill(new Color(0.0, 0.0, 0.0, 1.0));
+					if(x == 6) label.setTextFill(new Color(1.0, 0.0, 0.0, 1.0));
+				}
+				++i;
 			}
 		}
 	}
