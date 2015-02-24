@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.gruppe16.entities.Employee;
+import com.gruppe16.util.Digest;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -17,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -42,6 +44,8 @@ public class AddEmployee extends Application implements Initializable {
 	@FXML TextField firstName;
 	@FXML TextField lastName;
 	@FXML TextField email;
+	@FXML TextField username;
+	@FXML PasswordField password;
 	@FXML ListView list;
 
 	@Override
@@ -60,7 +64,7 @@ public class AddEmployee extends Application implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				try{
-					Employee.addNew(firstName.getText(), lastName.getText(), email.getText());
+					Employee.addNew(firstName.getText(), lastName.getText(), email.getText(), username.getText(), Digest.getHash(password.getText()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
