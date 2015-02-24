@@ -10,7 +10,6 @@ import com.mysql.jdbc.ResultSet;
 
 public class Employee {
 	
-	
 	private static HashMap<Integer, Employee> employees = new HashMap<Integer, Employee>();
 	
 	public static void initialize(){
@@ -26,15 +25,15 @@ public class Employee {
 		}
 	}
 	
-	public static void addNew(String fname, String lname, String email, String username, String password){
-		String q = "INSERT INTO Employee( GivenName, Surname, Email, Username, Password ) VALUES ( ?, ?, ?, ?, ? )";
+	public static void addNew(String fname, String lname, String email, String username, byte[] password){
+		String q = "INSERT INTO Employee( GivenName, Surname, Email, Username ) VALUES ( ?, ?, ?, ? )";
 		try {
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			s.setString(1, fname);
 			s.setString(2, lname);
 			s.setString(3, email);
 			s.setString(4, username);
-			s.setString(5, password);
+//			s.setBytes(5, "passord");
 			s.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
