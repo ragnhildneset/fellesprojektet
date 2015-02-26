@@ -33,6 +33,7 @@ public class CalendarView {
 	
 	CalendarView() {
 		calendar = Calendar.getInstance();
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 	}
 	
 	void nextMonth() {
