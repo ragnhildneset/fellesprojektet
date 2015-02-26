@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -108,7 +109,7 @@ public class AdminPanel extends Application implements Initializable {
 	@Override
 	public void start(Stage arg0) throws Exception {
 		try{
-			Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/com/gruppe16/admin/mainPane.fxml")));
+			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/admin/mainPane.fxml")));
 			arg0.setScene(scene);
 			arg0.show();
 		} catch (Exception e) {
@@ -168,7 +169,6 @@ public class AdminPanel extends Application implements Initializable {
 			System.out.println("Added new building.");
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
 		}
 	}
 	
