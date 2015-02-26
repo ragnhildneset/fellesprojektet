@@ -13,13 +13,13 @@ public abstract class Login {
 	public static boolean login(String username, String password){
 		int id = -1;
 		try{
-			String q = "SELECT Username, Password, EmployeeID FROM Employee WHERE Employee.Username=\'" + username + "\';";
+			String q = "SELECT username, password, employeeid FROM UserAndID WHERE UserAndID.username=\'" + username + "\';";
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			String passString = null;
 			while(rs.next()){
-				passString = rs.getString("Password");
-				id = rs.getInt("EmployeeID");
+				passString = rs.getString("password");
+				id = rs.getInt("employeeid");
 			}
 			if(password.equals(passString)){
 				login = Employee.getEmployee(id);

@@ -15,7 +15,7 @@ public class Appointment {
 	
 	private static HashMap<Integer, Appointment> appointments = new HashMap<Integer, Appointment>(); 
 	
-	int AppoinmentID;
+	int appoinmentID;
 	private String title, description;
 	//private RoomReservation room;
 	LocalDate date;
@@ -44,7 +44,7 @@ public class Appointment {
 	public Appointment(int appoinmentID, String title, String description,
 			LocalDate date, LocalTime fromTime, LocalTime toTime, int ownerid, LocalTime creationtime) {
 		Appointment.appointments.put(appoinmentID, this);
-		AppoinmentID = appoinmentID;
+		this.appoinmentID = appoinmentID;
 		this.title = title;
 		this.description = description;
 		this.date = date;
@@ -91,7 +91,7 @@ public class Appointment {
 	}
 	
 	public int getID(){
-		return this.AppoinmentID;
+		return this.appoinmentID;
 	}
 	
 	public static Appointment get(int id){
