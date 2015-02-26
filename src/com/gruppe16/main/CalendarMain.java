@@ -24,6 +24,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -34,7 +35,7 @@ import javafx.stage.WindowEvent;
 public class CalendarMain extends Application implements Initializable {
 	
 	@FXML
-	private Pane mainView;
+	private BorderPane mainPane;
 	
 	@FXML
 	private VBox calendarGroupPane;
@@ -72,7 +73,7 @@ public class CalendarMain extends Application implements Initializable {
 		fxmlLoader.setLocation(url);
 		fxmlLoader.setController(this);
 		try {
-			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 970, 740);
+			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1000, 750);
 			scene.getRoot().setStyle("-fx-background-color: linear-gradient(#FFFFFF, #EEEEEE)");
 			
 			this.primaryStage = primaryStage;
@@ -87,7 +88,7 @@ public class CalendarMain extends Application implements Initializable {
 		}
 
 		calendarView = new CalendarView();
-		calendarView.setup(mainView);
+		mainPane.setCenter(calendarView);
 		
 		calendarGroupList = new CalendarGroupSelector(scene);
 		calendarGroupList.setup(calendarGroupPane);

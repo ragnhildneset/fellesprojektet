@@ -2,9 +2,11 @@ package com.gruppe16.main;
 
 import java.util.Calendar;
 import java.util.Date;
+
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseEvent;
@@ -15,7 +17,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class CalendarView {
+public class CalendarView extends GridPane {
 	static String TEXT_DAY_COLOR = "#FFFFFF";
 	static String TEXT_DEFAULT_COLOR = "#000000";
 	static String TEXT_DEFAULT_INACTIVE_COLOR = "#888888";
@@ -31,36 +33,14 @@ public class CalendarView {
 
 	private Calendar calendar;
 	private Label[][] dayLabels = new Label[7][6];
-	private GridPane root;
 	
 	CalendarView() {
 		calendar = Calendar.getInstance();
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
-	}
-	
-	void nextMonth() {
-		calendar.add(Calendar.MONTH, 1);
-		update();
-	}
-	
-	void prevMonth() {
-		calendar.add(Calendar.MONTH, -1);
-		update();
-	}
-	
-	int getMonth() {
-		return calendar.get(Calendar.MONTH);
-	}
-	
-	int getYear() {
-		return calendar.get(Calendar.YEAR);
-	}
-	
-	void setup(Pane mainView) {
-		root = new GridPane();
-		root.setMinHeight(Double.MAX_VALUE);
-		root.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		root.setPrefSize(800, 600);
+
+		setMinHeight(Double.MAX_VALUE);
+		setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		setPrefSize(800, 600);
 		
 		// Day row (Mon, tue, etc)
 		for(int i = 0; i < 7; ++i) {
@@ -70,14 +50,14 @@ public class CalendarView {
 			label.setAlignment(Pos.CENTER);
 			if(i == 0) label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent " + BORDER_COLOR + "; -fx-background-color: " + CELL_DAY_COLOR + "; -fx-text-fill: " + TEXT_DAY_COLOR + ";");
 			else label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent transparent; -fx-background-color: " + CELL_DAY_COLOR + "; -fx-text-fill: " + TEXT_DAY_COLOR + ";");
-			root.add(label, i, 0);
+			add(label, i, 0);
 		}
-		root.getRowConstraints().add(new RowConstraints(24));
+		getRowConstraints().add(new RowConstraints(24));
 		
 		for(int y = 0; y < 6; ++y) {
-			root.getRowConstraints().add(new RowConstraints(100));
+			getRowConstraints().add(new RowConstraints(100));
 			for(int x = 0; x < 7; ++x) {
-				root.getColumnConstraints().add(new ColumnConstraints(114));
+				getColumnConstraints().add(new ColumnConstraints(114));
 				
 				Label label = new Label();
 				label.setFont(new Font("Arial", 18));
@@ -103,16 +83,39 @@ public class CalendarView {
 					}
 				});
 				
-				root.add(label, x, y+1);
+				label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+						//mainView.setContent();
+					}
+				});
+				
+				add(label, x, y+1);
 				
 				dayLabels[x][y] = label;
 			}
 		}
 		update();
 
-		root.requestLayout();
-		mainView.getChildren().add(root);
-		mainView.requestLayout();
+		requestLayout();
+	}
+	
+	void nextMonth() {
+		calendar.add(Calendar.MONTH, 1);
+		update();
+	}
+	
+	void prevMonth() {
+		calendar.add(Calendar.MONTH, -1);
+		update();
+	}
+	
+	int getMonth() {
+		return calendar.get(Calendar.MONTH);
+	}
+	
+	int getYear() {
+		return calendar.get(Calendar.YEAR);
 	}
 	
 	void update() {
