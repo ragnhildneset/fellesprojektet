@@ -26,7 +26,7 @@ public class Room {
 	}
 	
 	public static void addNew(int capacity, String name){
-		String q = "INSERT INTO Room(Capacity, RoomName) VALUES (?, ?)";
+		String q = "INSERT INTO Room(roomNumber, buildingID, Capacity) VALUES (?, ?)";
 		try {
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			s.setInt(1, capacity);
@@ -68,7 +68,6 @@ public class Room {
 		int c = 0;
 		for(Map.Entry<Integer, Room> e : rooms.entrySet()){
 			ls[c] = e.getValue().getName();
-			System.out.println(e.getValue().getName());
 			c++;
 		}
 		return ls;

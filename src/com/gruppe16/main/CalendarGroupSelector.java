@@ -21,7 +21,6 @@ public class CalendarGroupSelector {
 	public void setup(Pane root) {
 		for(int i = 0; i <= 9; ++i){
 			Label l = new Label(i == 9 ? "+ Add calendar" : "Group "+(i+1));
-			l.setAlignment(Pos.CENTER);
 			l.setPrefWidth(120);
 			l.setOnMouseEntered(new EventHandler<MouseEvent>() {
 				@Override
