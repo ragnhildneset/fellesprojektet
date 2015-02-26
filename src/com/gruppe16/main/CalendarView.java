@@ -4,9 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,14 +24,16 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class CalendarView {
 	private Calendar calendar;
 	private Label[][] dayLabels = new Label[7][6];
-	private GridPane root;
+	GridPane root;
 	
 	CalendarView() {
 		calendar = Calendar.getInstance();
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 	}
 	
 	void nextMonth() {
@@ -76,17 +80,14 @@ public class CalendarView {
 			for(int x = 0; x < 7; ++x) {
 				root.getColumnConstraints().add(new ColumnConstraints(114));
 				
-				Pane pane = new Pane();
-				pane.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				pane.setStyle("-fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent; -fx-background-color: #FFFFFF;");
-				
 				Label label = new Label();
 				label.setFont(new Font("Arial", 18));
 				label.setPadding(new Insets(3, 5, 0, 0));
 				label.setAlignment(Pos.TOP_RIGHT);
 				label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+				label.setStyle("-fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent; -fx-background-color: #FFFFFF;");
 				
-				root.add(pane, x, y+1);
+				//root.add(pane, x, y+1);
 				root.add(label, x, y+1);
 				
 				dayLabels[x][y] = label;
@@ -101,6 +102,7 @@ public class CalendarView {
 	
 	void update() {
 		Date beforeTime = calendar.getTime();
+		Date nowDate = new Date();
 		
 		// Set calendar to the first monday
 		calendar.set(Calendar.DAY_OF_MONTH, 1); calendar.getTime(); // Bug workaround
@@ -110,19 +112,30 @@ public class CalendarView {
 			for(int x = 0; x < 7; ++x) {
 				Label label = dayLabels[x][y];
 				label.setText(Integer.toString(calendar.get(Calendar.DATE)));
-				if(calendar.get(Calendar.MONTH) == beforeTime.getMonth()) {
-					if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-						label.setTextFill(new Color(1.0, 0.0, 0.0, 1.0));
-					}
-					else {
-						label.setTextFill(new Color(0.0, 0.0, 0.0, 1.0));
-					}
-				}
-				else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-					label.setTextFill(new Color(1.0, 0.5, 0.5, 1.0));
+				if(calendar.getTime().getDate() == nowDate.getDate() && calendar.getTime().getMonth() == nowDate.getMonth() && calendar.getTime().getYear() == nowDate.getYear()) {
+					label.setStyle("-fx-background-color: #CCCCFF; -fx-text-fill: #FFFFFF; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
 				}
 				else {
-					label.setTextFill(new Color(0.5, 0.5, 0.5, 1.0));
+					if(calendar.get(Calendar.MONTH) == beforeTime.getMonth()) {
+						if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+							label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #FF0000; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+						}
+						else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+							label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #000000; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+						}
+						else{
+							label.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #000000; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+						}
+					}
+					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+						label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #FF8888; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+					}
+					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+						label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #888888; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+					}
+					else {
+						label.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #888888; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+					}
 				}
 				calendar.add(Calendar.DATE, 1);
 			}

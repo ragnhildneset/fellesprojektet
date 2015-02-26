@@ -22,6 +22,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class CalendarMain extends Application implements Initializable {
 	
@@ -45,6 +46,14 @@ public class CalendarMain extends Application implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 	}
+	Scene scene;
+	Stage primaryStage;
+	
+	// HAX
+	public void redraw() {
+		primaryStage.setScene(null);
+		primaryStage.setScene(scene);
+	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -53,13 +62,15 @@ public class CalendarMain extends Application implements Initializable {
 		FXMLLoader fxmlLoader = new FXMLLoader();
 		fxmlLoader.setLocation(url);
 		fxmlLoader.setController(this);
-		
 		try {
-			Scene scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1280, 900);
+			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1280, 900);
 			
+			this.primaryStage = primaryStage;
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
 			primaryStage.show();
+
+			redraw();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -77,6 +88,7 @@ public class CalendarMain extends Application implements Initializable {
 				calendarView.nextMonth();
 				monthLabel.setText(months[calendarView.getMonth()]);
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
+				redraw();
 			}
 		});
 
@@ -86,6 +98,7 @@ public class CalendarMain extends Application implements Initializable {
 				calendarView.prevMonth();
 				monthLabel.setText(months[calendarView.getMonth()]);
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
+				redraw();
 			}
 		});
 		
