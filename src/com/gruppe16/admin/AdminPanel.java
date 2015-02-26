@@ -2,6 +2,7 @@ package com.gruppe16.admin;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -10,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -61,20 +63,7 @@ public class AdminPanel extends Application implements Initializable {
 					String _e_mail = e_mail.getText();
 					String _e_user = e_user.getText();
 					String _e_pass = e_pass.getText();
-					String e_query = "insert into Employee(employeeid, givenName, surname, email) VALUES ( ?, ?, ?, ? )";
-					PreparedStatement e = DBConnect.getConnection().prepareStatement(e_query);
-					e.setInt(1, _e_id);
-					e.setString(2, _e_fname);
-					e.setString(3, _e_lname);
-					e.setString(4, _e_mail);
-					e.execute();
-					String u_query = "insert into UserAndID(employeeid, username, password) VALUES ( ?, ?, ? )";
-					e = DBConnect.getConnection().prepareStatement(u_query);
-					e.setInt(1, _e_id);
-					e.setString(2, _e_user);
-					e.setString(3, _e_pass);
-					e.execute();
-					System.out.println("Added new user and employee.");
+					AdminPanel.addUser(_e_id, _e_fname, _e_lname, _e_mail, _e_user, _e_pass);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -91,15 +80,7 @@ public class AdminPanel extends Application implements Initializable {
 					String _r_desc = r_desc.getText();
 					int _r_bin = Integer.parseInt(r_bid.getText());
 					int _r_cap = Integer.parseInt(r_cap.getText());
-					String r_query = "insert into Room(roomNumber, buildingID, capacity, roomName, description) VALUES ( ?, ?, ?, ?, ? )";
-					PreparedStatement e = DBConnect.getConnection().prepareStatement(r_query);
-					e.setInt(1, _r_id);
-					e.setInt(2, _r_bin);
-					e.setInt(3, _r_cap);
-					e.setString(4, _r_name);
-					e.setString(5, _r_desc);
-					e.execute();
-					System.out.println("Added new room.");
+					AdminPanel.addRoom(_r_id, _r_bin, _r_cap, _r_name, _r_desc);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -116,15 +97,7 @@ public class AdminPanel extends Application implements Initializable {
 					String _b_desc = b_desc.getText();
 					float _b_lat = Float.parseFloat(b_lat.getText());
 					float _b_long = Float.parseFloat(b_long.getText());
-					String b_query = "insert into Building(buildingID, latitude, longitude, name, description) VALUES ( ?, ?, ?, ?, ? )";
-					PreparedStatement e = DBConnect.getConnection().prepareStatement(b_query);
-					e.setInt(1, _b_id);
-					e.setFloat(2, _b_lat);
-					e.setFloat(3, _b_long);
-					e.setString(4, _b_name);
-					e.setString(5, _b_desc);
-					e.execute();
-					System.out.println("Added new building.");
+					AdminPanel.addBuilding(_b_id, _b_lat, _b_long, _b_name, _b_desc);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -136,12 +109,67 @@ public class AdminPanel extends Application implements Initializable {
 	@Override
 	public void start(Stage arg0) throws Exception {
 		try{
-			Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/com/gruppe16/admin/mainPane.fxml")));
+			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/admin/mainPane.fxml")));
 			arg0.setScene(scene);
 			arg0.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void addUser(int _e_id, String _e_fname, String _e_lname, String _e_mail, String _e_user, String _e_pass){
+		try{
+			String e_query = "insert into Employee(employeeid, givenName, surname, email) VALUES ( ?, ?, ?, ? )";
+			PreparedStatement e = DBConnect.getConnection().prepareStatement(e_query);
+			e.setInt(1, _e_id);
+			e.setString(2, _e_fname);
+			e.setString(3, _e_lname);
+			e.setString(4, _e_mail);
+			e.execute();
+			String u_query = "insert into UserAndID(employeeid, username, password) VALUES ( ?, ?, ? )";
+			e = DBConnect.getConnection().prepareStatement(u_query);
+			e.setInt(1, _e_id);
+			e.setString(2, _e_user);
+			e.setString(3, _e_pass);
+			e.execute();
+			System.out.println("Added new user and employee.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void addRoom(int _r_id, int _r_bin, int _r_cap, String _r_name, String _r_desc){
+		String r_query = "insert into Room(roomNumber, buildingID, capacity, roomName, description) VALUES ( ?, ?, ?, ?, ? )";
+		PreparedStatement e;
+		try {
+			e = DBConnect.getConnection().prepareStatement(r_query);
+			e.setInt(1, _r_id);
+			e.setInt(2, _r_bin);
+			e.setInt(3, _r_cap);
+			e.setString(4, _r_name);
+			e.setString(5, _r_desc);
+			e.execute();
+			System.out.println("Added new room.");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+	}
 
+	public static void addBuilding(int _b_id, float _b_lat, float _b_long, String _b_name, String _b_desc){
+		try{
+			String b_query = "insert into Building(buildingID, latitude, longitude, name, description) VALUES ( ?, ?, ?, ?, ? )";
+			PreparedStatement e = DBConnect.getConnection().prepareStatement(b_query);
+			e.setInt(1, _b_id);
+			e.setFloat(2, _b_lat);
+			e.setFloat(3, _b_long);
+			e.setString(4, _b_name);
+			e.setString(5, _b_desc);
+			e.execute();
+			System.out.println("Added new building.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

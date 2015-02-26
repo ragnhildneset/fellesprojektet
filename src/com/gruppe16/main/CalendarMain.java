@@ -24,6 +24,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -34,16 +35,19 @@ import javafx.stage.WindowEvent;
 public class CalendarMain extends Application implements Initializable {
 	
 	@FXML
-	private Pane mainView;
+	private BorderPane mainPane;
 	
 	@FXML
 	private VBox calendarGroupPane;
 	
 	@FXML
-	private Button nextMonthBtn;
+	private Button nextDateBtn;
 	
 	@FXML
-	private Button prevMonthBtn;
+	private Button prevDateBtn;
+	
+	@FXML
+	private Button findCalendarBtn;
 	
 	@FXML
 	private Label monthLabel;
@@ -51,19 +55,15 @@ public class CalendarMain extends Application implements Initializable {
 	@FXML
 	private Label yearLabel;
 
+	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+
 	private CalendarView calendarView;
 	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-	}
-	Scene scene;
-	Stage primaryStage;
+	private CalendarGroupSelector calendarGroupList;
 	
-	// HAX
-	public void redraw() {
-		primaryStage.setScene(null);
-		primaryStage.setScene(scene);
-	}
+	private Scene scene;
+	
+	private Stage primaryStage;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -73,11 +73,13 @@ public class CalendarMain extends Application implements Initializable {
 		fxmlLoader.setLocation(url);
 		fxmlLoader.setController(this);
 		try {
-			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 970, 740);
+			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1000, 750);
 			scene.getRoot().setStyle("-fx-background-color: linear-gradient(#FFFFFF, #EEEEEE)");
+			
 			this.primaryStage = primaryStage;
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
+			primaryStage.setTitle("name's Calendar");
 			primaryStage.show();
 
 			redraw();
@@ -85,56 +87,44 @@ public class CalendarMain extends Application implements Initializable {
 			e.printStackTrace();
 		}
 
-		String[] months = {
-				"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-		};
-
 		calendarView = new CalendarView();
-		calendarView.setup(mainView);
+		mainPane.setCenter(calendarView);
 		
-		nextMonthBtn.setOnAction(new EventHandler<ActionEvent>() {
+		calendarGroupList = new CalendarGroupSelector(scene);
+		calendarGroupList.setup(calendarGroupPane);
+		
+		nextDateBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
 				calendarView.nextMonth();
-				monthLabel.setText(months[calendarView.getMonth()]);
+				monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
 				redraw();
 			}
 		});
 
-		prevMonthBtn.setOnAction(new EventHandler<ActionEvent>() {
+		prevDateBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
 				calendarView.prevMonth();
-				monthLabel.setText(months[calendarView.getMonth()]);
+				monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
 				redraw();
 			}
 		});
 		
-		monthLabel.setText(months[calendarView.getMonth()]);
+		monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
-		
-		for(int i = 0; i <= 9; ++i){
-			Label l = new Label(i == 9 ? "+ Add calendar" : "Group "+(i+1));
-			l.setAlignment(Pos.CENTER);
-			l.setPrefWidth(100);
-			l.setOnMouseEntered(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					scene.setCursor(Cursor.HAND);
-					l.setStyle("-fx-background-color: #AAAAAA;");
-				}
-			});
-			l.setOnMouseExited(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					scene.setCursor(Cursor.DEFAULT);
-					l.setStyle("-fx-background-color: transparent;");
-				}
-			});
-			calendarGroupPane.getChildren().add(l);
-		}
+	}
+	
+	// HAX
+	public void redraw() {
+		primaryStage.setScene(null);
+		primaryStage.setScene(scene);
+	}
+	
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
 	}
 	
 	public static void main(String[] args) {

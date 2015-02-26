@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0" prefWidth="800.0" vbarPolicy="ALWAYS" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gruppe16.main.DayPlanView">
+   <content>
+      <FlowPane fx:id="flowPane" orientation="VERTICAL" prefHeight="1920.0" prefWidth="798.0">
+         <children>
+            <HBox fx:id="time_01" onMouseEntered="#highlightOn" onMouseExited="#highlightOff" prefHeight="80.0" prefWidth="800.0">
+               <children>
+                  <HBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="80.0" prefWidth="80.0">
+                     <children>
+                        <Label alignment="TOP_LEFT" text="01:00">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0" />
+            <HBox prefHeight="80.0" prefWidth="800.0">
+               <children>
+                  <HBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="80.0" prefWidth="80.0">
+                     <children>
+                        <Label alignment="TOP_LEFT" text="02:00">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0" />
+         </children>
+      </FlowPane>
+   </content>
+</ScrollPane>

@@ -1,92 +1,63 @@
 package com.gruppe16.main;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
 
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
-public class CalendarView {
+public class CalendarView extends GridPane {
+	static String TEXT_DAY_COLOR = "#FFFFFF";
+	static String TEXT_DEFAULT_COLOR = "#000000";
+	static String TEXT_DEFAULT_INACTIVE_COLOR = "#888888";
+	static String TEXT_SUNDAY_COLOR = "#FF0000";
+	static String TEXT_SUNDAY_INACTIVE_COLOR = "#FF8888";
+	static String CELL_DAY_COLOR = "#4472C4";
+	static String CELL_DEFAULT_COLOR = "#FFFFFF";
+	static String CELL_WEEKEND_COLOR = "#D9E2F3";
+	static String CELL_CURRENT_COLOR = "#B2C9F5";
+	static String BORDER_COLOR = "#8EAADB";
+	
+	static String[] DAY_NAMES = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+
 	private Calendar calendar;
 	private Label[][] dayLabels = new Label[7][6];
-	private GridPane root;
-
-	static String DAY_ROW_COLOR = "#444444";
-	static String CELL_DEFAULT_COLOR = "#444444";
-	static String BORDER_COLOR = "#8EAADB";
 	
 	CalendarView() {
 		calendar = Calendar.getInstance();
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
-	}
-	
-	void nextMonth() {
-		calendar.add(Calendar.MONTH, 1);
-		update();
-	}
-	
-	void prevMonth() {
-		calendar.add(Calendar.MONTH, -1);
-		update();
-	}
-	
-	int getMonth() {
-		return calendar.get(Calendar.MONTH);
-	}
-	
-	int getYear() {
-		return calendar.get(Calendar.YEAR);
-	}
-	
-	void setup(Pane mainView) {
-		root = new GridPane();
-		root.setMinHeight(Double.MAX_VALUE);
-		root.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		root.setPrefSize(800, 600);
 
-		String[] days = {
-				"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
-		};
+		setMinHeight(Double.MAX_VALUE);
+		setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		setPrefSize(800, 600);
 		
 		// Day row (Mon, tue, etc)
 		for(int i = 0; i < 7; ++i) {
-			Label label = new Label(days[i]);
+			Label label = new Label(DAY_NAMES[i]);
 			label.setFont(new Font("Arial", 18));
 			label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
 			label.setAlignment(Pos.CENTER);
-			if(i == 0) label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent " + BORDER_COLOR + "; -fx-background-color: #4472C4; -fx-text-fill: #FFFFFF;");
-			else label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent transparent; -fx-background-color: #4472C4; -fx-text-fill: #FFFFFF;");
-			root.add(label, i, 0);
+			if(i == 0) label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent " + BORDER_COLOR + "; -fx-background-color: " + CELL_DAY_COLOR + "; -fx-text-fill: " + TEXT_DAY_COLOR + ";");
+			else label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent transparent; -fx-background-color: " + CELL_DAY_COLOR + "; -fx-text-fill: " + TEXT_DAY_COLOR + ";");
+			add(label, i, 0);
 		}
-		root.getRowConstraints().add(new RowConstraints(24));
+		getRowConstraints().add(new RowConstraints(24));
 		
 		for(int y = 0; y < 6; ++y) {
-			root.getRowConstraints().add(new RowConstraints(100));
+			getRowConstraints().add(new RowConstraints(100));
 			for(int x = 0; x < 7; ++x) {
-				root.getColumnConstraints().add(new ColumnConstraints(114));
+				getColumnConstraints().add(new ColumnConstraints(114));
 				
 				Label label = new Label();
 				label.setFont(new Font("Arial", 18));
@@ -112,16 +83,39 @@ public class CalendarView {
 					}
 				});
 				
-				root.add(label, x, y+1);
+				label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+						//mainView.setContent();
+					}
+				});
+				
+				add(label, x, y+1);
 				
 				dayLabels[x][y] = label;
 			}
 		}
 		update();
 
-		root.requestLayout();
-		mainView.getChildren().add(root);
-		mainView.requestLayout();
+		requestLayout();
+	}
+	
+	void nextMonth() {
+		calendar.add(Calendar.MONTH, 1);
+		update();
+	}
+	
+	void prevMonth() {
+		calendar.add(Calendar.MONTH, -1);
+		update();
+	}
+	
+	int getMonth() {
+		return calendar.get(Calendar.MONTH);
+	}
+	
+	int getYear() {
+		return calendar.get(Calendar.YEAR);
 	}
 	
 	void update() {
@@ -140,35 +134,35 @@ public class CalendarView {
 				String textFill = "";
 				
 				if(calendar.getTime().getDate() == nowDate.getDate() && calendar.getTime().getMonth() == nowDate.getMonth() && calendar.getTime().getYear() == nowDate.getYear()) {
-					backgroundColor = "#B2C9F5";
-					textFill = "#000000";
+					backgroundColor = CELL_CURRENT_COLOR;
+					textFill = TEXT_DEFAULT_COLOR;
 				}
 				else {
 					if(calendar.get(Calendar.MONTH) == beforeTime.getMonth()) {
 						if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-							backgroundColor = "#D9E2F3";
-							textFill = "#FF0000";
+							backgroundColor = CELL_WEEKEND_COLOR;
+							textFill = TEXT_SUNDAY_COLOR;
 						}
 						else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
-							backgroundColor = "#D9E2F3";
-							textFill = "#000000";
+							backgroundColor = CELL_WEEKEND_COLOR;
+							textFill = TEXT_DEFAULT_COLOR;
 						}
 						else{
-							backgroundColor = "#FFFFFF";
-							textFill = "#000000";
+							backgroundColor = CELL_DEFAULT_COLOR;
+							textFill = TEXT_DEFAULT_COLOR;
 						}
 					}
 					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-						backgroundColor = "#D9E2F3";
-						textFill = "#FF8888";
+						backgroundColor = CELL_WEEKEND_COLOR;
+						textFill = TEXT_SUNDAY_INACTIVE_COLOR;
 					}
 					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
-						backgroundColor = "#D9E2F3";
-						textFill = "#888888";
+						backgroundColor = CELL_WEEKEND_COLOR;
+						textFill = TEXT_DEFAULT_INACTIVE_COLOR;
 					}
 					else {
-						backgroundColor = "#FFFFFF";
-						textFill = "#888888";
+						backgroundColor = CELL_DEFAULT_COLOR;
+						textFill = TEXT_DEFAULT_INACTIVE_COLOR;
 					}
 				}
 				
