@@ -4,15 +4,20 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.InnerShadow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.ColumnConstraints;
@@ -22,14 +27,20 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class CalendarView {
 	private Calendar calendar;
 	private Label[][] dayLabels = new Label[7][6];
 	private GridPane root;
+
+	static String DAY_ROW_COLOR = "#444444";
+	static String CELL_DEFAULT_COLOR = "#444444";
+	static String BORDER_COLOR = "#8EAADB";
 	
 	CalendarView() {
 		calendar = Calendar.getInstance();
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 	}
 	
 	void nextMonth() {
@@ -66,7 +77,8 @@ public class CalendarView {
 			label.setFont(new Font("Arial", 18));
 			label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
 			label.setAlignment(Pos.CENTER);
-			label.setStyle("-fx-border-width: 1; -fx-border-color:  transparent #000000 #000000 transparent; -fx-background-color: #CCCCFF;");
+			if(i == 0) label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent " + BORDER_COLOR + "; -fx-background-color: #4472C4; -fx-text-fill: #FFFFFF;");
+			else label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent transparent; -fx-background-color: #4472C4; -fx-text-fill: #FFFFFF;");
 			root.add(label, i, 0);
 		}
 		root.getRowConstraints().add(new RowConstraints(24));
@@ -76,17 +88,30 @@ public class CalendarView {
 			for(int x = 0; x < 7; ++x) {
 				root.getColumnConstraints().add(new ColumnConstraints(114));
 				
-				Pane pane = new Pane();
-				pane.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				pane.setStyle("-fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent; -fx-background-color: #FFFFFF;");
-				
 				Label label = new Label();
 				label.setFont(new Font("Arial", 18));
 				label.setPadding(new Insets(3, 5, 0, 0));
 				label.setAlignment(Pos.TOP_RIGHT);
 				label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				
-				root.add(pane, x, y+1);
+				label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+				        InnerShadow glow = new InnerShadow();
+				        glow.setWidth(30);
+				        glow.setHeight(30);
+				        glow.setColor(Color.LIGHTBLUE);
+						label.setEffect(glow);
+					}
+				});
+				
+				label.setOnMouseExited(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+						label.setEffect(null);
+					}
+				});
+				
 				root.add(label, x, y+1);
 				
 				dayLabels[x][y] = label;
@@ -101,6 +126,7 @@ public class CalendarView {
 	
 	void update() {
 		Date beforeTime = calendar.getTime();
+		Date nowDate = new Date();
 		
 		// Set calendar to the first monday
 		calendar.set(Calendar.DAY_OF_MONTH, 1); calendar.getTime(); // Bug workaround
@@ -110,20 +136,55 @@ public class CalendarView {
 			for(int x = 0; x < 7; ++x) {
 				Label label = dayLabels[x][y];
 				label.setText(Integer.toString(calendar.get(Calendar.DATE)));
-				if(calendar.get(Calendar.MONTH) == beforeTime.getMonth()) {
-					if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-						label.setTextFill(new Color(1.0, 0.0, 0.0, 1.0));
-					}
-					else {
-						label.setTextFill(new Color(0.0, 0.0, 0.0, 1.0));
-					}
-				}
-				else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-					label.setTextFill(new Color(1.0, 0.5, 0.5, 1.0));
+				String backgroundColor = "";
+				String textFill = "";
+				
+				if(calendar.getTime().getDate() == nowDate.getDate() && calendar.getTime().getMonth() == nowDate.getMonth() && calendar.getTime().getYear() == nowDate.getYear()) {
+					backgroundColor = "#B2C9F5";
+					textFill = "#000000";
 				}
 				else {
-					label.setTextFill(new Color(0.5, 0.5, 0.5, 1.0));
+					if(calendar.get(Calendar.MONTH) == beforeTime.getMonth()) {
+						if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+							backgroundColor = "#D9E2F3";
+							textFill = "#FF0000";
+						}
+						else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+							backgroundColor = "#D9E2F3";
+							textFill = "#000000";
+						}
+						else{
+							backgroundColor = "#FFFFFF";
+							textFill = "#000000";
+						}
+					}
+					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+						backgroundColor = "#D9E2F3";
+						textFill = "#FF8888";
+					}
+					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+						backgroundColor = "#D9E2F3";
+						textFill = "#888888";
+					}
+					else {
+						backgroundColor = "#FFFFFF";
+						textFill = "#888888";
+					}
 				}
+				
+				String borderColor;
+				if(x == 0) {
+					if(y == 0)	borderColor = BORDER_COLOR + " " + BORDER_COLOR + " " + BORDER_COLOR + " " + BORDER_COLOR;
+					else		borderColor = "transparent " + BORDER_COLOR + " " + BORDER_COLOR + " " + BORDER_COLOR;
+				}
+				else if(y == 0) {
+					borderColor = BORDER_COLOR + " " + BORDER_COLOR + " " + BORDER_COLOR + " transparent";
+				}
+				else {
+					borderColor = "transparent " + BORDER_COLOR + " " + BORDER_COLOR + " transparent";
+				}
+				
+				label.setStyle("-fx-background-color: " + backgroundColor + "; -fx-text-fill: " + textFill + "; -fx-border-width: 1; -fx-border-color: " + borderColor + ";");
 				calendar.add(Calendar.DATE, 1);
 			}
 		}

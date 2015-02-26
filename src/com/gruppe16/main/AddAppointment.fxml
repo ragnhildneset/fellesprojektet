@@ -5,23 +5,31 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.gruppe16.main.AddAppointment">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="631.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gruppe16.main.AddAppointment">
    <children>
-      <Label layoutX="186.0" layoutY="35.0" prefHeight="37.0" prefWidth="229.0" text="        Avtaleskjema">
+      <Label layoutX="182.0" layoutY="26.0" prefHeight="37.0" prefWidth="229.0" text="        Avtaleskjema">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="formaal" layoutX="225.0" layoutY="110.0" />
-      <TextField fx:id="room" layoutX="225.0" layoutY="152.0" />
-      <DatePicker fx:id="dateid" layoutX="225.0" layoutY="193.0" />
-      <TextField fx:id="tilid" layoutX="225.0" layoutY="281.0" />
-      <TextField fx:id="fraid" layoutX="225.0" layoutY="239.0" />
-      <Button fx:id="sendid" layoutX="276.0" layoutY="332.0" mnemonicParsing="false" text="Send" />
-      <Label layoutX="160.0" layoutY="115.0" prefHeight="16.0" prefWidth="49.0" text="Formål:" />
-      <Label layoutX="160.0" layoutY="157.0" prefHeight="16.0" prefWidth="49.0" text="Rom:" />
-      <Label layoutX="160.0" layoutY="198.0" prefHeight="16.0" prefWidth="49.0" text="Dato:" />
-      <Label layoutX="160.0" layoutY="286.0" prefHeight="16.0" prefWidth="49.0" text="Til:" />
-      <Label layoutX="160.0" layoutY="244.0" prefHeight="16.0" prefWidth="49.0" text="Fra:" />
+      <TextField fx:id="formaal" layoutX="119.0" layoutY="123.0" />
+      <TextField fx:id="room" layoutX="36.0" layoutY="190.0" prefHeight="26.0" prefWidth="235.0" />
+      <DatePicker fx:id="dateid" layoutX="395.0" layoutY="118.0" />
+      <TextField fx:id="tilid" layoutX="395.0" layoutY="203.0" />
+      <TextField fx:id="fraid" layoutX="395.0" layoutY="161.0" />
+      <Button fx:id="sendid" layoutX="479.0" layoutY="379.0" mnemonicParsing="false" text="Send" />
+      <Label layoutX="38.0" layoutY="128.0" prefHeight="16.0" prefWidth="49.0" text="Formål:" />
+      <Label layoutX="38.0" layoutY="165.0" prefHeight="16.0" prefWidth="117.0" text="Beskrivelse/sted:" />
+      <Label layoutX="329.0" layoutY="123.0" prefHeight="16.0" prefWidth="49.0" text="Dato:" />
+      <Label layoutX="329.0" layoutY="208.0" prefHeight="16.0" prefWidth="49.0" text="Til:" />
+      <Label layoutX="329.0" layoutY="166.0" prefHeight="16.0" prefWidth="49.0" text="Fra:" />
+      <Label layoutX="38.0" layoutY="265.0" prefHeight="24.0" prefWidth="141.0" text="Book et rom..">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <TextField layoutX="43.0" layoutY="326.0" prefHeight="26.0" prefWidth="42.0" />
+      <Label layoutX="48.0" layoutY="304.0" prefHeight="16.0" prefWidth="105.0" text="Antall deltagere" />
+      <Button layoutX="39.0" layoutY="372.0" mnemonicParsing="false" text="Søk etter rom" />
    </children>
 </AnchorPane>
