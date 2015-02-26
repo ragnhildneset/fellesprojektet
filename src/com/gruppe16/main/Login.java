@@ -38,22 +38,14 @@ public class Login extends Application implements Initializable {
 					String q = "SELECT Username, Password FROM Employee WHERE Employee.Username=\'" + user.getText()+"\';";
 					PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 					ResultSet rs = (ResultSet) s.executeQuery();
-					byte[] passString = null;
+					String passString = null;
 					while(rs.next()){
-						passString = rs.getBytes("Password");
+						passString = rs.getString("Password");
 					}
-					byte[] inputPass = Digest.getHash(pass.getText());
-					boolean t = true;
-					for(int i=0;i<inputPass.length;i++){
-						if(inputPass[i]!=passString[i]){
-							System.out.println(inputPass[i]);
-							System.out.println(passString[i]);
-							System.out.println();
-							t = false;
-						}
-					}
-					if(t){
+					String inputPass = pass.getText();
+					if(inputPass.equals(passString)){
 						System.out.println("Correct password and username.");
+						Main._init();
 					} else {
 						System.out.println("Wrong password or username.");
 					}
