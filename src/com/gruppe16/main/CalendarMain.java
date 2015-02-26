@@ -40,10 +40,13 @@ public class CalendarMain extends Application implements Initializable {
 	private VBox calendarGroupPane;
 	
 	@FXML
-	private Button nextMonthBtn;
+	private Button nextDateBtn;
 	
 	@FXML
-	private Button prevMonthBtn;
+	private Button prevDateBtn;
+	
+	@FXML
+	private Button findCalendarBtn;
 	
 	@FXML
 	private Label monthLabel;
@@ -89,7 +92,7 @@ public class CalendarMain extends Application implements Initializable {
 		calendarGroupList = new CalendarGroupSelector(scene);
 		calendarGroupList.setup(calendarGroupPane);
 		
-		nextMonthBtn.setOnAction(new EventHandler<ActionEvent>() {
+		nextDateBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
 				calendarView.nextMonth();
@@ -99,7 +102,7 @@ public class CalendarMain extends Application implements Initializable {
 			}
 		});
 
-		prevMonthBtn.setOnAction(new EventHandler<ActionEvent>() {
+		prevDateBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
 				calendarView.prevMonth();
