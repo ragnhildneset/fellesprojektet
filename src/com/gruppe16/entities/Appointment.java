@@ -21,18 +21,20 @@ public class Appointment {
 	LocalDate date;
 	LocalTime fromTime;
 	LocalTime toTime;
+	int ownerid;
+	LocalTime creationtime;
 	//private Employee host;
 	//private Employee[] attendees;
 	
 
 	
 	public static void initialize(){
-		String q = "SELECT AppointmentID, Title, Description, Date, ToTime, FromTime FROM Appointment;";
+		String q = "SELECT appointmentID, title, description, appdate, totime, fromtime, ownerid, creationtime FROM Appointment;";
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
-				new Appointment(Integer.parseInt(rs.getString("AppointmentID")), rs.getString("Title"), rs.getString("Description"),LocalDate.parse(rs.getString("Date")), LocalTime.parse(rs.getString("ToTime")),  LocalTime.parse(rs.getString("FromTime")));
+				new Appointment(Integer.parseInt(rs.getString("appointmentID")), rs.getString("title"), rs.getString("description"),LocalDate.parse(rs.getString("appdate")), LocalTime.parse(rs.getString("totime")),  LocalTime.parse(rs.getString("fromtime")), Integer.parseInt(rs.getString("ownerid")), LocalTime.parse(rs.getString("creationtime")));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -40,7 +42,7 @@ public class Appointment {
 	}
 	
 	public Appointment(int appoinmentID, String title, String description,
-			LocalDate date, LocalTime fromTime, LocalTime toTime) {
+			LocalDate date, LocalTime fromTime, LocalTime toTime, int ownerid, LocalTime creationtime) {
 		Appointment.appointments.put(appoinmentID, this);
 		AppoinmentID = appoinmentID;
 		this.title = title;
@@ -48,18 +50,22 @@ public class Appointment {
 		this.date = date;
 		this.fromTime = fromTime;
 		this.toTime = toTime;
+		this.ownerid = ownerid;
+		this.creationtime = creationtime;
 	}
 
-	public static void addNew(String title, String descr, LocalDate date, String toTime, String fromTime){
-		String q = "INSERT INTO Appointment( Title, Description, Date, ToTime, FromTime, Owner_EID) VALUES ( ?, ?, ?, ?, ?, ? )";
+	public static void addNew(int AppointmentID, String title, String descr, LocalDate date, String toTime, String fromTime, int ownerid, String creationtime){
+		String q = "INSERT INTO Appointment( appointmendID, title, description, appdate, totime, fromtime, ownerid, creationtime) VALUES ( ?, ?, ?, ?, ?, ?,?,? )";
 		try {
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
-			s.setString(1, title);
-			s.setString(2, descr);
-			s.setDate(3, Date.valueOf(date));
-			s.setTime(4, Time.valueOf(toTime));
-			s.setTime(5, Time.valueOf(fromTime));
-			s.setInt(6, Login.getCurrentUserID());
+			s.setInt(1, AppointmentID);
+			s.setString(2, title);
+			s.setString(3, descr);
+			s.setDate(4, Date.valueOf(date));
+			s.setTime(5, Time.valueOf(toTime));
+			s.setTime(6, Time.valueOf(fromTime));
+			s.setInt(7, Login.getCurrentUserID());
+			s.setTime(8,Time.valueOf(LocalTime.now()));
 			s.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
