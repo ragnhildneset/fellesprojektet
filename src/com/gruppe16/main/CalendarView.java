@@ -33,8 +33,10 @@ public class CalendarView {
 	private Calendar calendar;
 	private Label[][] dayLabels = new Label[7][6];
 	private GridPane root;
-	
-	static String BORDER_COLOR = "#444444";
+
+	static String DAY_ROW_COLOR = "#444444";
+	static String CELL_DEFAULT_COLOR = "#444444";
+	static String BORDER_COLOR = "#8EAADB";
 	
 	CalendarView() {
 		calendar = Calendar.getInstance();
@@ -75,8 +77,8 @@ public class CalendarView {
 			label.setFont(new Font("Arial", 18));
 			label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
 			label.setAlignment(Pos.CENTER);
-			if(i == 0) label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent " + BORDER_COLOR + "; -fx-background-color: #CCCCFF;");
-			else label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent transparent; -fx-background-color: #CCCCFF;");
+			if(i == 0) label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent " + BORDER_COLOR + "; -fx-background-color: #4472C4; -fx-text-fill: #FFFFFF;");
+			else label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent transparent; -fx-background-color: #4472C4; -fx-text-fill: #FFFFFF;");
 			root.add(label, i, 0);
 		}
 		root.getRowConstraints().add(new RowConstraints(24));
@@ -138,17 +140,17 @@ public class CalendarView {
 				String textFill = "";
 				
 				if(calendar.getTime().getDate() == nowDate.getDate() && calendar.getTime().getMonth() == nowDate.getMonth() && calendar.getTime().getYear() == nowDate.getYear()) {
-					backgroundColor = "#CCCCFF";
+					backgroundColor = "#B2C9F5";
 					textFill = "#000000";
 				}
 				else {
 					if(calendar.get(Calendar.MONTH) == beforeTime.getMonth()) {
 						if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-							backgroundColor = "#DDDDDD";
+							backgroundColor = "#D9E2F3";
 							textFill = "#FF0000";
 						}
 						else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
-							backgroundColor = "#DDDDDD";
+							backgroundColor = "#D9E2F3";
 							textFill = "#000000";
 						}
 						else{
@@ -157,11 +159,11 @@ public class CalendarView {
 						}
 					}
 					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-						backgroundColor = "#DDDDDD";
+						backgroundColor = "#D9E2F3";
 						textFill = "#FF8888";
 					}
 					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
-						backgroundColor = "#DDDDDD";
+						backgroundColor = "#D9E2F3";
 						textFill = "#888888";
 					}
 					else {
