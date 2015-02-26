@@ -1,37 +1,30 @@
 package com.gruppe16.entities;
 
-import java.time.LocalDateTime;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import com.gruppe16.database.DBConnect;
 
 public class RoomReservation {
-	LocalDateTime fromTime;
-	LocalDateTime toTime;
-	Room room;
-	
-	RoomReservation(LocalDateTime fromTime, LocalDateTime toTime, Room room) {
-		setFromTime(fromTime);
-		setToTime(toTime);
-		setRoom(room);
+
+	public static void addNew(int appid, int roomid){
+		String q = "INSERT INTO RoomReservation(appid, roomid) VALUES (?, ?)";
+		try {
+			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
+			s.setInt(1, appid);
+			s.setInt(2, roomid);
+			s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public LocalDateTime getFromTime() {
-		return fromTime;
+	public Room[] findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime, int capacity){
+		
+		
 	}
-	public void setFromTime(LocalDateTime fromTime) {
-		this.fromTime = fromTime;
-	}
-	
-	public LocalDateTime getToTime() {
-		return toTime;
-	}
-	public void setToTime(LocalDateTime toTime) {
-		this.toTime = toTime;
-	}
-	
-	public Room getRoom() {
-		return room;
-	}
-	public void setRoom(Room room) {
-		this.room = room;
-	}
-	
 }
+	
+

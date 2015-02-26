@@ -26,11 +26,13 @@ public class AddAppointment extends Application implements Initializable {
 	@FXML
 	private TextField tilid;
 	@FXML
-	private TextField room;
+	private TextField roomsize;
 	@FXML
 	private TextField fraid;
 	@FXML
 	private TextField formaal;
+	@FXML
+	private TextField description;
 	@FXML
 	private DatePicker dateid;
 
@@ -42,7 +44,7 @@ public class AddAppointment extends Application implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				try{
-					Appointment.addNew(formaal.getText(), room.getText(), dateid.getValue(), 
+					Appointment.addNew(formaal.getText(), description.getText(), dateid.getValue(), 
 							fraid.getText() + ":00", tilid.getText() + ":00");
 					stage.close();
 				} catch (Exception e) {
