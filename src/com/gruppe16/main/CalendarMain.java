@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -115,7 +116,9 @@ public class CalendarMain extends Application implements Initializable {
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
 		
 		for(int i = 0; i <= 9; ++i){
-			Label l = new Label(i == 9 ? "+ Add calendar group" : "Group "+(i+1));
+			Label l = new Label(i == 9 ? "+ Add calendar" : "Group "+(i+1));
+			l.setAlignment(Pos.CENTER);
+			l.setPrefWidth(100);
 			l.setOnMouseEntered(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent event) {
