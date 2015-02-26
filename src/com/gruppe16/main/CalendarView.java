@@ -9,12 +9,15 @@ import java.util.Random;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.InnerShadow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.ColumnConstraints;
@@ -29,7 +32,9 @@ import javafx.stage.WindowEvent;
 public class CalendarView {
 	private Calendar calendar;
 	private Label[][] dayLabels = new Label[7][6];
-	GridPane root;
+	private GridPane root;
+	
+	static String BORDER_COLOR = "#444444";
 	
 	CalendarView() {
 		calendar = Calendar.getInstance();
@@ -70,7 +75,8 @@ public class CalendarView {
 			label.setFont(new Font("Arial", 18));
 			label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
 			label.setAlignment(Pos.CENTER);
-			label.setStyle("-fx-border-width: 1; -fx-border-color:  transparent #000000 #000000 transparent; -fx-background-color: #CCCCFF;");
+			if(i == 0) label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent " + BORDER_COLOR + "; -fx-background-color: #CCCCFF;");
+			else label.setStyle("-fx-border-width: 1; -fx-border-color: " + BORDER_COLOR + " " + BORDER_COLOR + " transparent transparent; -fx-background-color: #CCCCFF;");
 			root.add(label, i, 0);
 		}
 		root.getRowConstraints().add(new RowConstraints(24));
@@ -85,9 +91,25 @@ public class CalendarView {
 				label.setPadding(new Insets(3, 5, 0, 0));
 				label.setAlignment(Pos.TOP_RIGHT);
 				label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				label.setStyle("-fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent; -fx-background-color: #FFFFFF;");
 				
-				//root.add(pane, x, y+1);
+				label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+				        InnerShadow glow = new InnerShadow();
+				        glow.setWidth(30);
+				        glow.setHeight(30);
+				        glow.setColor(Color.LIGHTBLUE);
+						label.setEffect(glow);
+					}
+				});
+				
+				label.setOnMouseExited(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+						label.setEffect(null);
+					}
+				});
+				
 				root.add(label, x, y+1);
 				
 				dayLabels[x][y] = label;
@@ -112,31 +134,55 @@ public class CalendarView {
 			for(int x = 0; x < 7; ++x) {
 				Label label = dayLabels[x][y];
 				label.setText(Integer.toString(calendar.get(Calendar.DATE)));
+				String backgroundColor = "";
+				String textFill = "";
+				
 				if(calendar.getTime().getDate() == nowDate.getDate() && calendar.getTime().getMonth() == nowDate.getMonth() && calendar.getTime().getYear() == nowDate.getYear()) {
-					label.setStyle("-fx-background-color: #CCCCFF; -fx-text-fill: #FFFFFF; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+					backgroundColor = "#CCCCFF";
+					textFill = "#000000";
 				}
 				else {
 					if(calendar.get(Calendar.MONTH) == beforeTime.getMonth()) {
 						if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-							label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #FF0000; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+							backgroundColor = "#DDDDDD";
+							textFill = "#FF0000";
 						}
 						else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
-							label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #000000; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+							backgroundColor = "#DDDDDD";
+							textFill = "#000000";
 						}
 						else{
-							label.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #000000; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+							backgroundColor = "#FFFFFF";
+							textFill = "#000000";
 						}
 					}
 					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-						label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #FF8888; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+						backgroundColor = "#DDDDDD";
+						textFill = "#FF8888";
 					}
 					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
-						label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #888888; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+						backgroundColor = "#DDDDDD";
+						textFill = "#888888";
 					}
 					else {
-						label.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #888888; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+						backgroundColor = "#FFFFFF";
+						textFill = "#888888";
 					}
 				}
+				
+				String borderColor;
+				if(x == 0) {
+					if(y == 0)	borderColor = BORDER_COLOR + " " + BORDER_COLOR + " " + BORDER_COLOR + " " + BORDER_COLOR;
+					else		borderColor = "transparent " + BORDER_COLOR + " " + BORDER_COLOR + " " + BORDER_COLOR;
+				}
+				else if(y == 0) {
+					borderColor = BORDER_COLOR + " " + BORDER_COLOR + " " + BORDER_COLOR + " transparent";
+				}
+				else {
+					borderColor = "transparent " + BORDER_COLOR + " " + BORDER_COLOR + " transparent";
+				}
+				
+				label.setStyle("-fx-background-color: " + backgroundColor + "; -fx-text-fill: " + textFill + "; -fx-border-width: 1; -fx-border-color: " + borderColor + ";");
 				calendar.add(Calendar.DATE, 1);
 			}
 		}

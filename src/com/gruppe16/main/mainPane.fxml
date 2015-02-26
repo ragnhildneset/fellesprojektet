@@ -6,13 +6,13 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Label text="calendar_name">
+            <Label fx:id="calendarNameLabel" text="calendar_name">
                <HBox.margin>
-                  <Insets right="250.0" />
+                  <Insets left="10.0" right="318.0" top="10.0" />
                </HBox.margin>
                <font>
                   <Font size="18.0" />
@@ -42,7 +42,10 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Button fx:id="nextMonthBtn" mnemonicParsing="false" text="&gt;" />
+                        <Button fx:id="nextMonthBtn" mnemonicParsing="false" text="&gt;">
+                           <HBox.margin>
+                              <Insets left="1.0" />
+                           </HBox.margin></Button>
                      </children>
                   </HBox>
                </children>
@@ -51,18 +54,24 @@
       </HBox>
       <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0">
          <children>
-            <VBox prefHeight="400.0" prefWidth="200.0">
+            <VBox prefHeight="500.0" prefWidth="219.0">
                <children>
-                  <Label text="Group calendars">
+                  <Label text="Calendars">
                      <font>
                         <Font size="18.0" />
                      </font>
                      <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>
                   </Label>
-                  <ListView prefHeight="200.0" prefWidth="200.0" />
-                  <Button mnemonicParsing="false" text="Find calendar" />
+                  <ListView prefHeight="200.0" prefWidth="134.0">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin></ListView>
+                  <Button mnemonicParsing="false" text="Find calendar">
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin></Button>
                </children>
             </VBox>
             <Pane fx:id="mainView" prefHeight="500.0" prefWidth="700.0" />

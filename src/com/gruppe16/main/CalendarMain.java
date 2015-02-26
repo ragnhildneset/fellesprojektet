@@ -63,7 +63,7 @@ public class CalendarMain extends Application implements Initializable {
 		fxmlLoader.setLocation(url);
 		fxmlLoader.setController(this);
 		try {
-			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1280, 900);
+			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 970, 740);
 			
 			this.primaryStage = primaryStage;
 			primaryStage.setScene(scene);
