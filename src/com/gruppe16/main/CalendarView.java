@@ -112,23 +112,28 @@ public class CalendarView {
 				Label label = dayLabels[x][y];
 				label.setText(Integer.toString(calendar.get(Calendar.DATE)));
 				if(calendar.getTime().getDate() == nowDate.getDate() && calendar.getTime().getMonth() == nowDate.getMonth() && calendar.getTime().getYear() == nowDate.getYear()) {
-					label.setTextFill(new Color(1.0, 1.0, 1.0, 1.0));
-					label.setStyle("-fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent; -fx-background-color: #CCCCFF;");
+					label.setStyle("-fx-background-color: #CCCCFF; -fx-text-fill: #FFFFFF; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
 				}
 				else {
 					if(calendar.get(Calendar.MONTH) == beforeTime.getMonth()) {
 						if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-							label.setTextFill(new Color(1.0, 0.0, 0.0, 1.0));
+							label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #FF0000; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
 						}
-						else {
-							label.setTextFill(new Color(0.0, 0.0, 0.0, 1.0));
+						else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+							label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #000000; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+						}
+						else{
+							label.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #000000; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
 						}
 					}
 					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-						label.setTextFill(new Color(1.0, 0.5, 0.5, 1.0));
+						label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #FF8888; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
+					}
+					else if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+						label.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: #888888; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
 					}
 					else {
-						label.setTextFill(new Color(0.5, 0.5, 0.5, 1.0));
+						label.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #888888; -fx-border-width: 1; -fx-border-color: transparent #000000 #000000 transparent;");
 					}
 				}
 				calendar.add(Calendar.DATE, 1);
