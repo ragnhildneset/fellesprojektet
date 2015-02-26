@@ -2,16 +2,19 @@ package com.gruppe16.entities;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Time;
-import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 
 import com.gruppe16.database.DBConnect;
+import com.gruppe16.main.Login;
 import com.mysql.jdbc.ResultSet;
 
 public class Appointment {
+	
+	private static HashMap<Integer, Appointment> appointments = new HashMap<Integer, Appointment>(); 
+	
 	int AppoinmentID;
 	private String title, description;
 	//private RoomReservation room;
@@ -21,14 +24,7 @@ public class Appointment {
 	//private Employee host;
 	//private Employee[] attendees;
 	
-	public Appointment(//Employee host, Employee[] attendees, RoomReservation room
-			int AppointmentID, String title, String description, LocalDate date, LocalTime fromTime, LocalTime toTime) {
-		//setHost(host);
-		//setAttendees(attendees);
-		//setRoomReservation(room);
-		setTitle(title);
-		setDescription(description);
-	}
+
 	
 	public static void initialize(){
 		String q = "SELECT AppointmentID, Title, Description, Date, ToTime, FromTime FROM Appointment;";
@@ -43,80 +39,59 @@ public class Appointment {
 		}
 	}
 	
-	public static void addNew(String title, String descr, LocalDate date, LocalTime toTime, LocalTime fromTime){
-		String q = "INSERT INTO Appointment( Title, Description, Date, ToTime, FromTime) VALUES ( ?, ?, ?, ?, ? )";
+	public Appointment(int appoinmentID, String title, String description,
+			LocalDate date, LocalTime fromTime, LocalTime toTime) {
+		Appointment.appointments.put(appoinmentID, this);
+		AppoinmentID = appoinmentID;
+		this.title = title;
+		this.description = description;
+		this.date = date;
+		this.fromTime = fromTime;
+		this.toTime = toTime;
+	}
+
+	public static void addNew(String title, String descr, LocalDate date, String toTime, String fromTime){
+		String q = "INSERT INTO Appointment( Title, Description, Date, ToTime, FromTime, Owner_EID) VALUES ( ?, ?, ?, ?, ?, ? )";
 		try {
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			s.setString(1, title);
 			s.setString(2, descr);
-			s.setDate(3, Date.valueOf(date.toString()));
-			s.setTime(4, new java.sql.Time(toTime.getMillis()));
-			s.setTime(5, java.sql.Time(fromTime.getHour(), fromTime.getMinute(), fromTime.getSecond())));
+			s.setDate(3, Date.valueOf(date));
+			s.setTime(4, Time.valueOf(toTime));
+			s.setTime(5, Time.valueOf(fromTime));
+			s.setInt(6, Login.getCurrentUserID());
 			s.execute();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("Added addpointment.");
 		initialize();
-	}
-	
-	public static void main(String[] args) {
-		addNew("meme", "ja", LocalDate.of(2012,1,2), LocalTime.of(19,45), LocalTime.of(18,45)); 
 	}
 	
 	public String getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-/*
-	public Employee getHost() {
-		return host;
-	}
-
-	public void setHost(Employee host) {
-		this.host = host;
-	}
-	
-	public Employee[] getAttendees() {
-		return attendees;
-	}
-
-	public void setAttendees(Employee[] attendees) {
-		this.attendees = attendees;
-	}
-	
-	public RoomReservation getRoomReservation() {
-		return room;
-	}
-
-	public void setRoomReservation(RoomReservation room) {
-		this.room = room;
-	}
-	
-*/
 	public LocalTime getFromTime() {
 		return fromTime;
-	}
-	public void setFromTime(LocalTime fromTime) {
-		this.fromTime = fromTime;
 	}
 	
 	public LocalTime getToTime() {
 		return toTime;
 	}
-	public void setToTime(LocalTime toTime) {
-		this.toTime = toTime;
+	
+	public int getID(){
+		return this.AppoinmentID;
 	}
+	
+	public static Appointment get(int id){
+		return appointments.get(id);
+	}
+	
 }
 
 

@@ -1,73 +1,45 @@
 package com.gruppe16.main;
 
-import java.net.URL;
 import java.sql.PreparedStatement;
-import java.util.ResourceBundle;
-
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 import com.gruppe16.database.DBConnect;
-import com.gruppe16.util.Digest;
+import com.gruppe16.entities.Employee;
 import com.mysql.jdbc.ResultSet;
 
-public class Login extends Application implements Initializable {
+public abstract class Login {
 	
-	@FXML Button loginBtn;
-	@FXML TextField user;
-	@FXML TextField pass;
+	private static Employee login = null;
 	
-	private Stage stage;
-
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		loginBtn.setOnAction(new EventHandler<ActionEvent>(){
-
-			@Override
-			public void handle(ActionEvent event) {
-				try{
-					String q = "SELECT Username, Password FROM Employee WHERE Employee.Username=\'" + user.getText()+"\';";
-					PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
-					ResultSet rs = (ResultSet) s.executeQuery();
-					String passString = null;
-					while(rs.next()){
-						passString = rs.getString("Password");
-					}
-					String inputPass = pass.getText();
-					if(inputPass.equals(passString)){
-						System.out.println("Correct password and username.");
-						Main._init();
-					} else {
-						System.out.println("Wrong password or username.");
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+	public static boolean login(String username, String password){
+		int id = -1;
+		try{
+			String q = "SELECT Username, Password, EmployeeID FROM Employee WHERE Employee.Username=\'" + username + "\';";
+			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
+			ResultSet rs = (ResultSet) s.executeQuery();
+			String passString = null;
+			while(rs.next()){
+				passString = rs.getString("Password");
+				id = rs.getInt("EmployeeID");
 			}
-			
-		});
-		
+			if(password.equals(passString)){
+				login = Employee.getEmployee(id);
+				System.out.println("Hello, " + login.getFirstName() + "!");
+				return true;
+			}
+			System.out.println("Wrong password or username.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		login = null;
+		return false;
 	}
 	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		stage = primaryStage;
-		Scene scene = new Scene((AnchorPane) FXMLLoader.load(Main.class.getResource("/com/gruppe16/main/login.fxml")));
-		primaryStage.setScene(scene);
-		primaryStage.show();
+	public static Employee getCurrentUser(){
+		return login;
 	}
 	
-	public static void main(String[] args) {
-		launch(args);
+	public static int getCurrentUserID() throws Exception {
+		return login.getKey();
 	}
 
 }

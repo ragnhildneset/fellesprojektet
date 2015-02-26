@@ -53,6 +53,10 @@ public class Employee {
 		return ls;
 	}
 	
+	public static Employee getEmployee(int key){
+		return employees.get(key);
+	}
+	
 	String firstName;
 	String lastName;
 	String email;
@@ -71,6 +75,27 @@ public class Employee {
 	public String getName(){
 		return lastName + ", " + firstName;
 	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public int getKey() {
+		return key;
+	}
+
 
 	
 }
