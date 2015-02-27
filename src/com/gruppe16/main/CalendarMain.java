@@ -10,6 +10,8 @@ import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,18 +19,26 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -43,7 +53,7 @@ public class CalendarMain extends Application implements Initializable {
 	private BorderPane mainPane;
 	
 	@FXML
-	private VBox calendarGroupPane;
+	private ListView<HBox> groupListView;
 	
 	@FXML
 	private Button nextDateBtn;
@@ -56,6 +66,12 @@ public class CalendarMain extends Application implements Initializable {
 	
 	@FXML
 	private Button backToCalendarBtn;
+	
+	@FXML
+	private Button selectAllGroupsBtn;
+	
+	@FXML
+	private Button selectNoneGroupsBtn;
 	
 	@FXML
 	private Label monthLabel;
@@ -108,8 +124,27 @@ public class CalendarMain extends Application implements Initializable {
 		
 		showCalendar(new Date());
 		
-		calendarGroupList = new CalendarGroupSelector(scene);
-		calendarGroupList.setup(calendarGroupPane);
+		updateGroups();
+
+		selectAllGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent evnet) {
+				for(HBox hbox : groupListView.getItems()) {
+					CheckBox checkBox = (CheckBox)hbox.getChildren().get(0);
+					checkBox.setSelected(true);
+				}
+			}
+		});
+
+		selectNoneGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent evnet) {
+				for(HBox hbox : groupListView.getItems()) {
+					CheckBox checkBox = (CheckBox)hbox.getChildren().get(0);
+					checkBox.setSelected(false);
+				}
+			}
+		});
 	}
 	
 	void showCalendar(Date date) {
@@ -177,6 +212,33 @@ public class CalendarMain extends Application implements Initializable {
 				redraw();
 			}
 		});
+	}
+	
+	void updateGroups() {
+		ObservableList<HBox> items = FXCollections.observableArrayList();
+		
+		// Testkode
+		HBox hbox = new HBox();
+		hbox.getChildren().add(new CheckBox("Group 1"));
+		items.add(hbox);
+		
+		hbox = new HBox();
+		hbox.getChildren().add(new CheckBox("Group 2"));
+		items.add(hbox);
+		
+		hbox = new HBox();
+		CheckBox checkBox = new CheckBox("Group 3");
+		checkBox.setPadding(new Insets(0,80,0,0));
+		hbox.getChildren().add(checkBox);
+		
+		ImageView button = new ImageView("http://findicons.com/files/icons/2226/matte_basic/16/edit.png");
+		button.setScaleX(0.75);
+		button.setScaleY(0.75);
+		hbox.getChildren().add(button);
+		
+		items.add(hbox);
+		
+		groupListView.setItems(items);
 	}
 	
 	// HAX

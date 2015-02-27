@@ -10,30 +10,49 @@
    <left>
       <VBox prefHeight="490.0" prefWidth="180.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Calendars">
+            <Label text="Groups">
                <font>
                   <Font size="18.0" />
                </font>
                <VBox.margin>
                   <Insets />
                </VBox.margin>
+               <padding>
+                  <Insets bottom="10.0" />
+               </padding>
             </Label>
-            <VBox fx:id="calendarGroupPane" />
-            <Button fx:id="findCalendarBtn" mnemonicParsing="false" text="Find calendar">
+            <ListView fx:id="groupListView" prefHeight="200.0" prefWidth="200.0" />
+            <HBox alignment="CENTER" prefWidth="180.0">
+               <children>
+                  <Button fx:id="selectAllGroupsBtn" mnemonicParsing="false" text="Select All">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="selectNoneGroupsBtn" mnemonicParsing="false" text="Select None" />
+               </children>
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets />
                </VBox.margin>
-            </Button>
+               <padding>
+                  <Insets bottom="10.0" top="10.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER" prefWidth="200.0">
+               <children>
+                  <Button fx:id="findCalendarBtn" mnemonicParsing="false" text="Find calendar" />
+               </children>
+            </HBox>
          </children>
          <BorderPane.margin>
-            <Insets left="10.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" />
          </BorderPane.margin>
       </VBox>
    </left>
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="calendarNameLabel" prefHeight="27.0" prefWidth="480.0" text="name">
+            <Label fx:id="calendarNameLabel" prefHeight="27.0" prefWidth="490.0" text="name">
                <HBox.margin>
                   <Insets />
                </HBox.margin>

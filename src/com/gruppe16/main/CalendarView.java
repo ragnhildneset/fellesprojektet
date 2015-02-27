@@ -122,6 +122,7 @@ public class CalendarView extends GridPane {
 	
 	void setDate(Date date) {
 		calendar.setTime(date);
+		update();
 	}
 	
 	void update() {
