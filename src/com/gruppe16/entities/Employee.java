@@ -1,7 +1,4 @@
 package com.gruppe16.entities;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,36 +9,6 @@ public class Employee {
 	
 	
 	private static HashMap<Integer, Employee> employees = new HashMap<Integer, Employee>();
-	
-	public static void initialize(){
-		String q = "SELECT EmployeeID, GivenName, SurName, Email, Username FROM Employee;";
-		try{
-			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
-			ResultSet rs = (ResultSet) s.executeQuery();
-			while(rs.next()){
-				new Employee(Integer.parseInt(rs.getString("EmployeeID")), rs.getString("GivenName"), rs.getString("SurName"), rs.getString("Email"), rs.getString("Username"));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void addNew(String fname, String lname, String email, String username, String password){
-		String q = "INSERT INTO Employee( GivenName, Surname, Email, Username, Password ) VALUES ( ?, ?, ?, ?, ? )";
-		try {
-			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
-			s.setString(1, fname);
-			s.setString(2, lname);
-			s.setString(3, email);
-			s.setString(4, username);
-			s.setString(5, password);
-			s.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		employees.clear();
-		initialize();
-	}
 	
 	public static String[] getNames(){
 		String[] ls = new String[employees.size()];

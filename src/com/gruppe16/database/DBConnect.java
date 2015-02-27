@@ -5,9 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 
+import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Room;
 
 public class DBConnect {
 	
@@ -24,16 +28,45 @@ public class DBConnect {
 			ResultSet rs = (ResultSet) p.executeQuery();
 			while(rs.next()){
 				int key = rs.getInt("E.employeeid");
-				Employee e = new Employee(
-						key,rs.getString("E.givenName"), rs.getString("E.surname"), rs.getString("E.email"), rs.getString("username")
-						);
+				Employee e = new Employee(key,rs.getString("E.givenName"), rs.getString("E.surname"), rs.getString("E.email"), rs.getString("username"));
 				map.put(key, e);
-			}
-		return map;
+			}return map;
 		}catch(Exception e) {
 			e.printStackTrace();
-		}
-		return null;
+		}return null;
+	}
+	
+	public static HashMap<Integer, Room> getRooms(){
+		String q = "SELECT roomNumber, capacity, roomName, description, buildingID FROM Room;";
+		HashMap<Integer, Room> map = new HashMap<Integer, Room>();
+		try{
+			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
+			ResultSet rs = (ResultSet) s.executeQuery();
+			while(rs.next()){
+				int key = rs.getInt("roomNumber");
+				Room r = new Room(Integer.parseInt(rs.getString("roomNumber")), Integer.parseInt(rs.getString("capacity")), rs.getString("roomName"), rs.getString("description"), Integer.parseInt(rs.getString("buildingID")));
+				map.put(key, r);
+			}return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}return null;
+	}
+	
+	public static HashMap<Integer, Appointment> getAppointments(){
+		String q = "SELECT appointmentID, title, description, appdate, totime, fromtime, ownerid, creationtime FROM Appointment ";
+		HashMap<Integer, Appointment> map = new HashMap<Integer, Appointment>();
+		try{
+			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
+			ResultSet rs = (ResultSet) s.executeQuery();
+				while(rs.next()){
+					int key = rs.getInt("appointmentID");
+					Appointment a = new Appointment(Integer.parseInt(rs.getString("appointmentID")), rs.getString("title"), rs.getString("description"),LocalDate.parse(rs.getString("appdate")), LocalTime.parse(rs.getString("totime")),  LocalTime.parse(rs.getString("fromtime")), Integer.parseInt(rs.getString("ownerid")), LocalTime.parse(rs.getString("creationtime")));
+					map.put(key, a);
+				}return map;
+		}catch (Exception e) {
+			e.printStackTrace();
+			
+		}return null;
 	}
 	
 	public static Connection getConnection(){

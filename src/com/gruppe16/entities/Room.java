@@ -11,44 +11,21 @@ import com.mysql.jdbc.ResultSet;
 public class Room {
 	String name;
 	int capacity;
+	
 	private static HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
 	
 	
-	Room(int key, int capacity, String name){
+	public Room(int key, int capacity, String name, String descr, int buildingID ){
 		setName(name);
 		setCapacity(capacity);
 		rooms.put(key, this);
+		
 	}
 	
 	public static void main(String[] args){
-		initialize();
 		System.out.println(getRooms());
 	}
-	
-	public static void addNew(int capacity, String name){
-		String q = "INSERT INTO Room(roomNumber, buildingID, Capacity) VALUES (?, ?)";
-		try {
-			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
-			s.setInt(1, capacity);
-			s.setString(2, name);
-			s.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void initialize(){
-		String q = "SELECT RoomID, Capacity, RoomName FROM Room;";
-		try{
-			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
-			ResultSet rs = (ResultSet) s.executeQuery();
-			while(rs.next()){
-				new Room(Integer.parseInt(rs.getString("RoomID")), Integer.parseInt(rs.getString("Capacity")), rs.getString("RoomName"));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
 	
 	public String getName() {
 		return name;
@@ -68,6 +45,7 @@ public class Room {
 		int c = 0;
 		for(Map.Entry<Integer, Room> e : rooms.entrySet()){
 			ls[c] = e.getValue().getName();
+			System.out.println(e.getValue().getName());
 			c++;
 		}
 		return ls;
