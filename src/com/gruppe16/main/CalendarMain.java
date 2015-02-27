@@ -79,8 +79,6 @@ public class CalendarMain extends Application implements Initializable {
 	@FXML
 	private Label yearLabel;
 	
-	private CalendarGroupSelector calendarGroupList;
-	
 	private Scene scene;
 	
 	private Stage primaryStage;
