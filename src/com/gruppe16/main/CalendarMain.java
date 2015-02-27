@@ -3,6 +3,7 @@ package com.gruppe16.main;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -33,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class CalendarMain extends Application implements Initializable {
+	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 	
 	@FXML
 	private BorderPane mainPane;
@@ -54,16 +56,16 @@ public class CalendarMain extends Application implements Initializable {
 	
 	@FXML
 	private Label yearLabel;
-
-	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-
-	private CalendarView calendarView;
 	
 	private CalendarGroupSelector calendarGroupList;
 	
 	private Scene scene;
 	
 	private Stage primaryStage;
+	
+	private CalendarView calendarView; 
+	
+	private CopyOfDayPlanView dayPlan;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -87,12 +89,22 @@ public class CalendarMain extends Application implements Initializable {
 			e.printStackTrace();
 		}
 
-		calendarView = new CalendarView();
-		mainPane.setCenter(calendarView);
+		calendarView = new CalendarView(this);
+		dayPlan = new CopyOfDayPlanView(this);
+		
+		showCalendar(new Date());
 		
 		calendarGroupList = new CalendarGroupSelector(scene);
 		calendarGroupList.setup(calendarGroupPane);
+	}
+	
+	void showCalendar(Date date) {
+		calendarView.setDate(date);
+		mainPane.setCenter(calendarView);
 		
+		monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
+		yearLabel.setText(Integer.toString(calendarView.getYear()));
+
 		nextDateBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
@@ -112,9 +124,34 @@ public class CalendarMain extends Application implements Initializable {
 				redraw();
 			}
 		});
+	}
+	
+	void showDayPlan(Date date) {
+		dayPlan.setDate(date);
+		mainPane.setCenter(dayPlan);
 		
-		monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
+		monthLabel.setText(date.toString());
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
+
+		nextDateBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent evnet) {
+				dayPlan.nextDay();
+				monthLabel.setText(date.toString());
+				yearLabel.setText(Integer.toString(calendarView.getYear()));
+				redraw();
+			}
+		});
+
+		prevDateBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent evnet) {
+				dayPlan.prevDay();
+				monthLabel.setText(date.toString());
+				yearLabel.setText(Integer.toString(calendarView.getYear()));
+				redraw();
+			}
+		});
 	}
 	
 	// HAX

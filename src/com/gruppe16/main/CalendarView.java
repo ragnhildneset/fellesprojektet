@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -34,7 +35,8 @@ public class CalendarView extends GridPane {
 	private Calendar calendar;
 	private Label[][] dayLabels = new Label[7][6];
 	
-	CalendarView() {
+	CalendarView(CalendarMain mainPane) {
+		
 		calendar = Calendar.getInstance();
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 
@@ -86,7 +88,7 @@ public class CalendarView extends GridPane {
 				label.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent event) {
-						//mainView.setContent();
+						mainPane.showDayPlan(calendar.getTime());
 					}
 				});
 				
@@ -116,6 +118,10 @@ public class CalendarView extends GridPane {
 	
 	int getYear() {
 		return calendar.get(Calendar.YEAR);
+	}
+	
+	void setDate(Date date) {
+		calendar.setTime(date);
 	}
 	
 	void update() {
