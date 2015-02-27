@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -66,6 +69,10 @@ public class CalendarMain extends Application implements Initializable {
 	private CalendarView calendarView; 
 	
 	private CopyOfDayPlanView dayPlan;
+
+	private DayPlanView dayPlanView;
+	
+	private LocalDate someDate = LocalDate.now();
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -91,6 +98,10 @@ public class CalendarMain extends Application implements Initializable {
 
 		calendarView = new CalendarView(this);
 		dayPlan = new CopyOfDayPlanView(this);
+
+		/*dayPlanView = new DayPlanView(someDate);
+		dayPlanView.addAppointment(LocalTime.of(1, 0), LocalTime.of(2, 30));
+		mainPane.setCenter(dayPlanView);*/
 		
 		showCalendar(new Date());
 		
