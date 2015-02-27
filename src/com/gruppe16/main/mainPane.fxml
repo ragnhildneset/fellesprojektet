@@ -33,7 +33,7 @@
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="calendarNameLabel" prefHeight="27.0" prefWidth="468.0" text="name">
+            <Label fx:id="calendarNameLabel" prefHeight="27.0" prefWidth="480.0" text="name">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -53,6 +53,9 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <padding>
+                        <Insets right="25.0" />
+                     </padding>
                   </Label>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
@@ -70,6 +73,7 @@
                               <Insets left="1.0" />
                            </HBox.margin>
                         </Button>
+                        <Button fx:id="backToCalendarBtn" mnemonicParsing="false" text="^" visible="false" />
                      </children>
                   </HBox>
                </children>

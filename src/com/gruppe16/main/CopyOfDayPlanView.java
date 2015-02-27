@@ -70,4 +70,8 @@ public class CopyOfDayPlanView extends ScrollPane {
 	void setDate(Date date) {
 		// TODO
 	}
+	
+	Date getDate() {
+		return new Date();
+	}
 }

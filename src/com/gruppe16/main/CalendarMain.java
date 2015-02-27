@@ -55,6 +55,9 @@ public class CalendarMain extends Application implements Initializable {
 	private Button findCalendarBtn;
 	
 	@FXML
+	private Button backToCalendarBtn;
+	
+	@FXML
 	private Label monthLabel;
 	
 	@FXML
@@ -113,6 +116,8 @@ public class CalendarMain extends Application implements Initializable {
 		calendarView.setDate(date);
 		mainPane.setCenter(calendarView);
 		
+		backToCalendarBtn.setVisible(false);
+		
 		monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
 
@@ -141,8 +146,17 @@ public class CalendarMain extends Application implements Initializable {
 		dayPlan.setDate(date);
 		mainPane.setCenter(dayPlan);
 		
+		backToCalendarBtn.setVisible(true);
+		
 		monthLabel.setText(date.toString());
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
+
+		backToCalendarBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent evnet) {
+				showCalendar(dayPlan.getDate());
+			}
+		});
 
 		nextDateBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
