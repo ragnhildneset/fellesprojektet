@@ -84,8 +84,6 @@ public class CalendarMain extends Application implements Initializable {
 	private Stage primaryStage;
 	
 	private CalendarView calendarView; 
-	
-	private CopyOfDayPlanView dayPlan;
 
 	private DayPlanView dayPlanView;
 	
@@ -114,7 +112,7 @@ public class CalendarMain extends Application implements Initializable {
 		}
 
 		calendarView = new CalendarView(this);
-		dayPlan = new CopyOfDayPlanView(this);
+		dayPlanView = new DayPlanView(this);
 
 		/*dayPlanView = new DayPlanView(someDate);
 		dayPlanView.addAppointment(LocalTime.of(1, 0), LocalTime.of(2, 30));
@@ -176,8 +174,8 @@ public class CalendarMain extends Application implements Initializable {
 	}
 	
 	void showDayPlan(Date date) {
-		dayPlan.setDate(date);
-		mainPane.setCenter(dayPlan);
+		dayPlanView.setDate(date);
+		mainPane.setCenter(dayPlanView);
 		
 		backToCalendarBtn.setVisible(true);
 		
@@ -187,14 +185,14 @@ public class CalendarMain extends Application implements Initializable {
 		backToCalendarBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
-				showCalendar(dayPlan.getDate());
+				showCalendar(dayPlanView.getDate());
 			}
 		});
 
 		nextDateBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
-				dayPlan.nextDay();
+				dayPlanView.nextDay();
 				monthLabel.setText(date.toString());
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
 				redraw();
@@ -204,7 +202,7 @@ public class CalendarMain extends Application implements Initializable {
 		prevDateBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
-				dayPlan.prevDay();
+				dayPlanView.prevDay();
 				monthLabel.setText(date.toString());
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
 				redraw();
