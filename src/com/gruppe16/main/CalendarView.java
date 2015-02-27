@@ -88,7 +88,7 @@ public class CalendarView extends GridPane {
 				label.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent event) {
-						mainPane.showDayPlan(calendar.getTime());
+						mainPane.showDayPlan((Date)label.getUserData());
 					}
 				});
 				
@@ -136,6 +136,7 @@ public class CalendarView extends GridPane {
 		for(int y = 0; y < 6; ++y) {
 			for(int x = 0; x < 7; ++x) {
 				Label label = dayLabels[x][y];
+				label.setUserData(calendar.getTime());
 				label.setText(Integer.toString(calendar.get(Calendar.DATE)));
 				String backgroundColor = "";
 				String textFill = "";
