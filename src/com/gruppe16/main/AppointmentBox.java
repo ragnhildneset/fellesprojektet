@@ -2,11 +2,15 @@ package com.gruppe16.main;
 
 import java.time.LocalTime;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 public class AppointmentBox extends Pane {
 	
@@ -41,6 +45,9 @@ public class AppointmentBox extends Pane {
 	private LocalTime start, end;
 	private double panelWidth;
 	private double panelHeight;
+	private double panelX;
+	private double panelY;
+	private boolean active = false;
 	private panelColors color = panelColors.RED;
 	
 	public AppointmentBox(LocalTime start, LocalTime end, String name, panelColors color){
@@ -51,22 +58,16 @@ public class AppointmentBox extends Pane {
 		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
 		int appointmentStart = start.toSecondOfDay()/60;
 		setStyle(this.color.styleDefault);
-		setPrefSize(710, appointmentTime);
+		setPrefSize(710, Math.max(appointmentTime, 30));
 		relocate(0, appointmentStart);
 		getChildren().add(new Label(name));
 		setId(name);
-		
+
 		setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				setCursor(Cursor.HAND);
 				setStyle(color.styleHover);
-				panelWidth = getPrefWidth();
-				panelHeight = getPrefHeight();
-				toFront();
-				if(panelWidth < 400) setPrefWidth(400);
-				if(panelHeight < 300) setPrefHeight(300);
-
 			}
 		});
 		
@@ -76,7 +77,6 @@ public class AppointmentBox extends Pane {
 			public void handle(MouseEvent event) {
 				setCursor(Cursor.DEFAULT);
 				setStyle(color.styleDefault);
-				setPrefSize(panelWidth, panelHeight);
 			}
 		});
 		
@@ -84,7 +84,24 @@ public class AppointmentBox extends Pane {
 			@Override
 			public void handle(MouseEvent event) {
 				setCursor(Cursor.HAND);
-				getChildren().remove(this);
+				if(!active){
+					active = true;
+					panelWidth = getPrefWidth();
+					panelHeight = getPrefHeight();
+					panelX = getLayoutX();
+					panelY = getLayoutY();
+					toFront();
+					if(panelWidth < 400) setPrefWidth(400);
+					if(panelHeight < 200) setPrefHeight(200);
+					if(panelX > 310) setLayoutX(310);
+					if(panelY > 1250) setLayoutY(1250);
+				}
+				else{
+					active = false;
+					setPrefSize(panelWidth, panelHeight);
+					setLayoutX(panelX);
+					setLayoutY(panelY);
+				}
 			}
 		});
 		}
