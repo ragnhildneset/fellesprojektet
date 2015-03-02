@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Employee;
+
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -46,7 +49,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-public class CalendarMain extends Application implements Initializable {
+public class CalendarMain extends Application {
 	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 	
 	@FXML
@@ -74,10 +77,16 @@ public class CalendarMain extends Application implements Initializable {
 	private Button selectNoneGroupsBtn;
 	
 	@FXML
+	private Button addAppointmentBtn;
+	
+	@FXML
 	private Label monthLabel;
 	
 	@FXML
 	private Label yearLabel;
+	
+	@FXML
+	private Label calendarNameLabel;
 	
 	private Scene scene;
 	
@@ -89,27 +98,41 @@ public class CalendarMain extends Application implements Initializable {
 	
 	private LocalDate someDate = LocalDate.now();
 	
+	private Employee employee;
+	
+	public CalendarMain() {
+		// DEBUG: Use first employee
+		this.employee = DBConnect.getEmployees().values().iterator().next();
+	}
+	
+	public CalendarMain(Employee employee) {
+		this.employee = employee;
+	}
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		URL url = getClass().getResource("/com/gruppe16/main/mainPane.fxml");
+		URL url = getClass().getResource("/com/gruppe16/main/MainPane.fxml");
 		
 		FXMLLoader fxmlLoader = new FXMLLoader();
 		fxmlLoader.setLocation(url);
 		fxmlLoader.setController(this);
 		try {
-			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1000, 750);
+			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1005, 750);
 			scene.getRoot().setStyle("-fx-background-color: linear-gradient(#FFFFFF, #EEEEEE)");
 			
 			this.primaryStage = primaryStage;
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
-			primaryStage.setTitle("name's Calendar");
+			primaryStage.setTitle(employee.getFirstName() + "'s Calendar");
 			primaryStage.show();
+			primaryStage.centerOnScreen();
 
 			redraw();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		calendarNameLabel.setText(employee.getName());
 
 		calendarView = new CalendarView(this);
 		dayPlanView = new DayPlanView(this);
@@ -140,6 +163,19 @@ public class CalendarMain extends Application implements Initializable {
 					checkBox.setSelected(false);
 				}
 			}
+		});
+		
+		addAppointmentBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent evnet) {
+				AddAppointment appointment = new AddAppointment(scene.getWindow());
+				try {
+					appointment.start(new Stage());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
 		});
 	}
 	
@@ -175,6 +211,7 @@ public class CalendarMain extends Application implements Initializable {
 	
 	void showDayPlan(Date date) {
 		dayPlanView.setDate(date);
+		dayPlanView.showAppointments(employee);
 		mainPane.setCenter(dayPlanView);
 		
 		backToCalendarBtn.setVisible(true);
@@ -241,10 +278,6 @@ public class CalendarMain extends Application implements Initializable {
 	public void redraw() {
 		primaryStage.setScene(null);
 		primaryStage.setScene(scene);
-	}
-	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
 	}
 	
 	public static void main(String[] args) {

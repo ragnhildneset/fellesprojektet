@@ -22,7 +22,7 @@ public abstract class Login {
 				id = rs.getInt("employeeid");
 			}
 			if(password.equals(passString)){
-				login = Employee.getEmployee(id);
+				login = DBConnect.getEmployees().get(id);
 				System.out.println("Hello, " + login.getFirstName() + "!");
 				return true;
 			}

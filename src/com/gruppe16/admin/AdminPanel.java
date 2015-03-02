@@ -71,7 +71,7 @@ public class AdminPanel extends Application implements Initializable {
 		roomIDCol.setCellValueFactory(new PropertyValueFactory<Room, String>("roomid"));
 		capacityCol.setCellValueFactory(new PropertyValueFactory<Room, String>("capacity"));
 		roomnameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
-		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));
+		roomdescrCol.setCellValueFactory(new PropertyValueFactory<RoAom, String>("description"));
 		roombuildingidCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingid"));
 
 		roomlistTable.setItems(data);

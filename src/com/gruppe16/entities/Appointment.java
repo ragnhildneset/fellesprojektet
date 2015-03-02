@@ -42,7 +42,7 @@ public class Appointment {
 	}
 	
 	public Appointment(int appoinmentID, String title, String description,
-			LocalDate date, LocalTime fromTime, LocalTime toTime, int ownerid, LocalTime creationtime) {
+			LocalDate date, LocalTime toTime, LocalTime fromTime, int ownerid, LocalTime creationtime) {
 		Appointment.appointments.put(appoinmentID, this);
 		this.appoinmentID = appoinmentID;
 		this.title = title;
@@ -96,6 +96,14 @@ public class Appointment {
 	
 	public static Appointment get(int id){
 		return appointments.get(id);
+	}
+	
+	public int getOwnerID(){
+		return ownerid;
+	}
+	
+	public LocalDate getAppDate(){
+		return date;
 	}
 	
 }

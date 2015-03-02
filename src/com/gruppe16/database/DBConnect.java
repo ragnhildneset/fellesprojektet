@@ -21,7 +21,9 @@ public class DBConnect {
 	private static Connection con = null;
 	
 	public static HashMap<Integer,Employee> getEmployees(){
-		String q = "select E.employeeid, E.givenName, E.surname, E.email, U.username from Employee as E, UserAndID as U where U.employeeid = E.employeeid;";
+
+		String q = "SELECT E.employeeid, E.givenName, E.surname, E.email, U.username FROM Employee as E, UserAndID as U WHERE U.employeeid = E.employeeid;";
+
 		HashMap<Integer, Employee> map = new HashMap<Integer, Employee>();
 		try{
 			PreparedStatement p = getConnection().prepareStatement(q);
