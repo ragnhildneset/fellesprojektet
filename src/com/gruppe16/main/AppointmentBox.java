@@ -2,14 +2,19 @@ package com.gruppe16.main;
 
 import java.time.LocalTime;
 
+import com.gruppe16.entities.Appointment;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
 public class AppointmentBox extends Pane {
@@ -42,8 +47,7 @@ public class AppointmentBox extends Pane {
 	    }
 	}
 	
-	private int appointmentID;
-	private LocalTime start, end;
+	private Appointment appointment;
 	private double panelWidth;
 	private double panelHeight;
 	private double panelX;
@@ -51,18 +55,28 @@ public class AppointmentBox extends Pane {
 	private boolean active = false;
 	private panelColors color = panelColors.RED;
 	
-	public AppointmentBox(int appointmentID, LocalTime start, LocalTime end, String name, panelColors color){
-		this.appointmentID = appointmentID;
-		this.start = start;
-		this.end = end;
-		this.color = color;
+	public AppointmentBox(Appointment appointment, panelColors color){
+		this.appointment = appointment;
+		int ID = this.appointment.getID();
+		LocalTime start = this.appointment.getFromTime();
+		LocalTime end = this.appointment.getToTime();
+		String name = this.appointment.getTitle();
 		
 		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
 		int appointmentStart = start.toSecondOfDay()/60;
 		setStyle(this.color.styleDefault);
 		setPrefSize(710, Math.max(appointmentTime, 30));
 		relocate(0, appointmentStart);
-		getChildren().add(new Label(name));
+		Label titleLabel = new Label("Appointment: " + name);
+		titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		Label descriptionTitleLabel = new Label("Description");
+		descriptionTitleLabel.setLayoutY(25);
+		descriptionTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+		descriptionTitleLabel.setVisible(false);
+		Label descriptionLabel = new Label(appointment.getDescription());
+		descriptionLabel.setLayoutY(40);
+		descriptionLabel.setVisible(false);
+		getChildren().addAll(titleLabel, descriptionTitleLabel, descriptionLabel);
 		setId(name);
 
 		setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -97,12 +111,16 @@ public class AppointmentBox extends Pane {
 					if(panelHeight < 200) setPrefHeight(200);
 					if(panelX > 310) setLayoutX(310);
 					if(panelY > 1250) setLayoutY(1250);
+					descriptionTitleLabel.setVisible(true);
+					descriptionLabel.setVisible(true);
 				}
 				else{
 					active = false;
 					setPrefSize(panelWidth, panelHeight);
 					setLayoutX(panelX);
 					setLayoutY(panelY);
+					descriptionTitleLabel.setVisible(false);
+					descriptionLabel.setVisible(false);
 				}
 			}
 		});
@@ -113,11 +131,11 @@ public class AppointmentBox extends Pane {
 	}
 	
 	public LocalTime getStart(){
-		return start;
+		return appointment.getFromTime();
 	}
 	
 	public LocalTime getEnd(){
-		return end;
+		return appointment.getToTime();
 	}
 	
 	public void toDefaultSize(){
@@ -125,7 +143,7 @@ public class AppointmentBox extends Pane {
 	}
 	
 	public int getID(){
-		return appointmentID;
+		return appointment.getID();
 	}
 	
 }

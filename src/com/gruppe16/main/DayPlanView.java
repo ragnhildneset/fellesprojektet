@@ -133,11 +133,7 @@ public class DayPlanView extends ScrollPane {
 	}
 	
 	public void addAppointment(Appointment appointment, panelColors color){
-		int ID = appointment.getID();
-		LocalTime start = appointment.getFromTime();
-		LocalTime end = appointment.getToTime();
-		String name = appointment.getTitle();
-		AppointmentBox appointmentBox = new AppointmentBox(ID, start, end, name, color);
+		AppointmentBox appointmentBox = new AppointmentBox(appointment, color);
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	
