@@ -115,7 +115,7 @@ public class DayPlanView extends ScrollPane {
 	}
 	
 	public Date getDate() {
-		return new Date();
+		return date;
 	}
 	
 	void nextDay() {
