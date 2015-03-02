@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 
@@ -26,7 +27,7 @@ public class Main extends Application implements Initializable {
 	private TextField user;
 	
 	@FXML
-	private TextField pass;
+	private PasswordField pass;
 	
 	@FXML
 	private Button loginBtn;
