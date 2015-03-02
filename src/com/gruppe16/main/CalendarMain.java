@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Employee;
+
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -46,7 +49,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-public class CalendarMain extends Application implements Initializable {
+public class CalendarMain extends Application {
 	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 	
 	@FXML
@@ -79,6 +82,9 @@ public class CalendarMain extends Application implements Initializable {
 	@FXML
 	private Label yearLabel;
 	
+	@FXML
+	private Label calendarNameLabel;
+	
 	private Scene scene;
 	
 	private Stage primaryStage;
@@ -88,6 +94,17 @@ public class CalendarMain extends Application implements Initializable {
 	private DayPlanView dayPlanView;
 	
 	private LocalDate someDate = LocalDate.now();
+	
+	private Employee employee;
+	
+	public CalendarMain() {
+		// DEBUG: Use first employee
+		this.employee = DBConnect.getEmployees().values().iterator().next();
+	}
+	
+	public CalendarMain(Employee employee) {
+		this.employee = employee;
+	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -103,7 +120,7 @@ public class CalendarMain extends Application implements Initializable {
 			this.primaryStage = primaryStage;
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
-			primaryStage.setTitle("name's Calendar");
+			primaryStage.setTitle(employee.getFirstName() + "'s Calendar");
 			primaryStage.show();
 			primaryStage.centerOnScreen();
 
@@ -111,6 +128,8 @@ public class CalendarMain extends Application implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		calendarNameLabel.setText(employee.getName());
 
 		calendarView = new CalendarView(this);
 		dayPlanView = new DayPlanView(this);
@@ -242,10 +261,6 @@ public class CalendarMain extends Application implements Initializable {
 	public void redraw() {
 		primaryStage.setScene(null);
 		primaryStage.setScene(scene);
-	}
-	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
 	}
 	
 	public static void main(String[] args) {

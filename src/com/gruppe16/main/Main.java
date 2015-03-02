@@ -40,7 +40,8 @@ public class Main extends Application implements Initializable {
 			public void handle(ActionEvent event) {
 				if(Login.login(user.getText(), pass.getText())) {
 					try {
-						(new CalendarMain()).start(stage);
+						CalendarMain calendar = new CalendarMain(Login.getCurrentUser());
+						calendar.start(stage);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
