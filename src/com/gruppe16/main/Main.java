@@ -54,7 +54,7 @@ public class Main extends Application implements Initializable {
 	public void start(Stage stage) throws Exception {
 		Main.stage = stage;
 		try{
-			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/main/login.fxml")));
+			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/main/Login.fxml")));
 			stage.setScene(scene);
 			stage.show();
 		} catch (Exception e) {

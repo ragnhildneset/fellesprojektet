@@ -77,6 +77,9 @@ public class CalendarMain extends Application {
 	private Button selectNoneGroupsBtn;
 	
 	@FXML
+	private Button addAppointmentBtn;
+	
+	@FXML
 	private Label monthLabel;
 	
 	@FXML
@@ -108,7 +111,7 @@ public class CalendarMain extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		URL url = getClass().getResource("/com/gruppe16/main/mainPane.fxml");
+		URL url = getClass().getResource("/com/gruppe16/main/MainPane.fxml");
 		
 		FXMLLoader fxmlLoader = new FXMLLoader();
 		fxmlLoader.setLocation(url);
@@ -160,6 +163,19 @@ public class CalendarMain extends Application {
 					checkBox.setSelected(false);
 				}
 			}
+		});
+		
+		addAppointmentBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent evnet) {
+				AddAppointment appointment = new AddAppointment(scene.getWindow());
+				try {
+					appointment.start(new Stage());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
 		});
 	}
 	
