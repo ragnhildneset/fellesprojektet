@@ -225,7 +225,7 @@ public class DayPlanView extends ScrollPane {
 		HashMap<Integer, Appointment> appointments = DBConnect.getAppointments();
 		LocalDate date = this.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		for (Appointment currentApp : appointments.values()){
-			if(e.getKey() == currentApp.getOwnerID() && currentApp.getAppDate().equals(date)){
+			if(e.getEmployeeID() == currentApp.getOwnerID() && currentApp.getAppDate().equals(date)){
 				boolean notContained = true;
 				for (Node aBoxes : appointmentPane.getChildren()) {
 					if(aBoxes instanceof AppointmentBox) {

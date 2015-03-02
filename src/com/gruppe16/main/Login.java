@@ -39,7 +39,7 @@ public abstract class Login {
 	}
 	
 	public static int getCurrentUserID() throws Exception {
-		return login.getKey();
+		return login.getEmployeeID();
 	}
 
 }
