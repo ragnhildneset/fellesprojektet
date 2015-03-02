@@ -105,6 +105,7 @@ public class CalendarMain extends Application implements Initializable {
 			primaryStage.setResizable(false);
 			primaryStage.setTitle("name's Calendar");
 			primaryStage.show();
+			primaryStage.centerOnScreen();
 
 			redraw();
 		} catch (IOException e) {
