@@ -3,9 +3,12 @@ package com.gruppe16.main;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
+import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.main.AppointmentBox.panelColors;
@@ -33,10 +36,11 @@ import javafx.scene.text.Font;
 
 public class DayPlanView extends ScrollPane {
 	
+	private static String[] DAY_NAMES = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 	private Date date;
 	private Pane appointmentPane;
 	private Label dateTitle;
-	//private HBox[] timeBoxes = new HBox[24];
+	private Employee employee;
 	
 	public DayPlanView(CalendarMain mainPane){
 		setPrefSize(800, 625);
@@ -102,26 +106,12 @@ public class DayPlanView extends ScrollPane {
 		
 		this.setPannable(true);
 		this.appointmentPane = appointmentPane;
-		addAppointment(LocalTime.of(1, 00), LocalTime.of(3, 30), "test01", panelColors.RED);
-		addAppointment(LocalTime.of(3, 00), LocalTime.of(5, 10), "test02", panelColors.GREEN);
-		addAppointment(LocalTime.of(1, 00), LocalTime.of(3, 00), "test03", panelColors.TURQUOISE);
-		addAppointment(LocalTime.of(2, 00), LocalTime.of(2, 30), "test04", panelColors.BLUE);
-		addAppointment(LocalTime.of(7, 00), LocalTime.of(9, 00), "test05", panelColors.GREY);
-		addAppointment(LocalTime.of(3, 00), LocalTime.of(5, 30), "test06", panelColors.ORANGE);
-		addAppointment(LocalTime.of(6, 00), LocalTime.of(7, 30), "test07", panelColors.GREEN);
-		addAppointment(LocalTime.of(12, 00), LocalTime.of(15, 00), "test08", panelColors.PURPLE);
-		addAppointment(LocalTime.of(13, 15), LocalTime.of(13, 45), "test09", panelColors.BROWN);
-		addAppointment(LocalTime.of(18, 00), LocalTime.of(19, 00), "test10", panelColors.BLUE);
-		addAppointment(LocalTime.of(15, 10), LocalTime.of(15, 20), "test11", panelColors.GREY);
-		addAppointment(LocalTime.of(22, 40), LocalTime.of(23, 53), "test12", panelColors.RED);
-		addAppointment(LocalTime.of(10, 00), LocalTime.of(11, 50), "test13", panelColors.ORANGE);
-		arrangeAppointments();
 		requestLayout();
 	}
 	
 	public void setDate(Date date){
 		this.date = date;
-		dateTitle.setText(this.date.toString());
+		dateTitle.setText(DAY_NAMES[this.date.getDay()]);
 	}
 	
 	public Date getDate() {
@@ -132,16 +122,22 @@ public class DayPlanView extends ScrollPane {
 		Date date = this.date;
 		date.setDate(this.date.getDate()+1);
 		setDate(date);
+		showAppointments(employee);
 	}
 	
 	void prevDay() {
 		Date date = this.date;
 		date.setDate(this.date.getDate()-1);
 		setDate(date);
+		showAppointments(employee);
 	}
 	
-	public void addAppointment(LocalTime start, LocalTime end, String name, panelColors color){
-		AppointmentBox appointmentBox = new AppointmentBox(start, end, name, color);
+	public void addAppointment(Appointment appointment, panelColors color){
+		int ID = appointment.getID();
+		LocalTime start = appointment.getFromTime();
+		LocalTime end = appointment.getToTime();
+		String name = appointment.getTitle();
+		AppointmentBox appointmentBox = new AppointmentBox(ID, start, end, name, color);
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	
@@ -151,6 +147,7 @@ public class DayPlanView extends ScrollPane {
 
 		for (Node aBoxes : appointmentPane.getChildren()) {
 			if(aBoxes instanceof AppointmentBox) {
+				((AppointmentBox) aBoxes).toDefaultSize();
 				appointmentBoxes.add((AppointmentBox) aBoxes);
 			}
 		}
@@ -227,8 +224,37 @@ public class DayPlanView extends ScrollPane {
 	}
 	
 	public void showAppointments(Employee e) {
-		//NOTHING :D
+		employee = e;
+		removeAppointments();
+		HashMap<Integer, Appointment> appointments = DBConnect.getAppointments();
+		LocalDate date = this.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		for (Appointment currentApp : appointments.values()){
+			if(e.getKey() == currentApp.getOwnerID() && currentApp.getAppDate().equals(date)){
+				boolean notContained = true;
+				for (Node aBoxes : appointmentPane.getChildren()) {
+					if(aBoxes instanceof AppointmentBox) {
+						if(((AppointmentBox) aBoxes).getID() == currentApp.getID()){
+							notContained = false;
+							break;
+						}
+					}
+				}
+				if(notContained) addAppointment(currentApp, panelColors.RED);
+			}
+		}
+		arrangeAppointments();
 	}
+	
+	private void removeAppointments(){
+		ArrayList<AppointmentBox> appointmentBoxes = new ArrayList<AppointmentBox>();
+		for (Node aBoxes : appointmentPane.getChildren()) {
+			if(aBoxes instanceof AppointmentBox) {
+				appointmentBoxes.add((AppointmentBox) aBoxes);
+			}
+		}
+		appointmentPane.getChildren().removeAll(appointmentBoxes);
+	}
+	
 	
 }
 

@@ -211,6 +211,7 @@ public class CalendarMain extends Application {
 	
 	void showDayPlan(Date date) {
 		dayPlanView.setDate(date);
+		dayPlanView.showAppointments(employee);
 		mainPane.setCenter(dayPlanView);
 		
 		backToCalendarBtn.setVisible(true);

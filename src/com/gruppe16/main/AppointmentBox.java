@@ -42,6 +42,7 @@ public class AppointmentBox extends Pane {
 	    }
 	}
 	
+	private int appointmentID;
 	private LocalTime start, end;
 	private double panelWidth;
 	private double panelHeight;
@@ -50,7 +51,8 @@ public class AppointmentBox extends Pane {
 	private boolean active = false;
 	private panelColors color = panelColors.RED;
 	
-	public AppointmentBox(LocalTime start, LocalTime end, String name, panelColors color){
+	public AppointmentBox(int appointmentID, LocalTime start, LocalTime end, String name, panelColors color){
+		this.appointmentID = appointmentID;
 		this.start = start;
 		this.end = end;
 		this.color = color;
@@ -116,6 +118,14 @@ public class AppointmentBox extends Pane {
 	
 	public LocalTime getEnd(){
 		return end;
+	}
+	
+	public void toDefaultSize(){
+		setPrefWidth(710);
+	}
+	
+	public int getID(){
+		return appointmentID;
 	}
 	
 }
