@@ -1,16 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="293.0" prefWidth="432.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gruppe16.main.Main">
+<VBox prefHeight="150.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gruppe16.main.Main">
    <children>
-      <TextField layoutX="142.0" layoutY="85.0" prefHeight="25.0" prefWidth="248.0" fx:id="user"/>
-      <Label layoutX="50.0" layoutY="89.0" text="Username:" />
-      <TextField layoutX="142.0" layoutY="147.0" prefHeight="25.0" prefWidth="248.0" fx:id="pass"/>
-      <Label layoutX="50.0" layoutY="151.0" text="Password:" />
-      <Button layoutX="338.0" layoutY="206.0" mnemonicParsing="false" text="Login" fx:id="loginBtn"/>
+      <HBox alignment="CENTER">
+         <children>
+            <Label text="Calendar login">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox>
+         <children>
+            <Label prefWidth="80.0" text="Username:" />
+            <TextField fx:id="user" prefHeight="25.0" prefWidth="230.0" />
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="127.0">
+         <children>
+            <Label prefWidth="80.0" text="Password:" />
+            <TextField fx:id="pass" prefWidth="230.0" />
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="TOP_RIGHT" layoutX="10.0" layoutY="127.0">
+         <children>
+            <Button fx:id="loginBtn" mnemonicParsing="false" text="Login" />
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
    </children>
-</AnchorPane>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>

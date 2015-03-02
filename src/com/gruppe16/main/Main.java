@@ -48,6 +48,7 @@ public class Main extends Application implements Initializable {
 				}
 			}
 		});
+		loginBtn.setDefaultButton(true);
 	}
 
 	@Override
