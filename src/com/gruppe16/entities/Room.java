@@ -5,41 +5,59 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import com.gruppe16.database.DBConnect;
 import com.mysql.jdbc.ResultSet;
 
 public class Room {
-	String name;
-	int capacity;
+	SimpleStringProperty name;
+	SimpleIntegerProperty capacity;
+	SimpleIntegerProperty roomid;
+	SimpleStringProperty description;
+	SimpleIntegerProperty buildingid;
+	
+	
+	
 	
 	private static HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
 	
 	
 	public Room(int key, int capacity, String name, String descr, int buildingID ){
-		setName(name);
-		setCapacity(capacity);
+
+		this.name = new SimpleStringProperty(name);
+		this.capacity = new SimpleIntegerProperty(capacity);
+		this.roomid = new SimpleIntegerProperty(key);
+		this.description = new SimpleStringProperty(descr);
+		this.buildingid = new SimpleIntegerProperty(buildingID);
 		rooms.put(key, this);
-		
 	}
 	
 	public static void main(String[] args){
 		System.out.println(getRooms());
 	}
-
 	
 	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
+		return name.get();
 	}
 	
 	public int getCapacity() {
-		return capacity;
+		return capacity.get();
 	}
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
+	
+	public int getID(){
+		return roomid.get();
 	}
+	
+	public String getDescription(){
+		return description.get();
+	}
+	
+	public int getBuildingID(){
+		return buildingid.get();
+	}
+	
 	public static String[] getRooms(){
 		String[] ls = new String[rooms.size()];
 		int c = 0;

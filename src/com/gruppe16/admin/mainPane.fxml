@@ -75,12 +75,13 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView layoutX="14.0" layoutY="14.0" prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="roomlistTable" layoutX="14.0" layoutY="14.0" prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="RoomID" />
-                            <TableColumn prefWidth="75.0" text="Capacity" />
-                              <TableColumn prefWidth="75.0" text="Name" />
-                              <TableColumn prefWidth="75.0" text="Description" />
+                            <TableColumn fx:id="roomIDCol" prefWidth="75.0" text="RoomID" />
+                            <TableColumn fx:id="capacityCol" prefWidth="75.0" text="Capacity" />
+                              <TableColumn fx:id="roomnameCol" prefWidth="75.0" text="Name" />
+                              <TableColumn fx:id="roomdescrCol" prefWidth="75.0" text="Description" />
+                              <TableColumn fx:id="roombuildingidCol" prefWidth="75.0" text="Building ID" />
                               <TableColumn prefWidth="75.0" text="Delete" />
                           </columns>
                         </TableView>

@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,11 +17,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Room;
 
 public class AdminPanel extends Application implements Initializable {
 
@@ -49,8 +56,27 @@ public class AdminPanel extends Application implements Initializable {
 	@FXML TextField b_lat;
 	@FXML TextField b_long;
 	
+    @FXML private TableView<Room> roomlistTable;
+    @FXML private TableColumn<Room, String> roomIDCol;
+    @FXML private TableColumn<Room, String> capacityCol;
+    @FXML private TableColumn<Room, String> roomnameCol;
+    @FXML private TableColumn<Room, String> roomdescrCol;
+    @FXML private TableColumn<Room, String> roombuildingidCol;
+  
+    
+    
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		ObservableList<Room> data = FXCollections.observableArrayList(DBConnect.getRooms().values());
+		roomIDCol.setCellValueFactory(new PropertyValueFactory<Room, String>("roomid"));
+		capacityCol.setCellValueFactory(new PropertyValueFactory<Room, String>("capacity"));
+		roomnameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
+		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));
+		roombuildingidCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingid"));
+
+		roomlistTable.setItems(data);
+		
+		
 		
 		e_add.setOnAction(new EventHandler<ActionEvent>(){
 
@@ -170,6 +196,10 @@ public class AdminPanel extends Application implements Initializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void fillRoomTable(){
+		
 	}
 	
 }
