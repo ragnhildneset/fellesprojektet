@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -42,7 +43,8 @@ public class Main extends Application implements Initializable {
 				if(Login.login(user.getText(), pass.getText())) {
 					try {
 						CalendarMain calendar = new CalendarMain(Login.getCurrentUser());
-						calendar.start(stage);
+						stage.close();
+						calendar.start(new Stage());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -57,6 +59,9 @@ public class Main extends Application implements Initializable {
 		Main.stage = stage;
 		try{
 			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/main/Login.fxml")));
+			stage.initStyle(StageStyle.UTILITY);
+			stage.setTitle("Calendar login");
+			stage.setResizable(false);
 			stage.setScene(scene);
 			stage.show();
 		} catch (Exception e) {

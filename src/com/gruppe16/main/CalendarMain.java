@@ -47,6 +47,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class CalendarMain extends Application {
@@ -124,10 +125,7 @@ public class CalendarMain extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
 			primaryStage.setTitle(employee.getFirstName() + "'s Calendar");
-			primaryStage.show();
 			primaryStage.centerOnScreen();
-
-			redraw();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -136,14 +134,12 @@ public class CalendarMain extends Application {
 
 		calendarView = new CalendarView(this);
 		dayPlanView = new DayPlanView(this);
-
-		/*dayPlanView = new DayPlanView(someDate);
-		dayPlanView.addAppointment(LocalTime.of(1, 0), LocalTime.of(2, 30));
-		mainPane.setCenter(dayPlanView);*/
 		
 		showCalendar(new Date());
-		
 		updateGroups();
+
+		primaryStage.show();
+		redraw();
 
 		selectAllGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
