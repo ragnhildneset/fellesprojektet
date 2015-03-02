@@ -2,11 +2,20 @@ package com.gruppe16.entities;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import com.gruppe16.database.DBConnect;
 import com.mysql.jdbc.ResultSet;
 
 public class Employee {
 	
+
+	SimpleStringProperty firstName;
+	SimpleStringProperty lastName;
+	SimpleStringProperty email;
+	SimpleStringProperty username;
+	SimpleIntegerProperty employeeid;
 	
 	private static HashMap<Integer, Employee> employees = new HashMap<Integer, Employee>();
 	
@@ -24,19 +33,14 @@ public class Employee {
 		return employees.get(key);
 	}
 	
-	String firstName;
-	String lastName;
-	String email;
-	String username;
-	int key;
 	
 	public Employee(int key, String firstName, String lastName, String email, String username) {
 		employees.put(key, this);
-		this.key = key;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.username = username;
+		this.employeeid =  new SimpleIntegerProperty(key);
+		this.firstName = new SimpleStringProperty(firstName);
+		this.lastName =  new SimpleStringProperty(lastName);
+		this.email =  new SimpleStringProperty(email);
+		this.username = new SimpleStringProperty(username);
 	}
 	
 	public String getName(){
@@ -44,23 +48,23 @@ public class Employee {
 	}
 
 	public String getFirstName() {
-		return firstName;
+		return firstName.get();
 	}
 
 	public String getLastName() {
-		return lastName;
+		return lastName.get();
 	}
 
 	public String getEmail() {
-		return email;
+		return email.get();
 	}
 
 	public String getUsername() {
-		return username;
+		return username.get();
 	}
 
-	public int getKey() {
-		return key;
+	public int getEmployeeID() {
+		return employeeid.get();
 	}
 
 

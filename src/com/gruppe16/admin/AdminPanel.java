@@ -63,19 +63,31 @@ public class AdminPanel extends Application implements Initializable {
     @FXML private TableColumn<Room, String> roomdescrCol;
     @FXML private TableColumn<Room, String> roombuildingidCol;
   
+    @FXML private TableView<Employee> employeelistTable;
+    @FXML private TableColumn<Employee, String> employeeIDCol;
+    @FXML private TableColumn<Employee, String> firstNameCol;
+    @FXML private TableColumn<Employee, String> lastNameCol;
+    @FXML private TableColumn<Employee, String> usernameCol;
     
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ObservableList<Room> data = FXCollections.observableArrayList(DBConnect.getRooms().values());
-		roomIDCol.setCellValueFactory(new PropertyValueFactory<Room, String>("roomid"));
+		ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
+		roomIDCol.setCellValueFactory(new PropertyValueFactory<Room, String>("ID"));
 		capacityCol.setCellValueFactory(new PropertyValueFactory<Room, String>("capacity"));
 		roomnameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
-		roomdescrCol.setCellValueFactory(new PropertyValueFactory<RoAom, String>("description"));
-		roombuildingidCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingid"));
+		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));
+		roombuildingidCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingID"));
 
-		roomlistTable.setItems(data);
+		roomlistTable.setItems(roomdata);
 		
+		ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees().values());
+		employeeIDCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("employeeID"));
+		firstNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("firstName"));
+		lastNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("lastName"));
+		usernameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("username"));
+
+		employeelistTable.setItems(employeedata);
 		
 		
 		e_add.setOnAction(new EventHandler<ActionEvent>(){

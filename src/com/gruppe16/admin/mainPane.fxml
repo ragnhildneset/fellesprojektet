@@ -93,12 +93,12 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView prefHeight="371.0" prefWidth="600.0">
+                        <TableView fx:id="employeelistTable" prefHeight="371.0" prefWidth="600.0">
                            <columns>
-                              <TableColumn prefWidth="75.0" text="EmployeeID" />
-                              <TableColumn prefWidth="75.0" text="First Name" />
-                              <TableColumn prefWidth="75.0" text="Last Name" />
-                              <TableColumn prefWidth="75.0" text="Username" />
+                              <TableColumn fx:id="employeeIDCol" prefWidth="75.0" text="EmployeeID" />
+                              <TableColumn fx:id="firstNameCol" prefWidth="75.0" text="First Name" />
+                              <TableColumn fx:id="lastNameCol" prefWidth="75.0" text="Last Name" />
+                              <TableColumn fx:id="usernameCol" prefWidth="75.0" text="Username" />
                               <TableColumn prefWidth="75.0" text="Delete" />
                            </columns>
                         </TableView>
