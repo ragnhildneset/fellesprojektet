@@ -40,10 +40,11 @@ public class DayPlanView extends ScrollPane {
 	
 	public DayPlanView(CalendarMain mainPane){
 		setPrefSize(800, 625);
+		setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		
 		VBox bottomPane = new VBox();
-		bottomPane.setPrefSize(790, 1500);
+		bottomPane.setPrefSize(803, 1500);
 		bottomPane.setStyle("-fx-background-color: #FFFFFF;");
 		
 		//Create Title Pane
@@ -61,6 +62,7 @@ public class DayPlanView extends ScrollPane {
 		lowerPane.setPrefSize(790, 1500);
 		VBox leftPane = new VBox();
 		leftPane.setPrefSize(80, 1500);
+		leftPane.setPadding(new Insets(0,5,0,0));
 		VBox rightPane = new VBox();
 		rightPane.setPrefSize(710, 1500);
 		Pane appointmentPane = new Pane();
@@ -130,14 +132,12 @@ public class DayPlanView extends ScrollPane {
 		Date date = this.date;
 		date.setDate(this.date.getDate()+1);
 		setDate(date);
-		System.out.println("Next Day");
 	}
 	
 	void prevDay() {
 		Date date = this.date;
 		date.setDate(this.date.getDate()-1);
 		setDate(date);
-		System.out.println("Prev Day");
 	}
 	
 	public void addAppointment(LocalTime start, LocalTime end, String name, panelColors color){
