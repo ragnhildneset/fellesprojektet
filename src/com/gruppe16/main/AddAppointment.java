@@ -15,7 +15,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -72,13 +74,40 @@ public class AddAppointment extends Application implements Initializable {
 		sendBtn.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event) {
-				try{
-					//Appointment.addNew(formaal.getText(), description.getText(), dateid.getValue(), 
-					//		fraid.getText() + ":00", tilid.getText() + ":00");
-					stage.close();
-				} catch (Exception e) {
-					e.printStackTrace();
+				/*if(!isValidDate()) {
 				}
+				
+				if(!isValidFromTime()) {
+					
+				}
+				
+				if(!isValidTitle()) {
+					
+				}
+				
+				if(!isValidDesc()) {
+					
+				}
+				
+				if(!isValidAttendees()) {
+					
+				}*/
+				
+				boolean valid = true;
+				if(titleTextField.getText().isEmpty()) {
+					titleTextField.setEffect(new InnerShadow(4.0, Color.RED));
+					valid = false;
+				}
+				
+				if(valid) {
+					stage.close();
+				}
+			}
+		});
+		cancelBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				stage.close();
 			}
 		});
 	}
