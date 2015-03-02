@@ -257,7 +257,7 @@ public class CalendarMain extends Application {
 		
 		hbox = new HBox();
 		CheckBox checkBox = new CheckBox("Group 3");
-		checkBox.setPadding(new Insets(0,70,0,0));
+		checkBox.setPadding(new Insets(0,80,0,0));
 		hbox.getChildren().add(checkBox);
 		
 		ImageView button = new ImageView("http://findicons.com/files/icons/2226/matte_basic/16/edit.png");
