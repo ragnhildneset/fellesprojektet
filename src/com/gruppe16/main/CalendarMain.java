@@ -165,6 +165,7 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(ActionEvent evnet) {
 				AddAppointment appointment = new AddAppointment(scene.getWindow());
+				appointment.setStartDate(calendarShown ? new Date() : dayPlanView.getDate());
 				try {
 					appointment.start(new Stage());
 				} catch (Exception e) {
@@ -174,8 +175,11 @@ public class CalendarMain extends Application {
 			
 		});
 	}
+	boolean calendarShown = true;
 	
 	void showCalendar(Date date) {
+		calendarShown = true;
+		
 		calendarView.setDate(date);
 		mainPane.setCenter(calendarView);
 		
@@ -206,6 +210,8 @@ public class CalendarMain extends Application {
 	}
 	
 	void showDayPlan(Date date) {
+		calendarShown = false;
+		
 		dayPlanView.setDate(date);
 		dayPlanView.showAppointments(employee);
 		mainPane.setCenter(dayPlanView);
