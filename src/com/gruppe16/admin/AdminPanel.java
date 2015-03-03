@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,12 +19,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Employee;
@@ -62,23 +67,95 @@ public class AdminPanel extends Application implements Initializable {
     @FXML private TableColumn<Room, String> roomnameCol;
     @FXML private TableColumn<Room, String> roomdescrCol;
     @FXML private TableColumn<Room, String> roombuildingidCol;
+    @FXML private TableColumn<Room, Boolean> r_delete;
   
     @FXML private TableView<Employee> employeelistTable;
     @FXML private TableColumn<Employee, String> employeeIDCol;
     @FXML private TableColumn<Employee, String> firstNameCol;
     @FXML private TableColumn<Employee, String> lastNameCol;
     @FXML private TableColumn<Employee, String> usernameCol;
+    @FXML private TableColumn<Employee, Boolean> e_delete;
+    
     
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
 		ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
+		
+		class DeleteRoomCell extends TableCell<Room, Boolean> {
+	    	final Button b = new Button("Delete");
+	    	DeleteRoomCell(){
+	    		b.setOnMousePressed(new EventHandler<MouseEvent>(){
+	    			@Override
+	    			public void handle(MouseEvent mouseEvent){
+	    				Room r = (Room) DeleteRoomCell.this.getTableView().getItems().get(DeleteRoomCell.this.getIndex());
+	    				DBConnect.deleteRoom(r.getID());
+	    				roomdata.remove(r);
+	    				System.out.println("HELLO");
+	    			}
+	    		});
+	    	}
+	    	@Override
+	        protected void updateItem(Boolean t, boolean empty) {
+	            super.updateItem(t, empty);
+	            if(!empty){
+	                setGraphic(b);
+	            } else {
+	            	this.setGraphic(null);
+	            }
+	        }
+	    }
+		
+		class DeleteEmployeeCell extends TableCell<Employee, Boolean> {
+	    	final Button b = new Button("Delete");
+	    	DeleteEmployeeCell(){
+	    		b.setOnMousePressed(new EventHandler<MouseEvent>(){
+	    			@Override
+	    			public void handle(MouseEvent mouseEvent){
+	    				Employee r = (Employee) DeleteEmployeeCell.this.getTableView().getItems().get(DeleteEmployeeCell.this.getIndex());
+	    				DBConnect.deleteEmployee(r.getEmployeeID());
+	    				roomdata.remove(r);
+	    				System.out.println("HELLO");
+	    			}
+	    		});
+	    	}
+	    	@Override
+	        protected void updateItem(Boolean t, boolean empty) {
+	            super.updateItem(t, empty);
+	            if(!empty){
+	                setGraphic(b);
+	            } else {
+	            	this.setGraphic(null);
+	            }
+	        }
+	    }
+		
 		roomIDCol.setCellValueFactory(new PropertyValueFactory<Room, String>("ID"));
 		capacityCol.setCellValueFactory(new PropertyValueFactory<Room, String>("capacity"));
 		roomnameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
 		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));
 		roombuildingidCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingID"));
-
+		
+		r_delete.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<Room, Boolean>, 
+                ObservableValue<Boolean>>() {
+ 
+            @Override
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Room, Boolean> p) {
+                return new SimpleBooleanProperty(p.getValue() != null);
+            }
+        });
+		r_delete.setCellFactory(
+                new Callback<TableColumn<Room, Boolean>, TableCell<Room, Boolean>>() {
+ 
+            @Override
+            public TableCell<Room, Boolean> call(TableColumn<Room, Boolean> p) {
+                return new DeleteRoomCell();
+            }
+         
+        });
+		
 		roomlistTable.setItems(roomdata);
 		
 		ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees().values());
@@ -86,6 +163,25 @@ public class AdminPanel extends Application implements Initializable {
 		firstNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("firstName"));
 		lastNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("lastName"));
 		usernameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("username"));
+		
+		e_delete.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<Employee, Boolean>, 
+                ObservableValue<Boolean>>() {
+ 
+            @Override
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Employee, Boolean> p) {
+                return new SimpleBooleanProperty(p.getValue() != null);
+            }
+        });
+		e_delete.setCellFactory(
+                new Callback<TableColumn<Employee, Boolean>, TableCell<Employee, Boolean>>() {
+ 
+            @Override
+            public TableCell<Employee, Boolean> call(TableColumn<Employee, Boolean> p) {
+                return new DeleteEmployeeCell();
+            }
+         
+        });
 
 		employeelistTable.setItems(employeedata);
 		
@@ -191,7 +287,6 @@ public class AdminPanel extends Application implements Initializable {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		
 	}
 
 	public static void addBuilding(int _b_id, float _b_lat, float _b_long, String _b_name, String _b_desc){

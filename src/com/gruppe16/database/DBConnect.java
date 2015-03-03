@@ -54,6 +54,17 @@ public class DBConnect {
 		}return null;
 	}
 	
+	public static boolean deleteRoom(int key){
+		String q = "delete from Room where roomNumber = " + key + ";";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(q);
+			return s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public static HashMap<Integer, Appointment> getAppointments(){
 		String q = "SELECT appointmentID, title, description, appdate, totime, fromtime, ownerid, creationtime FROM Appointment ";
 		HashMap<Integer, Appointment> map = new HashMap<Integer, Appointment>();
@@ -88,5 +99,16 @@ public class DBConnect {
 		}
 		
 		return con;
+	}
+
+	public static boolean deleteEmployee(int employeeID) {
+		String q = "delete from Employee where employeeid = " + employeeID + ";";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(q);
+			return s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
