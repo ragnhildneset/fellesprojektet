@@ -213,6 +213,7 @@ public class DayPlanView extends ScrollPane {
 				double newWidth = app.getPrefWidth()/overlaps.size();
 				app.setPrefWidth(newWidth);
 				app.setLayoutX(newWidth*i);
+				app.updateLabels();
 				i++;
 			}
 		}
