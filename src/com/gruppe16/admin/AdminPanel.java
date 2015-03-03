@@ -77,11 +77,12 @@ public class AdminPanel extends Application implements Initializable {
     @FXML private TableColumn<Employee, Boolean> e_delete;
     
     
+    static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
+    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees().values());
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
 		
 		class DeleteRoomCell extends TableCell<Room, Boolean> {
 	    	final Button b = new Button("Delete");
@@ -158,7 +159,6 @@ public class AdminPanel extends Application implements Initializable {
 		
 		roomlistTable.setItems(roomdata);
 		
-		ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees().values());
 		employeeIDCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("employeeID"));
 		firstNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("firstName"));
 		lastNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("lastName"));
@@ -267,6 +267,7 @@ public class AdminPanel extends Application implements Initializable {
 			e.setString(3, _e_pass);
 			e.execute();
 			System.out.println("Added new user and employee.");
+			employeedata.add(new Employee(_e_id, _e_fname, _e_lname, _e_mail, _e_user));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -284,6 +285,7 @@ public class AdminPanel extends Application implements Initializable {
 			e.setString(5, _r_desc);
 			e.execute();
 			System.out.println("Added new room.");
+			roomdata.add(new Room(_r_id, _r_cap, _r_name, _r_desc, _r_bin));
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}

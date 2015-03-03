@@ -12,6 +12,7 @@ import com.gruppe16.database.DBConnect;
 import com.mysql.jdbc.ResultSet;
 
 public class Room {
+	
 	SimpleStringProperty name;
 	SimpleIntegerProperty capacity;
 	SimpleIntegerProperty roomid;
