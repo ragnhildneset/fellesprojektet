@@ -236,7 +236,7 @@ public class DayPlanView extends ScrollPane {
 						}
 					}
 				}
-				if(notContained) addAppointment(currentApp, panelColors.RED);
+				if(notContained) addAppointment(currentApp, panelColors.BLUE);
 			}
 		}
 		arrangeAppointments();

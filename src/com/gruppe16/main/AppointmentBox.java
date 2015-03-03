@@ -70,7 +70,7 @@ public class AppointmentBox extends AnchorPane {
 	private double panelX;
 	private double panelY;
 	private boolean active = false;
-	private panelColors color = panelColors.RED;
+	private panelColors color;
 	
 	public AppointmentBox(Appointment appointment, panelColors color){
 		this.appointment = appointment;
@@ -78,32 +78,13 @@ public class AppointmentBox extends AnchorPane {
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
 		String name = this.appointment.getTitle();
+		this.color = color;
+		
 		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
 		int appointmentStart = start.toSecondOfDay()/60;
-		setStyle(this.color.styleDefault);
 		setPrefSize(PANEL_WIDTH_PARENT, Math.max(appointmentTime, 30));
 		relocate(0, appointmentStart);
 		updateLabels();
-		setId(name);
-
-		setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				setCursor(Cursor.HAND);
-				setStyle(color.styleHover);
-			}
-		});
-		
-		setOnMouseExited(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				setCursor(Cursor.DEFAULT);
-				setStyle(color.styleDefault);
-			}
-		});
-		
-
 		}
 	
 	public void updateLabels(){
@@ -115,6 +96,7 @@ public class AppointmentBox extends AnchorPane {
 		}
 		getChildren().removeAll(labels);
 		
+		setStyle(color.styleDefault);
 		//Title
 		Label titleLabel = new Label(appointment.getTitle());
 		titleLabel.setTooltip(new Tooltip(appointment.getTitle()));
@@ -220,7 +202,7 @@ public class AppointmentBox extends AnchorPane {
 			}
 		});
 		
-		//Add
+		//Add Everything
 		getChildren().addAll(titleLabel, timeLabel, descriptionTitleLabel, descriptionLabel, delBtn, editBtn);
 		AnchorPane.setRightAnchor(timeLabel, 5.0);
 		AnchorPane.setTopAnchor(timeLabel, 5.0);
@@ -235,6 +217,7 @@ public class AppointmentBox extends AnchorPane {
 		AnchorPane.setBottomAnchor(editBtn, 5.0);
 		AnchorPane.setRightAnchor(editBtn, 75.0);
 		
+		//Controller
 		setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -274,6 +257,23 @@ public class AppointmentBox extends AnchorPane {
 					delBtn.setVisible(false);
 					editBtn.setVisible(false);
 				}
+			}
+		});
+		
+		setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				setCursor(Cursor.HAND);
+				setStyle(color.styleHover);
+			}
+		});
+		
+		setOnMouseExited(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				setCursor(Cursor.DEFAULT);
+				setStyle(color.styleDefault);
 			}
 		});
 		
