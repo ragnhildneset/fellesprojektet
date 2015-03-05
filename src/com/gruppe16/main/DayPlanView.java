@@ -133,7 +133,7 @@ public class DayPlanView extends ScrollPane {
 	}
 	
 	public void addAppointment(Appointment appointment, panelColors color){
-		AppointmentBox appointmentBox = new AppointmentBox(appointment, color);
+		AppointmentBox appointmentBox = new AppointmentBox(appointment, color, this);
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	

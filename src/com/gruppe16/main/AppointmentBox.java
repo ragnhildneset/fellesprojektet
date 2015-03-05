@@ -3,6 +3,8 @@ package com.gruppe16.main;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+import com.gruppe16.main.DayPlanView;
+import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 
 import javafx.animation.KeyFrame;
@@ -14,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -23,10 +26,15 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class AppointmentBox extends AnchorPane{
@@ -71,14 +79,16 @@ public class AppointmentBox extends AnchorPane{
 	private double panelY;
 	private boolean active = false;
 	private panelColors color;
+	private DayPlanView dpv;
 	
-	public AppointmentBox(Appointment appointment, panelColors color){
+	public AppointmentBox(Appointment appointment, panelColors color, DayPlanView dpv){
 		this.appointment = appointment;
 		int ID = this.appointment.getID();
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
 		String name = this.appointment.getTitle();
 		this.color = color;
+		this.dpv = dpv;
 		
 		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
 		int appointmentStart = start.toSecondOfDay()/60;
@@ -158,7 +168,44 @@ public class AppointmentBox extends AnchorPane{
 		
 		delBtn.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent event) {
-				System.out.println("Delete!");
+				
+				Stage dialogStage = new Stage();
+				dialogStage.initModality(Modality.WINDOW_MODAL);
+				AnchorPane deleteBox = new AnchorPane();
+				Label deleteLabel = new Label("Delete "+ appointment.getTitle()+"?");
+				deleteLabel.setFont(new Font(18));
+				deleteLabel.setAlignment(Pos.TOP_CENTER);
+				Button yesBtn = new Button("Yes");
+				yesBtn.setPrefWidth(60);
+				Button noBtn = new Button("No");
+				noBtn.setPrefWidth(60);
+				deleteBox.getChildren().addAll(deleteLabel, yesBtn, noBtn);
+				AnchorPane.setTopAnchor(deleteLabel, 10.0);
+				AnchorPane.setBottomAnchor(yesBtn, 0.0);
+				AnchorPane.setBottomAnchor(noBtn, 0.0);
+				AnchorPane.setRightAnchor(yesBtn, 0.0);
+				AnchorPane.setRightAnchor(noBtn, 80.0);
+				Scene deleteScene = new Scene(deleteBox, 250, 100);
+				dialogStage.setScene(deleteScene);
+				dialogStage.setResizable(false);
+				dialogStage.setAlwaysOnTop(true);
+				dialogStage.setTitle("Delete "+ appointment.getTitle()+"?");
+				dialogStage.show();
+				
+				yesBtn.setOnAction(new EventHandler<ActionEvent>(){
+					public void handle(ActionEvent event) {
+						DBConnect.deleteAppointment(appointment.getID());
+						dpv.showAppointments(Login.getCurrentUser());
+						dialogStage.close();
+					}
+				});
+				
+				noBtn.setOnAction(new EventHandler<ActionEvent>(){
+					public void handle(ActionEvent event) {
+						dialogStage.close();
+					}
+				});
+
 			}
 		});
 		
@@ -245,6 +292,7 @@ public class AppointmentBox extends AnchorPane{
 				}
 				else{
 					active = false;
+					toBack();
 					setPrefSize(panelWidth, panelHeight);
 					setLayoutX(panelX);
 					setLayoutY(panelY);
@@ -265,7 +313,8 @@ public class AppointmentBox extends AnchorPane{
 			public void handle(MouseEvent event) {
 				setCursor(Cursor.HAND);
 				setStyle(color.styleHover);
-				toFront();
+				if(active) toFront();
+				if(!active) toBack();
 			}
 		});
 		
@@ -275,6 +324,7 @@ public class AppointmentBox extends AnchorPane{
 			public void handle(MouseEvent event) {
 				setCursor(Cursor.DEFAULT);
 				setStyle(color.styleDefault);
+				if(!active) toBack();
 			}
 		});
 		

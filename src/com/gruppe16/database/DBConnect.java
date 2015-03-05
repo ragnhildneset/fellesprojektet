@@ -130,4 +130,15 @@ public class DBConnect {
 		}
 		return false;
 	}
+	
+	public static boolean deleteAppointment(int appointmentID) {
+		String q = "delete from Appointment where appointmentID = " + appointmentID + ";";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(q);
+			return s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
