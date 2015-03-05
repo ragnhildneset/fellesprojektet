@@ -33,7 +33,6 @@ public class Employee {
 		return employees.get(key);
 	}
 	
-	
 	public Employee(int key, String firstName, String lastName, String email, String username) {
 		employees.put(key, this);
 		this.employeeid =  new SimpleIntegerProperty(key);
@@ -66,7 +65,8 @@ public class Employee {
 	public int getEmployeeID() {
 		return employeeid.get();
 	}
-
-
 	
+	public String toString() {
+		return getName();
+	}
 }

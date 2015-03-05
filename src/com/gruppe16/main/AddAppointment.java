@@ -40,7 +40,7 @@ import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 
-public class AddAppointment extends Application implements Initializable {
+public class AddAppointment implements Initializable {
 	@FXML
 	private Button sendBtn;
 	
@@ -76,20 +76,7 @@ public class AddAppointment extends Application implements Initializable {
 
 	private static Stage stage;
 	private static LocalDate startDate = null;
-	private static Window owner;
 	
-	public AddAppointment() {
-		AddAppointment.owner = null;
-	}
-	
-	public AddAppointment(Window owner) {
-		AddAppointment.owner = owner;
-	}
-	
-	public void setStartDate(java.util.Date date) {
-		startDate = new java.sql.Date(date.getTime()).toLocalDate();
-	}
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		if(startDate != null) {
@@ -400,11 +387,10 @@ public class AddAppointment extends Application implements Initializable {
 		});
 	}
 	
-	@Override
-	public void start(Stage stage) throws Exception {
+	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
 		AddAppointment.stage = stage;
-		Parent root = (Parent)FXMLLoader.load(getClass().getResource("/com/gruppe16/main/AddAppointment.fxml"));
-		Scene scene = new Scene(root);
+		AddAppointment.startDate = new java.sql.Date(date.getTime()).toLocalDate();
+		Scene scene = new Scene((Parent)FXMLLoader.load(AddAppointment.class.getResource("/com/gruppe16/main/AddAppointment.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);
 		if(owner != null) {
@@ -413,9 +399,5 @@ public class AddAppointment extends Application implements Initializable {
 		}
 		stage.setScene(scene);
 		stage.show();
-	}
-	
-	public static void main(String[] args){
-		launch(args);
 	}
 }

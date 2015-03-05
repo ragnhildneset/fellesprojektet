@@ -166,10 +166,8 @@ public class CalendarMain extends Application {
 		addAppointmentBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
-				AddAppointment appointment = new AddAppointment(scene.getWindow());
-				appointment.setStartDate(calendarShown ? new Date() : dayPlanView.getDate());
 				try {
-					appointment.start(new Stage());
+					AddAppointment.start(new Stage(), scene.getWindow(), calendarShown ? new Date() : dayPlanView.getDate());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
