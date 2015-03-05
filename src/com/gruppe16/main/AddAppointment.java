@@ -7,6 +7,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -35,6 +37,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+
 import com.gruppe16.admin.AdminPanel;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
@@ -76,9 +79,11 @@ public class AddAppointment implements Initializable {
 
 	private static Stage stage;
 	private static LocalDate startDate = null;
+	public static Collection<Employee> cachedEmployees;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		cachedEmployees = DBConnect.getEmployees().values();
 		if(startDate != null) {
 			datePicker.setValue(startDate);
 		}
@@ -380,12 +385,37 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					EmployeeFinder.start(new Stage(), stage.getScene().getWindow());
+					EmployeeFinder.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+	
+	public void setAttendees(Collection<Employee> employees) {
+		attendeesTextField.clear();
+		int i = 0;
+		for(Employee e : employees) {
+			if(i++ > 0) {
+				attendeesTextField.appendText(", ");
+			}
+			attendeesTextField.appendText(e.getFirstName() + " " + e.getLastName());
+		}
+	}
+	
+	public Collection<Employee> getAttendees() {
+		ArrayList<Employee> attendees = new ArrayList<Employee>();
+		for(String fullName : attendeesTextField.getText().split(", ")) {
+			String[] names = fullName.split(" ");
+			for(Employee e : cachedEmployees) {
+				if(names[0].equals(e.getFirstName()) && names[1].equals(e.getLastName())) {
+					attendees.add(e);
+					break;
+				}
+			}
+		}
+		return attendees;
 	}
 	
 	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {

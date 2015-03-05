@@ -35,10 +35,10 @@ public class Employee {
 	
 	public Employee(int key, String firstName, String lastName, String email, String username) {
 		employees.put(key, this);
-		this.employeeid =  new SimpleIntegerProperty(key);
+		this.employeeid = new SimpleIntegerProperty(key);
 		this.firstName = new SimpleStringProperty(firstName);
-		this.lastName =  new SimpleStringProperty(lastName);
-		this.email =  new SimpleStringProperty(email);
+		this.lastName = new SimpleStringProperty(lastName);
+		this.email = new SimpleStringProperty(email);
 		this.username = new SimpleStringProperty(username);
 	}
 	

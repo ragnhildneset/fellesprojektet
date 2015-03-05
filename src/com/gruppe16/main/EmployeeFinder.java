@@ -53,15 +53,17 @@ public class EmployeeFinder implements Initializable {
 	private ListView<Employee> attendingListView;
 	
 	private static Stage stage;
-	private Collection<Employee> employeeCachedList;
+	private static AddAppointment addAppointment;
+	private static Collection<Employee> currentAttendees;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		employeeCachedList = DBConnect.getEmployees().values();
+		attendingListView.setItems(FXCollections.observableArrayList(currentAttendees));
 		
 		OKBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				addAppointment.setAttendees(attendingListView.getItems());
 				stage.close();
 			}
 		});
@@ -107,7 +109,7 @@ public class EmployeeFinder implements Initializable {
 	
 	private void updateEmployeeList() {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
-		for(Employee e : employeeCachedList) {
+		for(Employee e : AddAppointment.cachedEmployees) {
 			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(sirNameTextField.getText().toLowerCase()) &&
 					!attendingListView.getItems().contains(e)) {
 				employees.add(e);
@@ -117,8 +119,10 @@ public class EmployeeFinder implements Initializable {
 		employeeListView.getSelectionModel().select(0);
 	}
 	
-	public static void start(Stage stage, Window owner) throws IOException {
+	public static void start(Stage stage, Window owner, AddAppointment addApp) throws IOException {
 		EmployeeFinder.stage = stage;
+		EmployeeFinder.addAppointment = addApp;
+		EmployeeFinder.currentAttendees = addApp.getAttendees();
 		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeeFinder.class.getResource("/com/gruppe16/main/EmployeeFinder.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);
