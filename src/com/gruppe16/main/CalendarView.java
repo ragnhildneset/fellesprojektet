@@ -150,11 +150,18 @@ public class CalendarView extends GridPane {
 		Map<Integer, Appointment> appointments = DBConnect.getAppointments();
 		Map<String, List<Appointment>> appointmentDateMap = new HashMap<String, List<Appointment>>();
 		for(Appointment a : appointments.values()) {
-			Date date = java.sql.Date.valueOf(a.getAppDate());
-			if(!appointmentDateMap.containsKey(date.toString())) {
-				appointmentDateMap.put(date.toString(), new ArrayList<Appointment>());
+			try {
+				if(a.getOwnerID() == Login.getCurrentUserID()) {
+					Date date = java.sql.Date.valueOf(a.getAppDate());
+					if(!appointmentDateMap.containsKey(date.toString())) {
+						appointmentDateMap.put(date.toString(), new ArrayList<Appointment>());
+					}
+					appointmentDateMap.get(date.toString()).add(a);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			appointmentDateMap.get(date.toString()).add(a);
 		}
 		
 		// Set calendar to the first monday
