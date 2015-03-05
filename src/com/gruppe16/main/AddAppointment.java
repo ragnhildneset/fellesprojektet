@@ -35,7 +35,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-
+import com.gruppe16.admin.AdminPanel;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
@@ -143,9 +143,10 @@ public class AddAppointment implements Initializable {
 		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO
+			
 			}
 		});
+
 		
 		titleTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
