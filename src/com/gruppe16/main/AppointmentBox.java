@@ -24,7 +24,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.VBoxBuilder;
@@ -35,13 +37,15 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 public class AppointmentBox extends AnchorPane{
 	
 	private static int PANEL_WIDTH_PARENT = 710;
 	private static int PANEL_HEIGHT_PARENT = 1250;
-	private static int PANEL_WIDTH_OPEN = 400;
+	private static int PANEL_WIDTH_OPEN = 450;
 	private static int PANEL_HEIGHT_OPEN = 200;
 	
 	public enum panelColors {
@@ -80,6 +84,7 @@ public class AppointmentBox extends AnchorPane{
 	private boolean active = false;
 	private panelColors color;
 	private DayPlanView dpv;
+	private Window owner;
 	
 	public AppointmentBox(Appointment appointment, panelColors color, DayPlanView dpv){
 		this.appointment = appointment;
@@ -109,7 +114,6 @@ public class AppointmentBox extends AnchorPane{
 		setStyle(color.styleDefault);
 		//Title
 		Label titleLabel = new Label(appointment.getTitle());
-		titleLabel.setTooltip(new Tooltip(appointment.getTitle()));
 		titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		titleLabel.setPrefWidth(getPrefWidth()-10);
 		titleLabel.setClip(new Rectangle(getPrefWidth()-5, 45));
@@ -170,26 +174,31 @@ public class AppointmentBox extends AnchorPane{
 			public void handle(ActionEvent event) {
 				
 				Stage dialogStage = new Stage();
-				dialogStage.initModality(Modality.WINDOW_MODAL);
-				AnchorPane deleteBox = new AnchorPane();
+				VBox deleteBox = new VBox();
+				VBox deleteBox2 = new VBox();
+				FlowPane buttonPane = new FlowPane();
+				
 				Label deleteLabel = new Label("Delete "+ appointment.getTitle()+"?");
 				deleteLabel.setFont(new Font(18));
-				deleteLabel.setAlignment(Pos.TOP_CENTER);
+				deleteLabel.setAlignment(Pos.CENTER);
+				deleteLabel.setPrefSize(250,60);
 				Button yesBtn = new Button("Yes");
 				yesBtn.setPrefWidth(60);
 				Button noBtn = new Button("No");
 				noBtn.setPrefWidth(60);
-				deleteBox.getChildren().addAll(deleteLabel, yesBtn, noBtn);
-				AnchorPane.setTopAnchor(deleteLabel, 10.0);
-				AnchorPane.setBottomAnchor(yesBtn, 0.0);
-				AnchorPane.setBottomAnchor(noBtn, 0.0);
-				AnchorPane.setRightAnchor(yesBtn, 0.0);
-				AnchorPane.setRightAnchor(noBtn, 80.0);
+				buttonPane.getChildren().addAll(yesBtn, noBtn);
+				buttonPane.setAlignment(Pos.CENTER);
+				buttonPane.setHgap(10);
+				deleteBox2.getChildren().add(buttonPane);
+				deleteBox.getChildren().addAll(deleteLabel, deleteBox2);
+				
 				Scene deleteScene = new Scene(deleteBox, 250, 100);
 				dialogStage.setScene(deleteScene);
 				dialogStage.setResizable(false);
-				dialogStage.setAlwaysOnTop(true);
+				dialogStage.initStyle(StageStyle.UTILITY);
 				dialogStage.setTitle("Delete "+ appointment.getTitle()+"?");
+				dialogStage.initOwner(dpv.getScene().getWindow());
+				dialogStage.initModality(Modality.WINDOW_MODAL);
 				dialogStage.show();
 				
 				yesBtn.setOnAction(new EventHandler<ActionEvent>(){
