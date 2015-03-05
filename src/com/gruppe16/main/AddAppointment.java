@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
+import com.gruppe16.admin.AdminPanel;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 
@@ -142,10 +143,9 @@ public class AddAppointment extends Application implements Initializable {
 		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO
+			
 			}
 		});
-		
 		titleTextField.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
