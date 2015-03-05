@@ -133,7 +133,7 @@ public class DayPlanView extends ScrollPane {
 	}
 	
 	public void addAppointment(Appointment appointment, panelColors color){
-		AppointmentBox appointmentBox = new AppointmentBox(appointment, color);
+		AppointmentBox appointmentBox = new AppointmentBox(appointment, color, this);
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	
@@ -213,6 +213,7 @@ public class DayPlanView extends ScrollPane {
 				double newWidth = app.getPrefWidth()/overlaps.size();
 				app.setPrefWidth(newWidth);
 				app.setLayoutX(newWidth*i);
+				app.updateLabels();
 				i++;
 			}
 		}
@@ -235,7 +236,7 @@ public class DayPlanView extends ScrollPane {
 						}
 					}
 				}
-				if(notContained) addAppointment(currentApp, panelColors.RED);
+				if(notContained) addAppointment(currentApp, panelColors.BLUE);
 			}
 		}
 		arrangeAppointments();

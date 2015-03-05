@@ -1,7 +1,12 @@
 package com.gruppe16.main;
 
 import java.net.URL;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -15,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -29,8 +35,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-
 import com.gruppe16.admin.AdminPanel;
+import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 
@@ -40,6 +46,9 @@ public class AddAppointment extends Application implements Initializable {
 	
 	@FXML
 	private Button cancelBtn;
+	
+	@FXML
+	private Button findEmployeeBtn;
 	
 	@FXML
 	private Button searchForRoomBtn;
@@ -66,19 +75,29 @@ public class AddAppointment extends Application implements Initializable {
 	private TextField titleTextField;
 
 	private static Stage stage;
-	
-	private Window owner;
+	private static LocalDate startDate = null;
+	private static Window owner;
 	
 	public AddAppointment() {
-		this.owner = null;
+		AddAppointment.owner = null;
 	}
 	
 	public AddAppointment(Window owner) {
-		this.owner = owner;
+		AddAppointment.owner = owner;
+	}
+	
+	public void setStartDate(java.util.Date date) {
+		startDate = new java.sql.Date(date.getTime()).toLocalDate();
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		if(startDate != null) {
+			datePicker.setValue(startDate);
+		}
+		else {
+			datePicker.setValue(LocalDate.now());
+		}
 		roomTextField.setEditable(true);
 		sendBtn.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
@@ -102,24 +121,17 @@ public class AddAppointment extends Application implements Initializable {
 				
 				fromTextField.setEffect(null);
 				toTextField.setEffect(null);
-				if(fromTextField.getText().isEmpty()) {
-					fromTextField.setEffect(new InnerShadow(4.0, Color.RED));
-					valid = false;
-				}
-
-				if(toTextField.getText().isEmpty()) {
-					toTextField.setEffect(new InnerShadow(4.0, Color.RED));
-					valid = false;
+				
+				int fromHour = 0, toHour = 0, fromMin = 0, toMin = 0;
+				if(!fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
+					fromHour = Integer.parseInt(fromTextField.getText(0, 2)); toHour = Integer.parseInt(toTextField.getText(0, 2));
+					fromMin = Integer.parseInt(fromTextField.getText(3, 5)); toMin = Integer.parseInt(toTextField.getText(3, 5));
 				}
 				
-				if(!fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
-					int fromHour = Integer.parseInt(fromTextField.getText(0, 2)), toHour = Integer.parseInt(toTextField.getText(0, 2));
-					int fromMin = Integer.parseInt(fromTextField.getText(3, 5)), toMin = Integer.parseInt(toTextField.getText(3, 5));
-					if(fromHour > toHour || (fromHour == toHour && fromMin >= toMin)) {
-						toTextField.setEffect(new InnerShadow(4.0, Color.RED));
-						fromTextField.setEffect(new InnerShadow(4.0, Color.RED));
-						valid = false;
-					}
+				if(fromHour > toHour || (fromHour == toHour && fromMin >= toMin)) {
+					toTextField.setEffect(new InnerShadow(4.0, Color.RED));
+					fromTextField.setEffect(new InnerShadow(4.0, Color.RED));
+					valid = false;
 				}
 				
 				if(roomTextField.getText().isEmpty()) {
@@ -128,6 +140,7 @@ public class AddAppointment extends Application implements Initializable {
 				}
 				
 				if(valid) {
+					DBConnect.addAppointment(titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(fromHour, fromMin, 0), new Time(toHour, toMin, 0), Login.getCurrentUser());
 					stage.close();
 				}
 			}
@@ -146,24 +159,26 @@ public class AddAppointment extends Application implements Initializable {
 			
 			}
 		});
-		titleTextField.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+		
+		titleTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
-			public void handle(MouseEvent event) {
-				titleTextField.setEffect(null);
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
+				if(newValue) titleTextField.setEffect(null);
 			}
 		});
 
-		datePicker.setOnMouseEntered(new EventHandler<MouseEvent>() {
+		datePicker.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
-			public void handle(MouseEvent event) {
-				datePicker.setEffect(null);
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
+				if(newValue) datePicker.setEffect(null);
 			}
 		});
 
-		descriptionTextArea.setOnMouseEntered(new EventHandler<MouseEvent>() {
+		descriptionTextArea.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
-			public void handle(MouseEvent event) {
-				descriptionTextArea.setEffect(null);
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
+				if(newValue) descriptionTextArea.setEffect(null);
 			}
 		});
 
@@ -262,10 +277,10 @@ public class AddAppointment extends Application implements Initializable {
 			}
 		});
 		
-		fromTextField.setOnMouseEntered(new EventHandler<MouseEvent>() {
+		fromTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
-			public void handle(MouseEvent event) {
-				fromTextField.setEffect(null);
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
+				if(newValue) fromTextField.setEffect(null);
 			}
 		});
 		
@@ -360,17 +375,28 @@ public class AddAppointment extends Application implements Initializable {
 			}
 		});
 		
-		toTextField.setOnMouseEntered(new EventHandler<MouseEvent>() {
+		toTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
-			public void handle(MouseEvent event) {
-				toTextField.setEffect(null);
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
+				if(newValue) toTextField.setEffect(null);
 			}
 		});
 
-		roomTextField.setOnMouseEntered(new EventHandler<MouseEvent>() {
+		roomTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
-			public void handle(MouseEvent event) {
-				roomTextField.setEffect(null);
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
+				if(newValue) roomTextField.setEffect(null);
+			}
+		});
+		
+		findEmployeeBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					EmployeeFinder.start(new Stage(), stage.getScene().getWindow());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}

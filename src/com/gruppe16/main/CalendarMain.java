@@ -36,6 +36,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
@@ -60,10 +61,10 @@ public class CalendarMain extends Application {
 	private ListView<HBox> groupListView;
 	
 	@FXML
-	private Button nextDateBtn;
+	private ImageView nextDateBtn;
 	
 	@FXML
-	private Button prevDateBtn;
+	private ImageView prevDateBtn;
 	
 	@FXML
 	private Button findCalendarBtn;
@@ -103,7 +104,8 @@ public class CalendarMain extends Application {
 	
 	public CalendarMain() {
 		// DEBUG: Use first employee
-		this.employee = DBConnect.getEmployees().values().iterator().next();
+		Login.login("a", "b");
+		this.employee = Login.getCurrentUser();
 	}
 	
 	public CalendarMain(Employee employee) {
@@ -165,17 +167,62 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(ActionEvent evnet) {
 				AddAppointment appointment = new AddAppointment(scene.getWindow());
+				appointment.setStartDate(calendarShown ? new Date() : dayPlanView.getDate());
 				try {
 					appointment.start(new Stage());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			
+		});
+		
+		nextDateBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				nextDateBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		nextDateBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				nextDateBtn.setEffect(null);
+			}
+		});
+
+		nextDateBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				nextDateBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+			}
+		});
+
+		prevDateBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				prevDateBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		prevDateBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				prevDateBtn.setEffect(null);
+			}
+		});
+
+		prevDateBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				prevDateBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+			}
 		});
 	}
+	boolean calendarShown = true;
 	
 	void showCalendar(Date date) {
+		calendarShown = true;
+		
 		calendarView.setDate(date);
 		mainPane.setCenter(calendarView);
 		
@@ -184,9 +231,9 @@ public class CalendarMain extends Application {
 		monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
 
-		nextDateBtn.setOnAction(new EventHandler<ActionEvent>() {
+		nextDateBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(ActionEvent evnet) {
+			public void handle(MouseEvent evnet) {
 				calendarView.nextMonth();
 				monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
@@ -194,9 +241,9 @@ public class CalendarMain extends Application {
 			}
 		});
 
-		prevDateBtn.setOnAction(new EventHandler<ActionEvent>() {
+		prevDateBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(ActionEvent evnet) {
+			public void handle(MouseEvent evnet) {
 				calendarView.prevMonth();
 				monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
@@ -206,6 +253,8 @@ public class CalendarMain extends Application {
 	}
 	
 	void showDayPlan(Date date) {
+		calendarShown = false;
+		
 		dayPlanView.setDate(date);
 		dayPlanView.showAppointments(employee);
 		mainPane.setCenter(dayPlanView);
@@ -222,9 +271,9 @@ public class CalendarMain extends Application {
 			}
 		});
 
-		nextDateBtn.setOnAction(new EventHandler<ActionEvent>() {
+		nextDateBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(ActionEvent evnet) {
+			public void handle(MouseEvent evnet) {
 				dayPlanView.nextDay();
 				monthLabel.setText(date.toString());
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
@@ -232,9 +281,9 @@ public class CalendarMain extends Application {
 			}
 		});
 
-		prevDateBtn.setOnAction(new EventHandler<ActionEvent>() {
+		prevDateBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(ActionEvent evnet) {
+			public void handle(MouseEvent evnet) {
 				dayPlanView.prevDay();
 				monthLabel.setText(date.toString());
 				yearLabel.setText(Integer.toString(calendarView.getYear()));

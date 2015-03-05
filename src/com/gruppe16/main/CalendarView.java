@@ -1,7 +1,16 @@
 package com.gruppe16.main;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Appointment;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,8 +24,10 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class CalendarView extends GridPane {
 	static String TEXT_DAY_COLOR = "#FFFFFF";
@@ -33,12 +44,16 @@ public class CalendarView extends GridPane {
 	static String[] DAY_NAMES = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
 	private Calendar calendar;
-	private Label[][] dayLabels = new Label[7][6];
+	private VBox[][] dayVBoxes = new VBox[7][6];
 	
 	CalendarView(CalendarMain mainPane) {
 		
 		calendar = Calendar.getInstance();
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR, 0);
 
 		setMinHeight(Double.MAX_VALUE);
 		setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -57,44 +72,47 @@ public class CalendarView extends GridPane {
 		getRowConstraints().add(new RowConstraints(24));
 		
 		for(int y = 0; y < 6; ++y) {
-			getRowConstraints().add(new RowConstraints(100));
+			getRowConstraints().add(new RowConstraints(102));
 			for(int x = 0; x < 7; ++x) {
 				getColumnConstraints().add(new ColumnConstraints(114));
 				
-				Label label = new Label();
-				label.setFont(new Font("Arial", 18));
-				label.setPadding(new Insets(3, 5, 0, 0));
-				label.setAlignment(Pos.TOP_RIGHT);
-				label.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+				VBox vbox = new VBox();
+				vbox.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				
-				label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+				vbox.setOnMouseEntered(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent event) {
 				        InnerShadow glow = new InnerShadow();
 				        glow.setWidth(30);
 				        glow.setHeight(30);
 				        glow.setColor(Color.LIGHTBLUE);
-						label.setEffect(glow);
+				        vbox.setEffect(glow);
 					}
 				});
 				
-				label.setOnMouseExited(new EventHandler<MouseEvent>() {
+				vbox.setOnMouseExited(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent event) {
-						label.setEffect(null);
+						vbox.setEffect(null);
 					}
 				});
 				
-				label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				vbox.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent event) {
-						mainPane.showDayPlan((Date)label.getUserData());
+						mainPane.showDayPlan((Date)vbox.getUserData());
 					}
 				});
 				
-				add(label, x, y+1);
-				
-				dayLabels[x][y] = label;
+				Label label = new Label();
+				label.setFont(new Font("Arial", 18));
+				label.setPadding(new Insets(3, 5, 0, 0));
+				label.setAlignment(Pos.TOP_RIGHT);
+				label.setPrefWidth(Double.MAX_VALUE);
+
+				dayVBoxes[x][y] = vbox;
+				vbox.getChildren().add(label);
+				add(vbox, x, y+1);
 			}
 		}
 		update();
@@ -128,6 +146,23 @@ public class CalendarView extends GridPane {
 	void update() {
 		Date beforeTime = calendar.getTime();
 		Date nowDate = new Date();
+
+		Map<Integer, Appointment> appointments = DBConnect.getAppointments();
+		Map<String, List<Appointment>> appointmentDateMap = new HashMap<String, List<Appointment>>();
+		for(Appointment a : appointments.values()) {
+			try {
+				if(a.getOwnerID() == Login.getCurrentUserID()) {
+					Date date = java.sql.Date.valueOf(a.getAppDate());
+					if(!appointmentDateMap.containsKey(date.toString())) {
+						appointmentDateMap.put(date.toString(), new ArrayList<Appointment>());
+					}
+					appointmentDateMap.get(date.toString()).add(a);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		// Set calendar to the first monday
 		calendar.set(Calendar.DAY_OF_MONTH, 1); calendar.getTime(); // Bug workaround
@@ -135,8 +170,11 @@ public class CalendarView extends GridPane {
 
 		for(int y = 0; y < 6; ++y) {
 			for(int x = 0; x < 7; ++x) {
-				Label label = dayLabels[x][y];
-				label.setUserData(calendar.getTime());
+				VBox vbox = dayVBoxes[x][y];
+				vbox.getChildren().remove(1, vbox.getChildren().size());
+				vbox.setUserData(calendar.getTime());
+				
+				Label label = (Label)vbox.getChildren().get(0);
 				label.setText(Integer.toString(calendar.get(Calendar.DATE)));
 				String backgroundColor = "";
 				String textFill = "";
@@ -186,7 +224,31 @@ public class CalendarView extends GridPane {
 					borderColor = "transparent " + BORDER_COLOR + " " + BORDER_COLOR + " transparent";
 				}
 				
-				label.setStyle("-fx-background-color: " + backgroundColor + "; -fx-text-fill: " + textFill + "; -fx-border-width: 1; -fx-border-color: " + borderColor + ";");
+				String dateStr = new java.sql.Date(calendar.getTime().getTime()).toString();
+				if(appointmentDateMap.containsKey(dateStr)) {
+					int i = 0;
+					for(Appointment a : appointmentDateMap.get(dateStr)) {
+						Label appLabel = new Label(a.getTitle());
+						appLabel.setFont(new Font("Arial Bold", 12));
+						appLabel.setPrefWidth(Double.MAX_VALUE);
+						appLabel.setPadding(new Insets(4, 4, 4, 4));
+						VBox.setMargin(appLabel, new Insets(0, 1, 0, 0));
+						if(i == appointmentDateMap.get(dateStr).size()-1 || i == 2)
+							appLabel.setStyle("-fx-background-color: #CCCCFF; -fx-border-width: 1; -fx-border-color: #0000FF #0000FF #0000FF #0000FF;");
+						else
+							appLabel.setStyle("-fx-background-color: #CCCCFF; -fx-border-width: 1; -fx-border-color: #0000FF #0000FF transparent #0000FF;");
+						vbox.getChildren().add(appLabel);
+						if(i == 2 && appointmentDateMap.get(dateStr).size() > 3) {
+							appLabel.setText((appointmentDateMap.get(dateStr).size()-i) + " more...");
+							break;
+						}
+						i++;
+					}
+				}
+				vbox.requestLayout();
+				
+				vbox.setStyle("-fx-background-color: " + backgroundColor + "; -fx-border-width: 1; -fx-border-color: " + borderColor + ";");
+				label.setStyle("-fx-text-fill: " + textFill + ";");
 				calendar.add(Calendar.DATE, 1);
 			}
 		}
