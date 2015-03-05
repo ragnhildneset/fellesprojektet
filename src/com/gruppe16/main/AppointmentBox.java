@@ -29,7 +29,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-public class AppointmentBox extends AnchorPane {
+public class AppointmentBox extends AnchorPane{
 	
 	private static int PANEL_WIDTH_PARENT = 710;
 	private static int PANEL_HEIGHT_PARENT = 1250;
@@ -265,6 +265,7 @@ public class AppointmentBox extends AnchorPane {
 			public void handle(MouseEvent event) {
 				setCursor(Cursor.HAND);
 				setStyle(color.styleHover);
+				toFront();
 			}
 		});
 		
@@ -299,7 +300,6 @@ public class AppointmentBox extends AnchorPane {
 	public int getID(){
 		return appointment.getID();
 	}
-	
 	
 	
 }
