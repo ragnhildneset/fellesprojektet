@@ -48,6 +48,9 @@ public class AddAppointment extends Application implements Initializable {
 	private Button cancelBtn;
 	
 	@FXML
+	private Button findEmployeeBtn;
+	
+	@FXML
 	private Button searchForRoomBtn;
 	
 	@FXML
@@ -72,16 +75,15 @@ public class AddAppointment extends Application implements Initializable {
 	private TextField titleTextField;
 
 	private static Stage stage;
-	
-	private Window owner;
 	private static LocalDate startDate = null;
+	private static Window owner;
 	
 	public AddAppointment() {
-		this.owner = null;
+		AddAppointment.owner = null;
 	}
 	
 	public AddAppointment(Window owner) {
-		this.owner = owner;
+		AddAppointment.owner = owner;
 	}
 	
 	public void setStartDate(java.util.Date date) {
@@ -383,6 +385,17 @@ public class AddAppointment extends Application implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
 				if(newValue) roomTextField.setEffect(null);
+			}
+		});
+		
+		findEmployeeBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					EmployeeFinder.start(new Stage(), stage.getScene().getWindow());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
