@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
-public class EmployeeFinder implements Initializable {
+public class EmployeePicker implements Initializable {
 	@FXML
 	private Button OKBtn;
 	
@@ -44,7 +44,7 @@ public class EmployeeFinder implements Initializable {
 	private TextField givenNameTextField;
 	
 	@FXML
-	private TextField sirNameTextField;
+	private TextField surNameTextField;
 	
 	@FXML
 	private ListView<Employee> employeeListView;
@@ -97,7 +97,7 @@ public class EmployeeFinder implements Initializable {
 			}
 		});
 		
-		sirNameTextField.setOnKeyTyped(new EventHandler<KeyEvent>() {
+		surNameTextField.setOnKeyTyped(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
 				updateEmployeeList();
@@ -110,7 +110,7 @@ public class EmployeeFinder implements Initializable {
 	private void updateEmployeeList() {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		for(Employee e : AddAppointment.cachedEmployees) {
-			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(sirNameTextField.getText().toLowerCase()) &&
+			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(surNameTextField.getText().toLowerCase()) &&
 					!attendingListView.getItems().contains(e)) {
 				employees.add(e);
 			}
@@ -120,10 +120,10 @@ public class EmployeeFinder implements Initializable {
 	}
 	
 	public static void start(Stage stage, Window owner, AddAppointment addApp) throws IOException {
-		EmployeeFinder.stage = stage;
-		EmployeeFinder.addAppointment = addApp;
-		EmployeeFinder.currentAttendees = addApp.getAttendees();
-		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeeFinder.class.getResource("/com/gruppe16/main/EmployeeFinder.fxml")));
+		EmployeePicker.stage = stage;
+		EmployeePicker.addAppointment = addApp;
+		EmployeePicker.currentAttendees = addApp.getAttendees();
+		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/EmployeePicker.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);
 		if(owner != null) {
