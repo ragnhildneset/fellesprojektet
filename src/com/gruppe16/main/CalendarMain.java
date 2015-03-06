@@ -2,7 +2,6 @@ package com.gruppe16.main;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.Date;
 
 import javafx.application.Application;
@@ -47,7 +46,10 @@ public class CalendarMain extends Application {
 	private Button findCalendarBtn;
 	
 	@FXML
-	private Button backToCalendarBtn;
+	private ImageView backToCalendarBtn;
+	
+	@FXML
+	private ImageView alertBtn;
 	
 	@FXML
 	private Button selectAllGroupsBtn;
@@ -75,8 +77,6 @@ public class CalendarMain extends Application {
 
 	private DayPlanView dayPlanView;
 	
-	private LocalDate someDate = LocalDate.now();
-	
 	private Employee employee;
 	
 	public CalendarMain() {
@@ -91,7 +91,7 @@ public class CalendarMain extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		URL url = getClass().getResource("/com/gruppe16/main/MainPane.fxml");
+		URL url = getClass().getResource("/com/gruppe16/main/CalendarMain.fxml");
 		
 		FXMLLoader fxmlLoader = new FXMLLoader();
 		fxmlLoader.setLocation(url);
@@ -172,6 +172,13 @@ public class CalendarMain extends Application {
 			}
 		});
 
+		nextDateBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				nextDateBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
 		prevDateBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -190,6 +197,69 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(MouseEvent event) {
 				prevDateBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+			}
+		});
+
+		prevDateBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				prevDateBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		alertBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				alertBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		alertBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				alertBtn.setEffect(null);
+			}
+		});
+
+		alertBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				alertBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+			}
+		});
+
+		alertBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				alertBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		backToCalendarBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		backToCalendarBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				backToCalendarBtn.setEffect(null);
+			}
+		});
+
+		backToCalendarBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+			}
+		});
+
+		backToCalendarBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
 			}
 		});
 	}
@@ -239,9 +309,9 @@ public class CalendarMain extends Application {
 		monthLabel.setText(MONTH_NAMES[date.getMonth()] + " " + date.getDate());
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
 
-		backToCalendarBtn.setOnAction(new EventHandler<ActionEvent>() {
+		backToCalendarBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(ActionEvent evnet) {
+			public void handle(MouseEvent evnet) {
 				showCalendar(dayPlanView.getDate());
 			}
 		});
