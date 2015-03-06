@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 import com.gruppe16.database.DBConnect;
 import com.mysql.jdbc.ResultSet;
+import com.gruppe16.util.Tuple;
 
 public class RoomReservation {
 	
@@ -49,7 +50,7 @@ public class RoomReservation {
 		//String dateString = "" + appdate.getYear() + "-" + appdate.getMonth() + "-" + appdate.getDayOfMonth();
 		//String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
 		//String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
-		ArrayList<ArrayList<Integer>> available = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Tuple> available = new ArrayList<Tuple>();
 		String q = "SELECT Room.roomNumber, Room.buildingID, Room.capacity FROM Room JOIN Building ON(Room.buildingID = Building.buildingID) "
 				+ "WHERE Room.roomNumber NOT IN (SELECT RR.roomid FROM Appointment AS A JOIN RoomReservation AS RR ON(A.appointmentID = RR.appid)"
 				+ " WHERE A.appdate = ? AND A.fromtime <= ? AND A.totime >= ?);";
@@ -60,13 +61,13 @@ public class RoomReservation {
 			s.setTime(3, fromtime);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
-				available.add(new ArrayList<rs.getInt("roomNumber")><rs.getInt("buildingID")>());
+				available.add(new Tuple<Integer>(rs.getInt("roomNumber"), rs.getInt("buildingID")));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		for(String booking:booked){
-			System.out.print(booking);
+		for(Tuple booking:available){
+			System.out.print("" + booking.a + booking.b);
 		}
 		
 	}

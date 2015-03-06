@@ -2,10 +2,10 @@ package com.gruppe16.util;
 
 public class Tuple<Value extends Comparable>{
 	
-	Value a;
-	Value b;
+	public Value a;
+	public Value b;
 	
-	Tuple(Value a, Value b){
+	public Tuple(Value a, Value b){
 		this.a = a;
 		this.b = b;
 	}
@@ -15,5 +15,7 @@ public class Tuple<Value extends Comparable>{
 			return true;
 		return false;
 	}
+	
+	
 	
 }
