@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
-public class EmployeeFinder implements Initializable {
+public class EmployeePicker implements Initializable {
 	@FXML
 	private Button OKBtn;
 	
@@ -120,10 +120,10 @@ public class EmployeeFinder implements Initializable {
 	}
 	
 	public static void start(Stage stage, Window owner, AddAppointment addApp) throws IOException {
-		EmployeeFinder.stage = stage;
-		EmployeeFinder.addAppointment = addApp;
-		EmployeeFinder.currentAttendees = addApp.getAttendees();
-		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeeFinder.class.getResource("/com/gruppe16/main/EmployeeFinder.fxml")));
+		EmployeePicker.stage = stage;
+		EmployeePicker.addAppointment = addApp;
+		EmployeePicker.currentAttendees = addApp.getAttendees();
+		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/EmployeePicker.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);
 		if(owner != null) {

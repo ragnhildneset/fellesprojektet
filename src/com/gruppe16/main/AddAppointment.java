@@ -148,16 +148,19 @@ public class AddAppointment implements Initializable {
 		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-			 try{
-				 LocalDate e = datePicker.getValue();
-				 int fromHour = Integer.parseInt(fromTextField.getText(0, 2));int toHour = Integer.parseInt(toTextField.getText(0, 2));
-				 int fromMin = Integer.parseInt(fromTextField.getText(3, 5));int toMin = Integer.parseInt(toTextField.getText(3, 5));
-				 Time fromTimeFormatted = new Time(fromHour,fromMin, 0);
-				 Time toTimeFormatted = new Time(toHour,toMin, 0);
-				 
-			 }catch (Exception rr){
-				 rr.printStackTrace();
-			 }
+				try{
+					LocalDate e = datePicker.getValue();
+					int fromHour = 0, toHour = 0, fromMin = 0, toMin = 0;
+					if(!fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
+						fromHour = Integer.parseInt(fromTextField.getText(0, 2)); toHour = Integer.parseInt(toTextField.getText(0, 2));
+						fromMin = Integer.parseInt(fromTextField.getText(3, 5)); toMin = Integer.parseInt(toTextField.getText(3, 5));
+					}
+					Time fromTimeFormatted = new Time(fromHour, fromMin, 0);
+					Time toTimeFormatted = new Time(toHour, toMin, 0);
+
+				}catch (Exception rr){
+					rr.printStackTrace();
+				}
 			}
 		});
 
@@ -394,7 +397,7 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					EmployeeFinder.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this);
+					EmployeePicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
