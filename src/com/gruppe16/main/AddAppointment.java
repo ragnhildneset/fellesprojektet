@@ -144,27 +144,7 @@ public class AddAppointment implements Initializable {
 				stage.close();
 			}
 		});
-		
-		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				try{
-					LocalDate e = datePicker.getValue();
-					int fromHour = 0, toHour = 0, fromMin = 0, toMin = 0;
-					if(!fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
-						fromHour = Integer.parseInt(fromTextField.getText(0, 2)); toHour = Integer.parseInt(toTextField.getText(0, 2));
-						fromMin = Integer.parseInt(fromTextField.getText(3, 5)); toMin = Integer.parseInt(toTextField.getText(3, 5));
-					}
-					Time fromTimeFormatted = new Time(fromHour, fromMin, 0);
-					Time toTimeFormatted = new Time(toHour, toMin, 0);
 
-				}catch (Exception rr){
-					rr.printStackTrace();
-				}
-			}
-		});
-
-		
 		titleTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
@@ -390,6 +370,25 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
 				if(newValue) roomTextField.setEffect(null);
+			}
+		});
+		
+		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try{
+					LocalDate e = datePicker.getValue();
+					int fromHour = 0, toHour = 0, fromMin = 0, toMin = 0;
+					if(!fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
+						fromHour = Integer.parseInt(fromTextField.getText(0, 2)); toHour = Integer.parseInt(toTextField.getText(0, 2));
+						fromMin = Integer.parseInt(fromTextField.getText(3, 5)); toMin = Integer.parseInt(toTextField.getText(3, 5));
+					}
+					Time fromTimeFormatted = new Time(fromHour, fromMin, 0);
+					Time toTimeFormatted = new Time(toHour, toMin, 0);
+					RoomPicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this);
+				}catch (Exception rr){
+					rr.printStackTrace();
+				}
 			}
 		});
 		

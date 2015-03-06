@@ -44,7 +44,7 @@ public class EmployeePicker implements Initializable {
 	private TextField givenNameTextField;
 	
 	@FXML
-	private TextField sirNameTextField;
+	private TextField surNameTextField;
 	
 	@FXML
 	private ListView<Employee> employeeListView;
@@ -97,7 +97,7 @@ public class EmployeePicker implements Initializable {
 			}
 		});
 		
-		sirNameTextField.setOnKeyTyped(new EventHandler<KeyEvent>() {
+		surNameTextField.setOnKeyTyped(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
 				updateEmployeeList();
@@ -110,7 +110,7 @@ public class EmployeePicker implements Initializable {
 	private void updateEmployeeList() {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		for(Employee e : AddAppointment.cachedEmployees) {
-			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(sirNameTextField.getText().toLowerCase()) &&
+			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(surNameTextField.getText().toLowerCase()) &&
 					!attendingListView.getItems().contains(e)) {
 				employees.add(e);
 			}
