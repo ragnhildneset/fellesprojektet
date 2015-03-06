@@ -84,12 +84,12 @@
                   </Label>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <ImageView fx:id="prevDateBtn" fitHeight="32.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="prevDateBtn" fitHeight="24.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../../img/arrow_left.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="monthLabel" alignment="CENTER" maxWidth="100.0" minWidth="100.0" text="September">
+                        <Label fx:id="monthLabel" alignment="CENTER" maxWidth="100.0" minWidth="130.0" text="September">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
@@ -97,7 +97,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <ImageView fx:id="nextDateBtn" fitHeight="32.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="nextDateBtn" fitHeight="24.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../../img/arrow_right.png" />
                            </image>
