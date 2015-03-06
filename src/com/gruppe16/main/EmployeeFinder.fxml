@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="307.0" prefWidth="283.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gruppe16.main.EmployeeFinder">
+<VBox prefHeight="500.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gruppe16.main.EmployeeFinder">
    <children>
       <HBox alignment="CENTER_LEFT">
          <children>
@@ -36,17 +36,30 @@
       </HBox>
       <ListView fx:id="employeeListView" prefHeight="200.0" prefWidth="200.0">
          <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </ListView>
+      <ListView fx:id="attendingListView" prefHeight="200.0" prefWidth="200.0">
+         <VBox.margin>
             <Insets />
          </VBox.margin>
       </ListView>
-      <HBox alignment="TOP_RIGHT">
+      <HBox>
          <children>
-            <Button fx:id="cancelBtn" mnemonicParsing="false" text="Cancel">
+            <Button fx:id="OKBtn" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" text="OK">
                <HBox.margin>
-                  <Insets right="10.0" />
+                  <Insets right="140.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="addBtn" mnemonicParsing="false" text="Add" />
+            <Button fx:id="addBtn" mnemonicParsing="false" text="Add">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin></Button>
+            <Button fx:id="removeBtn" mnemonicParsing="false" text="Remove">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
          </children>
          <VBox.margin>
             <Insets top="10.0" />

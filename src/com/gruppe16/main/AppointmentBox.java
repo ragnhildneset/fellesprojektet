@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -82,6 +83,7 @@ public class AppointmentBox extends AnchorPane{
 	private double panelX;
 	private double panelY;
 	private boolean active = false;
+	private boolean show = false;
 	private panelColors color;
 	private DayPlanView dpv;
 	private Window owner;
@@ -182,6 +184,8 @@ public class AppointmentBox extends AnchorPane{
 				deleteLabel.setFont(new Font(18));
 				deleteLabel.setAlignment(Pos.CENTER);
 				deleteLabel.setPrefSize(250,60);
+				deleteLabel.setWrapText(true);
+				deleteLabel.setTextAlignment(TextAlignment.CENTER);
 				Button yesBtn = new Button("Yes");
 				yesBtn.setPrefWidth(60);
 				Button noBtn = new Button("No");
@@ -191,8 +195,9 @@ public class AppointmentBox extends AnchorPane{
 				buttonPane.setHgap(10);
 				deleteBox2.getChildren().add(buttonPane);
 				deleteBox.getChildren().addAll(deleteLabel, deleteBox2);
+				deleteBox.setAlignment(Pos.CENTER);
 				
-				Scene deleteScene = new Scene(deleteBox, 250, 100);
+				Scene deleteScene = new Scene(deleteBox, 300, 100);
 				dialogStage.setScene(deleteScene);
 				dialogStage.setResizable(false);
 				dialogStage.initStyle(StageStyle.UTILITY);
@@ -258,8 +263,71 @@ public class AppointmentBox extends AnchorPane{
 			}
 		});
 		
+		//Participants ListView
+		ListView participants = new ListView();
+		participants.setVisible(false);
+		participants.setPrefWidth(0);
+		participants.setPrefHeight(0);
+		
+		//Show Participants Button
+				Button showBtn = new Button("Show participants");
+				showBtn.setStyle(color.styleDefault);
+				showBtn.setVisible(false);
+				
+				
+				//Show Participants Button Controller
+				showBtn.setOnMouseEntered(new EventHandler<MouseEvent>(){
+					public void handle(MouseEvent event) {
+						setCursor(Cursor.HAND);
+						showBtn.setStyle(color.styleHover);
+					}
+				});
+				
+				showBtn.setOnMouseExited(new EventHandler<MouseEvent>(){
+					public void handle(MouseEvent event) {
+						setCursor(Cursor.HAND);
+						showBtn.setStyle(color.styleDefault);
+					}
+				});
+				
+				showBtn.setOnMousePressed(new EventHandler<MouseEvent>(){
+					public void handle(MouseEvent event) {
+						setCursor(Cursor.HAND);
+						showBtn.setStyle(color.styleDefault);
+					}
+				});
+				
+				showBtn.setOnMouseReleased(new EventHandler<MouseEvent>(){
+					public void handle(MouseEvent event) {
+						setCursor(Cursor.HAND);
+						showBtn.setStyle(color.styleHover);
+					}
+				});
+				
+				showBtn.setOnAction(new EventHandler<ActionEvent>(){
+					public void handle(ActionEvent event) {
+						if(!show){
+							show = true;
+							descriptionLabel.setVisible(false);
+							descriptionTitleLabel.setVisible(false);
+							participants.setVisible(true);
+							participants.setPrefWidth(getPrefWidth()-10);
+							participants.setPrefHeight(getPrefHeight()-80);
+							showBtn.setText("Hide participants");
+						}
+						else if(show){
+							show = false;
+							participants.setVisible(false);
+							participants.setPrefSize(0, 0);
+							descriptionLabel.setVisible(true);
+							descriptionTitleLabel.setVisible(true);
+							showBtn.setText("Show participants");
+						}
+					}
+				});
+		
 		//Add Everything
-		getChildren().addAll(titleLabel, timeLabel, descriptionTitleLabel, descriptionLabel, delBtn, editBtn);
+		getChildren().addAll(titleLabel, timeLabel, descriptionTitleLabel, descriptionLabel, delBtn, editBtn, participants, showBtn);
 		AnchorPane.setRightAnchor(timeLabel, 5.0);
 		AnchorPane.setTopAnchor(timeLabel, 5.0);
 		AnchorPane.setTopAnchor(titleLabel, 5.0);
@@ -268,10 +336,14 @@ public class AppointmentBox extends AnchorPane{
 		AnchorPane.setLeftAnchor(descriptionTitleLabel, 5.0);
 		AnchorPane.setTopAnchor(descriptionLabel, 55.0);
 		AnchorPane.setLeftAnchor(descriptionLabel, 5.0);
+		AnchorPane.setTopAnchor(participants, 55.0);
+		AnchorPane.setLeftAnchor(participants, 5.0);
 		AnchorPane.setBottomAnchor(delBtn, 5.0);
 		AnchorPane.setRightAnchor(delBtn, 5.0);
 		AnchorPane.setBottomAnchor(editBtn, 5.0);
-		AnchorPane.setRightAnchor(editBtn, 75.0);
+		AnchorPane.setRightAnchor(editBtn, 70.0);
+		AnchorPane.setBottomAnchor(showBtn, 5.0);
+		AnchorPane.setLeftAnchor(showBtn, 5.0);
 		
 		//Controller
 		setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -298,6 +370,7 @@ public class AppointmentBox extends AnchorPane{
 					descriptionLabel.setPrefHeight(getPrefHeight()-80);
 					delBtn.setVisible(true);
 					editBtn.setVisible(true);
+					showBtn.setVisible(true);
 				}
 				else{
 					active = false;
@@ -313,6 +386,7 @@ public class AppointmentBox extends AnchorPane{
 					descriptionLabel.setVisible(false);
 					delBtn.setVisible(false);
 					editBtn.setVisible(false);
+					showBtn.setVisible(false);
 				}
 			}
 		});
