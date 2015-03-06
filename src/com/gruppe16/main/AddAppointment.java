@@ -7,6 +7,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -36,11 +38,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
+import com.gruppe16.admin.AdminPanel;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 
-public class AddAppointment extends Application implements Initializable {
+public class AddAppointment implements Initializable {
 	@FXML
 	private Button sendBtn;
 	
@@ -76,22 +79,11 @@ public class AddAppointment extends Application implements Initializable {
 
 	private static Stage stage;
 	private static LocalDate startDate = null;
-	private static Window owner;
+	public static Collection<Employee> cachedEmployees;
 	
-	public AddAppointment() {
-		AddAppointment.owner = null;
-	}
-	
-	public AddAppointment(Window owner) {
-		AddAppointment.owner = owner;
-	}
-	
-	public void setStartDate(java.util.Date date) {
-		startDate = new java.sql.Date(date.getTime()).toLocalDate();
-	}
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		cachedEmployees = DBConnect.getEmployees().values();
 		if(startDate != null) {
 			datePicker.setValue(startDate);
 		}
@@ -156,9 +148,10 @@ public class AddAppointment extends Application implements Initializable {
 		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO
+			
 			}
 		});
+
 		
 		titleTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
@@ -392,7 +385,7 @@ public class AddAppointment extends Application implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					EmployeeFinder.start(new Stage(), stage.getScene().getWindow());
+					EmployeeFinder.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -400,11 +393,35 @@ public class AddAppointment extends Application implements Initializable {
 		});
 	}
 	
-	@Override
-	public void start(Stage stage) throws Exception {
+	public void setAttendees(Collection<Employee> employees) {
+		attendeesTextField.clear();
+		int i = 0;
+		for(Employee e : employees) {
+			if(i++ > 0) {
+				attendeesTextField.appendText(", ");
+			}
+			attendeesTextField.appendText(e.getFirstName() + " " + e.getLastName());
+		}
+	}
+	
+	public Collection<Employee> getAttendees() {
+		ArrayList<Employee> attendees = new ArrayList<Employee>();
+		for(String fullName : attendeesTextField.getText().split(", ")) {
+			String[] names = fullName.split(" ");
+			for(Employee e : cachedEmployees) {
+				if(names[0].equals(e.getFirstName()) && names[1].equals(e.getLastName())) {
+					attendees.add(e);
+					break;
+				}
+			}
+		}
+		return attendees;
+	}
+	
+	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
 		AddAppointment.stage = stage;
-		Parent root = (Parent)FXMLLoader.load(getClass().getResource("/com/gruppe16/main/AddAppointment.fxml"));
-		Scene scene = new Scene(root);
+		AddAppointment.startDate = new java.sql.Date(date.getTime()).toLocalDate();
+		Scene scene = new Scene((Parent)FXMLLoader.load(AddAppointment.class.getResource("/com/gruppe16/main/AddAppointment.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);
 		if(owner != null) {
@@ -413,9 +430,5 @@ public class AddAppointment extends Application implements Initializable {
 		}
 		stage.setScene(scene);
 		stage.show();
-	}
-	
-	public static void main(String[] args){
-		launch(args);
 	}
 }
