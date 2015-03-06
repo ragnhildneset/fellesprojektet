@@ -156,7 +156,16 @@ public class AddAppointment extends Application implements Initializable {
 		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-			
+			 try{
+				 LocalDate e = datePicker.getValue();
+				 int fromHour = Integer.parseInt(fromTextField.getText(0, 2));int toHour = Integer.parseInt(toTextField.getText(0, 2));
+				 int fromMin = Integer.parseInt(fromTextField.getText(3, 5));int toMin = Integer.parseInt(toTextField.getText(3, 5));
+				 Time fromTimeFormatted = new Time(fromHour,fromMin, 0);
+				 Time toTimeFormatted = new Time(toHour,toMin, 0);
+				 
+			 }catch (Exception rr){
+				 rr.printStackTrace();
+			 }
 			}
 		});
 
