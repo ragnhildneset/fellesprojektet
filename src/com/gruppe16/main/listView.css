@@ -1,0 +1,9 @@
+
+.list-view {
+	list-view-color: #000000;
+	-fx-border-width: 1; -fx-border-color: #0000FF;
+}
+
+.list-cell {
+	-fx-background-color: list-view-color;
+}
