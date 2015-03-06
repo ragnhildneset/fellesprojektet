@@ -52,7 +52,7 @@ public class RoomReservation {
 		ArrayList<ArrayList<Integer>> available = new ArrayList<ArrayList<Integer>>();
 		String q = "SELECT Room.roomNumber, Room.buildingID, Room.capacity FROM Room JOIN Building ON(Room.buildingID = Building.buildingID) "
 				+ "WHERE Room.roomNumber NOT IN (SELECT RR.roomid FROM Appointment AS A JOIN RoomReservation AS RR ON(A.appointmentID = RR.appid)"
-				+ " WHERE A.appdate = ? AND A.fromtime <= ? AND A.totime >= ?);";
+				+ " WHERE A.appdate = "+appdate+" AND A.fromtime <="+fromtime+" AND A.totime >= "+totime+");";
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			s.setDate(1, appdate);
