@@ -41,9 +41,12 @@
 	-fx-border-width: 1; 
 	-fx-border-color: cBorder;
 	list-cell-color: cMain;
+	-fx-background-color: cMain;
+	-fx-cursor: default;
 }
 
 .list-cell {
 	-fx-background-color: list-cell-color;
+	-fx-cursor: default;
 
 }

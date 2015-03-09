@@ -153,11 +153,10 @@ public class AppointmentBox extends AnchorPane{
 		
 		//Participants ListView
 		ListView<Employee> participants = new ListView<Employee>();
-		participants.setMouseTransparent( true );
+		//participants.setMouseTransparent( true );
 		participants.setFocusTraversable( false );
 		participantPane.getChildren().addAll(participantsTitleLabel,participants);
 		participants.setLayoutY(20);
-		participants.setPrefHeight(getPrefHeight());
 		
 		//Show Participants Button
 				Button showBtn = new Button("Show participants");
@@ -221,10 +220,12 @@ public class AppointmentBox extends AnchorPane{
 					participantPane.setVisible(false);
 					descriptionPane.setPrefWidth(getPrefWidth()-10);
 					descriptionPane.setPrefHeight(getPrefHeight()-100);
+					descriptionLabel.setPrefWidth(getPrefWidth()-10);
+					descriptionLabel.setPrefHeight(getPrefHeight()-100);
 					participantPane.setPrefWidth(getPrefWidth()-10);
 					participantPane.setPrefHeight(getPrefHeight()-100);
-					participants.setPrefWidth(getPrefWidth()-10);
-					participants.setPrefHeight(getPrefHeight()-100);
+					participants.setPrefWidth(getPrefWidth()-12);
+					participants.setPrefHeight(getPrefHeight()-105);
 					participants.setItems(employeedata);
 					if(!show){
 						descriptionPane.setVisible(true);
