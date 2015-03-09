@@ -44,26 +44,32 @@ public class RoomReservation {
 		}
 	}
 	public static void main(String[] args){
-		LocalDate d = LocalDate.of(2015,3,2);
-		Date sqlD = java.sql.Date.valueOf(d);
-		findRoom(LocalDate.of(2015,3,2), LocalTime.of(9,0), LocalTime.of(14,0), 10);
+		findRoom(LocalDate.of(2015,3,3), LocalTime.of(19,0), LocalTime.of(21,0), 10);
 	}
 	
 	
 	public static void findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime, int capacity){
-		String dateString = "" + appdate.getYear() + "-" + appdate.getMonth() + "-" + appdate.getDayOfMonth();
+		String dateString = "" + appdate.getYear() + "-" + appdate.getMonthValue() + "-" + appdate.getDayOfMonth();
 		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
 		String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
-		ArrayList<Tuple> available = new ArrayList<Tuple>();
-		String q = "SELECT Room.roomNumber, Room.buildingID, Room.capacity FROM Room JOIN Building ON(Room.buildingID = Building.buildingID) "
-				+ "WHERE Room.roomNumber NOT IN (SELECT RR.roomid FROM Appointment AS A JOIN RoomReservation AS RR ON(A.appointmentID = RR.appid)"
-				+ " WHERE Room.capacity < " + capacity + " OR (A.appdate = '"+ dateString +"' AND A.fromtime <= '"+ fromtimeString+"' AND A.totime >= '" +totimeString+ "'));";
+		ArrayList<Tuple<Integer>> available = new ArrayList<Tuple<Integer>>();
+		String q = "select D.roomNumber, D.BuildingID\n"+
+				"from Room as D\n"+
+				"where (D.roomNumber, D.BuildingID) not in (\n"+
+				"select R.roomNumber, R.BuildingID\n"+
+				"from Room as R, RoomReservation as E, Appointment as A\n"+
+				"where  E.appid = A.appointmentID\n"+
+				"and E.BuildingID = R.BuildingID\n"+
+				"and E.roomid = R.roomNumber\n"+
+				"and A.appdate = '"+dateString+"'\n"+
+				"and ('"+fromtimeString+"' between A.fromtime and A.totime or '"+totimeString+"' between A.fromtime and A.totime)\n"+
+				") and D.capacity >= "+capacity+";";
 		System.out.println(q);
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
-				available.add(new Tuple<Integer>(rs.getInt("roomNumber"), rs.getInt("buildingID")));
+				available.add(new Tuple<Integer>(rs.getInt("roomNumber"), rs.getInt("BuildingID")));
 				
 			}
 		} catch (Exception e) {
@@ -76,6 +82,9 @@ public class RoomReservation {
 		}
 		
 	}
+	
 }
+
+
 	
 
