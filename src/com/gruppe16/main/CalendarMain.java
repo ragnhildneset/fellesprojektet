@@ -24,6 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import com.gruppe16.entities.Employee;
 
@@ -71,13 +72,15 @@ public class CalendarMain extends Application {
 	
 	private Scene scene;
 	
-	private Stage primaryStage;
+	private Stage stage;
 	
 	private CalendarView calendarView; 
 
 	private DayPlanView dayPlanView;
 	
 	private Employee employee;
+
+	private boolean calendarShown = true;
 	
 	public CalendarMain() {
 		// DEBUG: Use first employee
@@ -90,7 +93,7 @@ public class CalendarMain extends Application {
 	}
 	
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage stage) throws Exception {
 		URL url = getClass().getResource("/com/gruppe16/main/CalendarMain.fxml");
 		
 		FXMLLoader fxmlLoader = new FXMLLoader();
@@ -100,24 +103,23 @@ public class CalendarMain extends Application {
 			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1005, 750);
 			scene.getRoot().setStyle("-fx-background-color: linear-gradient(#FFFFFF, #EEEEEE)");
 			
-			this.primaryStage = primaryStage;
-			primaryStage.setScene(scene);
-			primaryStage.setResizable(false);
-			primaryStage.setTitle(employee.getFirstName() + "'s Calendar");
-			primaryStage.centerOnScreen();
+			this.stage = stage;
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.centerOnScreen();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		calendarNameLabel.setText(employee.getName());
 
 		calendarView = new CalendarView(this);
 		dayPlanView = new DayPlanView(this);
-		
-		showCalendar(new Date());
-		updateGroups();
 
-		primaryStage.show();
+		
+		setEmployee(employee);
+		//showCalendar(new Date());
+		//updateGroups();
+
+		stage.show();
 		redraw();
 
 		selectAllGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -144,7 +146,20 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(ActionEvent evnet) {
 				try {
-					AddAppointment.start(new Stage(), scene.getWindow(), calendarShown ? new Date() : dayPlanView.getDate());
+					Stage newStage = new Stage();
+					newStage.setOnHidden(new EventHandler<WindowEvent>() {
+						@Override
+						public void handle(WindowEvent event) {
+							if(calendarShown) {
+								calendarView.update();
+							}
+							else {
+								dayPlanView.showAppointments(employee);
+							}
+							redraw();
+						}
+					});
+					AddAppointment.start(newStage, scene.getWindow(), calendarShown ? new Date() : dayPlanView.getDate());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -262,8 +277,23 @@ public class CalendarMain extends Application {
 				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
 			}
 		});
+		
+		findCalendarBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent event) {
+				EmployeeFinder employeeFinder = new EmployeeFinder();
+				Stage newStage = new Stage();
+				newStage.setOnHidden(new EventHandler<WindowEvent>() {
+					public void handle(WindowEvent arg0) {
+						Employee newEmployee = employeeFinder.getEmployee();
+						if(newEmployee != null) {
+							setEmployee(newEmployee);
+						}
+					}
+				});
+				employeeFinder.show(newStage, scene.getWindow());
+			}
+		});
 	}
-	boolean calendarShown = true;
 	
 	void showCalendar(Date date) {
 		calendarShown = true;
@@ -364,10 +394,32 @@ public class CalendarMain extends Application {
 		groupListView.setItems(items);
 	}
 	
-	// HAX
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+		
+		// Update calendar label and title
+		if(employee.getEmployeeID() == Login.getCurrentUserID()) {
+			stage.setTitle("My Calendar");
+			calendarNameLabel.setText("Welcome, " + employee.getFirstName() + "!");
+		}
+		else {
+			stage.setTitle(employee.getFirstName() + "'s Calendar");
+			calendarNameLabel.setText(employee.getName());
+		}
+		
+		// Show calendar and redraw
+		showCalendar(new Date());
+		redraw();
+	}
+	
+	public Employee getEmployee() {
+		return employee;
+	}
+	
 	public void redraw() {
-		primaryStage.setScene(null);
-		primaryStage.setScene(scene);
+		// HAX
+		stage.setScene(null);
+		stage.setScene(scene);
 	}
 	
 	public static void main(String[] args) {

@@ -3,6 +3,11 @@ package com.gruppe16.main;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+import com.gruppe16.main.DayPlanView;
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.Employee;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,18 +30,13 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.Window;
-
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Appointment;
-import com.gruppe16.entities.Employee;
 
 public class AppointmentBox extends AnchorPane{
 	
 	private static int PANEL_WIDTH_PARENT = 710;
 	private static int PANEL_HEIGHT_PARENT = 1250;
 	private static int PANEL_WIDTH_OPEN = 450;
-	private static int PANEL_HEIGHT_OPEN = 300;
+	private static int PANEL_HEIGHT_OPEN = 255;
 	
 	public enum panelColors {
 	    RED("#FFCCCC", "#FFAAAA", "#FF0000"),
@@ -52,10 +52,11 @@ public class AppointmentBox extends AnchorPane{
 	    
 	    private String styleHover;
 	    private String styleDefault;
+	    private String styleListView;
 	    panelColors(String cMain, String cSecondary, String cBorder){
 	    	styleDefault = "-fx-background-color: " + cMain + "; -fx-border-width: 1; -fx-border-color: " + cBorder + ";";
 	    	styleHover = "-fx-background-color: " + cSecondary + "; -fx-border-width: 1; -fx-border-color: " + cBorder + ";";
-
+	    	styleListView = "list-view-color: " + cMain + ";";
 	    }
 	    
 	    public String getDefault(){
@@ -64,6 +65,9 @@ public class AppointmentBox extends AnchorPane{
 	    
 	    public String getHover(){
 	    	return styleHover;
+	    }
+	    public String getListView() {
+	    	return styleListView;
 	    }
 	    
 	}
@@ -77,7 +81,6 @@ public class AppointmentBox extends AnchorPane{
 	private boolean show = false;
 	private panelColors color;
 	private DayPlanView dpv;
-	private Window owner;
 	
 	//Using list of employees for testing
     static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees().values());
@@ -88,7 +91,7 @@ public class AppointmentBox extends AnchorPane{
 		LocalTime end = this.appointment.getToTime();
 		this.color = color;
 		this.dpv = dpv;
-		
+		getStylesheets().add("/com/gruppe16/main/listView.css");
 		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
 		int appointmentStart = start.toSecondOfDay()/60;
 		setPrefSize(PANEL_WIDTH_PARENT, Math.max(appointmentTime, 30));
@@ -104,8 +107,7 @@ public class AppointmentBox extends AnchorPane{
 			}
 		}
 		getChildren().removeAll(labels);
-		
-		setStyle(color.styleDefault);
+		setStyle("list-view-color: #CCCCFF; -fx-background-color: #CCCCFF; -fx-border-width: 1; -fx-border-color: #0000FF;");
 		//Title
 		Label titleLabel = new Label(appointment.getTitle());
 		titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -262,8 +264,8 @@ public class AppointmentBox extends AnchorPane{
 		
 		//Participants ListView
 		ListView<Employee> participants = new ListView<Employee>();
-		participants.setStyle(color.styleDefault);
 		participants.setPrefSize(0, 0);
+		participants.setStyle(color.styleListView);
 		participants.setVisible(false);
 		participants.setMouseTransparent( true );
 		participants.setFocusTraversable( false );

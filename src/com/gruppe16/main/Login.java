@@ -38,7 +38,7 @@ public abstract class Login {
 		return login;
 	}
 	
-	public static int getCurrentUserID() throws Exception {
+	public static int getCurrentUserID() {
 		return login.getEmployeeID();
 	}
 
