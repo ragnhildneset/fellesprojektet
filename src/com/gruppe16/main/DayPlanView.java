@@ -99,6 +99,7 @@ public class DayPlanView extends VBox {
 				public void handle(MouseEvent evnet) {
 					try {
 						AddAppointment.start(new Stage(), mainPane.getScene().getWindow(), getDate());
+						showAppointments(employee);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

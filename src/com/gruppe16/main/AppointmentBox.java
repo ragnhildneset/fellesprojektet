@@ -153,7 +153,6 @@ public class AppointmentBox extends AnchorPane{
 		
 		//Participants ListView
 		ListView<Employee> participants = new ListView<Employee>();
-		//participants.setMouseTransparent( true );
 		participants.setFocusTraversable( false );
 		participantPane.getChildren().addAll(participantsTitleLabel,participants);
 		participants.setLayoutY(20);
@@ -169,6 +168,8 @@ public class AppointmentBox extends AnchorPane{
 							show = true;
 							descriptionPane.setVisible(false);
 							participantPane.setVisible(true);
+							participants.setItems(employeedata);
+							participantsTitleLabel.setText("Participants (" + employeedata.size() + "):");
 							
 							showBtn.setText("Hide participants");
 						}
@@ -226,12 +227,13 @@ public class AppointmentBox extends AnchorPane{
 					participantPane.setPrefHeight(getPrefHeight()-100);
 					participants.setPrefWidth(getPrefWidth()-12);
 					participants.setPrefHeight(getPrefHeight()-105);
-					participants.setItems(employeedata);
 					if(!show){
 						descriptionPane.setVisible(true);
 					}
 					else {
 						participantPane.setVisible(true);
+						participants.setItems(employeedata);
+						participantsTitleLabel.setText("Participants (" + employeedata.size() + "):");
 
 					}
 					delBtn.setVisible(true);
