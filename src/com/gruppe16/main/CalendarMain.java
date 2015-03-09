@@ -364,6 +364,10 @@ public class CalendarMain extends Application {
 		groupListView.setItems(items);
 	}
 	
+	public Scene getScene(){
+		return scene;
+	}
+	
 	// HAX
 	public void redraw() {
 		primaryStage.setScene(null);
