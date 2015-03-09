@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 import com.gruppe16.database.DBConnect;
 import com.mysql.jdbc.ResultSet;
+import com.gruppe16.main.RoomPicker;
 import com.gruppe16.util.Tuple;
 
 public class RoomReservation {
@@ -43,36 +44,30 @@ public class RoomReservation {
 			e.printStackTrace();
 		}
 	}
-	public static void main(String[] args){
-		LocalDate d = LocalDate.of(2015,3,2);
-		Date sqlD = java.sql.Date.valueOf(d);
-		findRoom(LocalDate.of(2015,3,2), LocalTime.of(9,0), LocalTime.of(14,0), 10);
-	}
 	
-	
-	public static void findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime, int capacity){
-		String dateString = "" + appdate.getYear() + "-" + appdate.getMonth() + "-" + appdate.getDayOfMonth();
-		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
-		String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
+	public void findRoom(Date appdate, Time fromtime, Time totime, int capacity){
+		//String dateString = "" + appdate.getYear() + "-" + appdate.getMonth() + "-" + appdate.getDayOfMonth();
+		//String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
+		//String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
 		ArrayList<Tuple> available = new ArrayList<Tuple>();
 		String q = "SELECT Room.roomNumber, Room.buildingID, Room.capacity FROM Room JOIN Building ON(Room.buildingID = Building.buildingID) "
 				+ "WHERE Room.roomNumber NOT IN (SELECT RR.roomid FROM Appointment AS A JOIN RoomReservation AS RR ON(A.appointmentID = RR.appid)"
-				+ " WHERE Room.capacity < " + capacity + " OR (A.appdate = '"+ dateString +"' AND A.fromtime <= '"+ fromtimeString+"' AND A.totime >= '" +totimeString+ "'));";
-		System.out.println(q);
+				+ " WHERE A.appdate = "+appdate+" AND A.fromtime <="+fromtime+" AND A.totime >= "+totime+");";
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
+			s.setDate(1, appdate);
+			s.setTime(2, totime);
+			s.setTime(3, fromtime);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
 				available.add(new Tuple<Integer>(rs.getInt("roomNumber"), rs.getInt("buildingID")));
-				
-			}//sende videre til roompicker?
+			}new RoomPicker(available);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		for(Tuple booking:available){
-			System.out.println("");
-			System.out.print(" Room: " + booking.a + " Building: "+ booking.b);
+			System.out.print("" + booking.a + booking.b);
 		}
 		
 	}

@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 
 import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.Building;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Room;
 
@@ -36,6 +37,22 @@ public class DBConnect {
 				map.put(key, e);
 			}return map;
 		}catch(Exception e) {
+			e.printStackTrace();
+		}return null;
+	}
+	
+	public static HashMap<Integer, Building> getBuildings(){
+		String q = "SELECT buildingID, name, description FROM Building;";
+		HashMap<Integer, Building> map = new HashMap<Integer, Building>();
+		try{
+			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
+			ResultSet rs = (ResultSet) s.executeQuery();
+			while(rs.next()){
+				int key = rs.getInt("buildingID");
+				Building b = new Building(Integer.parseInt(rs.getString("buildingID")), rs.getString("name"), rs.getString("description"));
+				map.put(key, b);
+			}return map;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}return null;
 	}

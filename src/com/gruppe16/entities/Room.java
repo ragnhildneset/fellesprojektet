@@ -20,8 +20,6 @@ public class Room {
 	SimpleIntegerProperty buildingid;
 	
 	
-	
-	
 	private static HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
 	
 	

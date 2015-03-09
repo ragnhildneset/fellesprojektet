@@ -1,5 +1,7 @@
 package com.gruppe16.main;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,21 +9,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Appointment;
+
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Appointment;
+import javafx.scene.text.FontWeight;
 
 public class CalendarView extends GridPane {
 	static String TEXT_DAY_COLOR = "#FFFFFF";
@@ -153,6 +159,7 @@ public class CalendarView extends GridPane {
 					appointmentDateMap.get(date.toString()).add(a);
 				}
 			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
