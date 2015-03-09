@@ -4,11 +4,14 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.gruppe16.main.DayPlanView;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 
+=======
+>>>>>>> origin/master
 =======
 >>>>>>> origin/master
 import javafx.collections.FXCollections;
@@ -34,6 +37,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.Employee;
 
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
