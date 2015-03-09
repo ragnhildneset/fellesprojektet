@@ -3,17 +3,11 @@ package com.gruppe16.main;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import com.gruppe16.main.DayPlanView;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 
-=======
->>>>>>> origin/master
-=======
->>>>>>> origin/master
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,7 +18,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -37,14 +30,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Appointment;
-import com.gruppe16.entities.Employee;
-
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Appointment;
-import com.gruppe16.entities.Employee;
 
 public class AppointmentBox extends AnchorPane{
 	
