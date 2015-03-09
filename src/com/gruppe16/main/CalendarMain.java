@@ -3,6 +3,7 @@ package com.gruppe16.main;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
