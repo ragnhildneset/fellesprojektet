@@ -403,7 +403,7 @@ public class CalendarMain extends Application {
 			calendarNameLabel.setText("Welcome, " + employee.getFirstName() + "!");
 		}
 		else {
-			stage.setTitle(employee.getFirstName() + "'s Calendar");
+			stage.setTitle(employee.getFirstName() + " " + employee.getLastName() + "'s Calendar");
 			calendarNameLabel.setText(employee.getName());
 		}
 		
