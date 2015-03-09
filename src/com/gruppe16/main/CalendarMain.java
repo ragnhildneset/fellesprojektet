@@ -153,8 +153,12 @@ public class CalendarMain extends Application {
 					newStage.setOnHidden(new EventHandler<WindowEvent>() {
 						@Override
 						public void handle(WindowEvent event) {
-							calendarView.update();
-							dayPlanView.showAppointments(employee);
+							if(calendarShown) {
+								calendarView.update();
+							}
+							else {
+								dayPlanView.showAppointments(employee);
+							}
 							redraw();
 						}
 					});
