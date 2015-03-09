@@ -40,6 +40,7 @@ public class DBConnect {
 		}return null;
 	}
 	
+	
 	public static HashMap<Integer, Room> getRooms(){
 		String q = "SELECT roomNumber, capacity, roomName, description, buildingID FROM Room;";
 		HashMap<Integer, Room> map = new HashMap<Integer, Room>();

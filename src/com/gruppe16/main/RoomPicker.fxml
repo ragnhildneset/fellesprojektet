@@ -28,12 +28,11 @@
          <children>
             <TableView fx:id="roomlistTable" prefHeight="371.0" prefWidth="529.0">
                <columns>
-                  <TableColumn fx:id="roomIDCol" prefWidth="75.0" text="RoomID" />
-                  <TableColumn fx:id="capacityCol" prefWidth="75.0" text="Capacity" />
-                  <TableColumn fx:id="roomnameCol" prefWidth="75.0" text="Name" />
-                  <TableColumn fx:id="roomdescrCol" prefWidth="92.0" text="Description" />
-                  <TableColumn fx:id="roombuildingidCol" prefWidth="86.0" text="Building ID" />
-                  <TableColumn fx:id="rlist_pick" prefWidth="61.0" text="Pick" />
+                  <TableColumn fx:id="roomNameCol" prefWidth="101.0" text="Room name" />
+                  <TableColumn fx:id="buildingNameCol" prefWidth="110.0" text="Building name" />
+                  <TableColumn fx:id="roomdescrCol" prefWidth="163.0" text="Description" />
+                  <TableColumn fx:id="roomCapCol" prefWidth="82.0" text="Capacity" />
+                  <TableColumn fx:id="roomPickCol" prefWidth="72.0" text="Pick" />
                </columns>
             </TableView>
          </children>
