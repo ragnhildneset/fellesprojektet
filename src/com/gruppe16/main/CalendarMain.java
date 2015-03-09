@@ -5,8 +5,6 @@ import java.net.URL;
 import java.util.Date;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,7 +12,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -400,9 +397,17 @@ public class CalendarMain extends Application {
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
 		
-		// Update calendar name
-		stage.setTitle(employee.getFirstName() + "'s Calendar");
-		calendarNameLabel.setText(employee.getName());
+		// Update calendar label and title
+		if(employee.getEmployeeID() == Login.getCurrentUserID()) {
+			stage.setTitle("My Calendar");
+			calendarNameLabel.setText("Welcome, " + employee.getFirstName() + "!");
+		}
+		else {
+			stage.setTitle(employee.getFirstName() + "'s Calendar");
+			calendarNameLabel.setText(employee.getName());
+		}
+		
+		// Show calendar and redraw
 		showCalendar(new Date());
 		redraw();
 	}
