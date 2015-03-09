@@ -394,13 +394,11 @@ public class CalendarMain extends Application {
 		groupListView.setItems(items);
 	}
 	
-<<<<<<< HEAD
 	public Scene getScene(){
 		return scene;
 	}
 	
 	// HAX
-=======
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
 		
@@ -423,7 +421,6 @@ public class CalendarMain extends Application {
 		return employee;
 	}
 	
->>>>>>> origin/master
 	public void redraw() {
 		// HAX
 		stage.setScene(null);

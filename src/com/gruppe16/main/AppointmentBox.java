@@ -51,32 +51,11 @@ public class AppointmentBox extends AnchorPane{
 	    GREY("#CCCCCC", "#AAAAAA", "#000000")
 	    ;
 	    
-<<<<<<< HEAD
 	    private String getStyle;
 	    panelColors(String cMain, String cSecondary, String cBorder){
 	    	getStyle = "cMain: " + cMain + "; cSecondary: " + cSecondary + "; cBorder: " + cBorder + ";";
-=======
-	    private String styleHover;
-	    private String styleDefault;
-	    private String styleListView;
-	    panelColors(String cMain, String cSecondary, String cBorder){
-	    	styleDefault = "-fx-background-color: " + cMain + "; -fx-border-width: 1; -fx-border-color: " + cBorder + ";";
-	    	styleHover = "-fx-background-color: " + cSecondary + "; -fx-border-width: 1; -fx-border-color: " + cBorder + ";";
-	    	styleListView = "list-view-color: " + cMain + ";";
-	    }
 	    
-	    public String getDefault(){
-	    	return styleDefault;
 	    }
-	    
-	    public String getHover(){
-	    	return styleHover;
->>>>>>> origin/master
-	    }
-	    public String getListView() {
-	    	return styleListView;
-	    }
-	    
 	}
 	
 	private Appointment appointment;
@@ -115,11 +94,8 @@ public class AppointmentBox extends AnchorPane{
 			}
 		}
 		getChildren().removeAll(labels);
-<<<<<<< HEAD
 		setStyle(color.getStyle);
-=======
-		setStyle("list-view-color: #CCCCFF; -fx-background-color: #CCCCFF; -fx-border-width: 1; -fx-border-color: #0000FF;");
->>>>>>> origin/master
+
 		//Title
 		Label titleLabel = new Label(appointment.getTitle());
 		titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -177,12 +153,6 @@ public class AppointmentBox extends AnchorPane{
 		
 		//Participants ListView
 		ListView<Employee> participants = new ListView<Employee>();
-<<<<<<< HEAD
-=======
-		participants.setPrefSize(0, 0);
-		participants.setStyle(color.styleListView);
-		participants.setVisible(false);
->>>>>>> origin/master
 		participants.setMouseTransparent( true );
 		participants.setFocusTraversable( false );
 		participantPane.getChildren().addAll(participantsTitleLabel,participants);
