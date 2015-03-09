@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.Date;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import com.gruppe16.entities.Employee;
 
@@ -144,7 +148,16 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(ActionEvent evnet) {
 				try {
-					AddAppointment.start(new Stage(), scene.getWindow(), calendarShown ? new Date() : dayPlanView.getDate());
+					Stage newStage = new Stage();
+					newStage.setOnHidden(new EventHandler<WindowEvent>() {
+						@Override
+						public void handle(WindowEvent event) {
+							calendarView.update();
+							dayPlanView.showAppointments(employee);
+							redraw();
+						}
+					});
+					AddAppointment.start(newStage, scene.getWindow(), calendarShown ? new Date() : dayPlanView.getDate());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -262,6 +275,8 @@ public class CalendarMain extends Application {
 				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
 			}
 		});
+		
+		
 	}
 	boolean calendarShown = true;
 	
