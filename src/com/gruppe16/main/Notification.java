@@ -4,13 +4,9 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.ResourceBundle;
-
-import com.gruppe16.database.DBConnect;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -25,6 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import com.gruppe16.database.DBConnect;
 
 public class Notification extends Application implements Initializable {
 
