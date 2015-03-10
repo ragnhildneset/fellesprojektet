@@ -376,19 +376,34 @@ public class AddAppointment implements Initializable {
 		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				try{
-					LocalDate e = datePicker.getValue();
-					int fromHour = 0, toHour = 0, fromMin = 0, toMin = 0;
-					if(!fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
-						fromHour = Integer.parseInt(fromTextField.getText(0, 2)); toHour = Integer.parseInt(toTextField.getText(0, 2));
-						fromMin = Integer.parseInt(fromTextField.getText(3, 5)); toMin = Integer.parseInt(toTextField.getText(3, 5));
-					}
-					Time fromTimeFormatted = new Time(fromHour, fromMin, 0);
-					Time toTimeFormatted = new Time(toHour, toMin, 0);
-					RoomPicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this);
-				}catch (Exception rr){
-					rr.printStackTrace();
+				boolean valid = true;
+				
+				LocalDate date = datePicker.getValue();
+				if(date == null || date.isBefore(LocalDate.now())) {
+					datePicker.setEffect(new InnerShadow(4.0, Color.RED));
+					valid = false;
 				}
+				
+				int fromHour = 0, toHour = 0, fromMin = 0, toMin = 0;
+				if(!fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
+					fromHour = Integer.parseInt(fromTextField.getText(0, 2)); toHour = Integer.parseInt(toTextField.getText(0, 2));
+					fromMin = Integer.parseInt(fromTextField.getText(3, 5)); toMin = Integer.parseInt(toTextField.getText(3, 5));
+				}
+				
+				if(fromHour > toHour || (fromHour == toHour && fromMin >= toMin)) {
+					toTextField.setEffect(new InnerShadow(4.0, Color.RED));
+					fromTextField.setEffect(new InnerShadow(4.0, Color.RED));
+					valid = false;
+				}
+				
+				if(valid){
+					try{
+						RoomPicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this, datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin, 0));
+					}catch (Exception rr){
+						rr.printStackTrace();
+					}
+				}
+				
 			}
 		});
 		
