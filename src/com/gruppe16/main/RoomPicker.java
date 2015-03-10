@@ -1,6 +1,9 @@
 package com.gruppe16.main;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -58,8 +61,7 @@ public class RoomPicker implements Initializable {
 		buildingNameCol.setCellValueFactory(new PropertyValueFactory<Building, String>("ID"));
 		roomCapCol.setCellValueFactory(new PropertyValueFactory<Room, String>("capacity"));
 		roomNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
-		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));
-		
+		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));	
 		roomlistTable.setItems(roomdata);
 		
 		
@@ -67,7 +69,7 @@ public class RoomPicker implements Initializable {
 
 
 	
-	public static void start(Stage stage, Window owner, AddAppointment addApp) throws IOException {
+	public static void start(Stage stage, Window owner, AddAppointment addApp, LocalDate date, LocalTime fromTime, LocalTime toTime ) throws IOException {
 		RoomPicker.stage = stage;
 		RoomPicker.addAppointment = addApp;
 		//RoomPicker.currentRoom = addApp.getRoom();
