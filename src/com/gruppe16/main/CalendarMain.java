@@ -15,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Parent;
@@ -28,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -36,7 +38,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.HBoxBuilder;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 import com.gruppe16.database.DBConnect;
@@ -102,7 +106,8 @@ public class CalendarMain extends Application {
 
 	private boolean calendarShown = true;
 	
-	private ContextMenu notificationMenu = null;
+	private Popup notificationMenu = null;
+	private Accordion accordion = null;
 
 	private ArrayList<Notification> notifications = new ArrayList<Notification>();
 	
@@ -141,12 +146,14 @@ public class CalendarMain extends Application {
 
 		setEmployee(employee);
 		//showCalendar(new Date());
-		//updateGroups();
+		updateGroups();
 
 		for(int i = 0; i < 10; i++) notifications.add(new Notification());
-		notificationMenu = new ContextMenu();
+		notificationMenu = new Popup();
+		accordion = new Accordion();
+		notificationMenu.getContent().add(accordion);
 		updateNotificationCounter();
-		showNotifications();
+		setupNotifications();
 
 		stage.show();
 		redraw();
@@ -326,7 +333,10 @@ public class CalendarMain extends Application {
 		notifyBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 				if(notificationMenu.isShowing()) notificationMenu.hide();
-				else /*if(DBConnect.getNotifications().size() > 0)*/ notificationMenu.show(notifyBtn, Side.BOTTOM, -280, 10);
+				else /*if(DBConnect.getNotifications().size() > 0)*/ {
+					Point2D pos = notifyBtn.localToScreen(-270.0, 40.0);
+					notificationMenu.show(scene.getWindow(), pos.getX(), pos.getY());
+				}
 			}
 		});
 	}
@@ -429,16 +439,8 @@ public class CalendarMain extends Application {
 		
 		groupListView.setItems(items);
 	}
-	
-	private void showNotifications() {
-		notificationMenu.getItems().clear();
-		
-		CustomMenuItem item = new CustomMenuItem();
-		Accordion accordion = new Accordion();
-		
-		notificationMenu.setConsumeAutoHidingEvents(true);
-		notificationMenu.setAutoHide(false);
-		
+
+	private void setupNotifications() {
 		//ArrayList<NotificationView> notifications = DBConnect.getNotifications(Login.getCurrentUser());
 		for(Notification n : notifications) {
 			NotificationView notificationView = new NotificationView(n);
@@ -451,8 +453,8 @@ public class CalendarMain extends Application {
 				@Override
 				public void run() {
 					notifications.remove(n);
+					accordion.getPanes().remove(pane);
 					updateNotificationCounter();
-					showNotifications();
 					//DBConnect.acceptNotification(n);
 				}
 			};
@@ -462,20 +464,16 @@ public class CalendarMain extends Application {
 				@Override
 				public void run() {
 					notifications.remove(n);
+					accordion.getPanes().remove(pane);
 					updateNotificationCounter();
-					showNotifications();
 					//DBConnect.declineNotification(n);
 				}
 			};
 			notificationView.setOnDecline(onDecline);
 
 			Button acceptBtn = new Button("Accept");
-			acceptBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					System.out.println("MouseClick");
-					onAccept.run();
-				}
+			acceptBtn.setOnMouseClicked(event -> {
+				onAccept.run();
 			});
 			
 			Button declineBtn = new Button("Decline");
@@ -491,17 +489,8 @@ public class CalendarMain extends Application {
 			
 			pane.setGraphic(hbox);
 			pane.setAnimated(false);
-			pane.setOnMouseExited(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					pane.setExpanded(false);
-				}
-			});
 			accordion.getPanes().add(pane);
 		}
-		
-		item.setContent(accordion);
-		notificationMenu.getItems().add(item);
 	}
 	
 	public void updateNotificationCounter() {
