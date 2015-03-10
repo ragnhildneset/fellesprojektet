@@ -18,18 +18,20 @@ public class Room {
 	SimpleIntegerProperty roomid;
 	SimpleStringProperty description;
 	SimpleIntegerProperty buildingid;
+	SimpleStringProperty buildingname;
 	
 	
 	private static HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
 	
 	
-	public Room(int key, int capacity, String name, String descr, int buildingID ){
+	public Room(int key, int capacity, String name, String descr, int buildingID, String buildingname ){
 
 		this.name = new SimpleStringProperty(name);
 		this.capacity = new SimpleIntegerProperty(capacity);
 		this.roomid = new SimpleIntegerProperty(key);
 		this.description = new SimpleStringProperty(descr);
 		this.buildingid = new SimpleIntegerProperty(buildingID);
+		this.buildingname = new SimpleStringProperty(buildingname);
 		rooms.put(key, this);
 	}
 	
@@ -55,6 +57,10 @@ public class Room {
 	
 	public int getBuildingID(){
 		return buildingid.get();
+	}
+	
+	public String getBuildingname(){
+		return buildingname.get();
 	}
 	
 	public static String[] getRooms(){

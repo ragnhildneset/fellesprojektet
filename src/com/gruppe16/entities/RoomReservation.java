@@ -53,7 +53,7 @@ public class RoomReservation {
 		String dateString = "" + appdate.getYear() + "-" + appdate.getMonthValue() + "-" + appdate.getDayOfMonth();
 		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
 		String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
-		ArrayList<Tuple<Integer>> available = new ArrayList<Tuple<Integer>>();
+		ArrayList<Room> available = new ArrayList<Room>();
 		String q = "select D.roomNumber, D.BuildingID\n"+
 				"from Room as D\n"+
 				"where (D.roomNumber, D.BuildingID) not in (\n"+
@@ -71,7 +71,7 @@ public class RoomReservation {
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
 
-				available.add(new Tuple<Integer>(rs.getInt("roomNumber"), rs.getInt("buildingID")));
+				available.add(new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("name"), rs.getString("descr"), rs.getInt("buildingID"), rs.getString("buildingName")));
 
 			}
 		} catch (Exception e) {
