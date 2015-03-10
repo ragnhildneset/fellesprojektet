@@ -47,7 +47,7 @@ public class RoomPicker implements Initializable {
 	private static Room currentRoom;
 	private ArrayList<Tuple> availableRooms;
 
-    static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
+    static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.findRooms().values());
 
 
 	public RoomPicker(ArrayList<Tuple> available) {
@@ -58,16 +58,13 @@ public class RoomPicker implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		buildingNameCol.setCellValueFactory(new PropertyValueFactory<Building, String>("ID"));
+		buildingNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingname"));
 		roomCapCol.setCellValueFactory(new PropertyValueFactory<Room, String>("capacity"));
-		roomNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
+		roomNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("roomname"));
 		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));	
 		roomlistTable.setItems(roomdata);
-		
-		
+			
 	}
-
-
 	
 	public static void start(Stage stage, Window owner, AddAppointment addApp, LocalDate date, LocalTime fromTime, LocalTime toTime ) throws IOException {
 		RoomPicker.stage = stage;

@@ -42,6 +42,7 @@ import com.gruppe16.admin.AdminPanel;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.RoomReservation;
 
 public class AddAppointment implements Initializable {
 	@FXML
@@ -79,17 +80,28 @@ public class AddAppointment implements Initializable {
 
 	private static Stage stage;
 	private static LocalDate startDate = null;
+	private static int startTime = 0;
+	private static Appointment appointment = null;
+	private static boolean editMode = false;
 	public static Collection<Employee> cachedEmployees;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		cachedEmployees = DBConnect.getEmployees().values();
-		if(startDate != null) {
-			datePicker.setValue(startDate);
+		
+		if(editMode) datePicker.setValue(appointment.getAppDate());
+		else if(startDate != null) datePicker.setValue(startDate);
+		else datePicker.setValue(LocalDate.now());
+		
+		if(editMode) {
+			titleTextField.setText(appointment.getTitle());
+			descriptionTextArea.setText(appointment.getDescription());
 		}
-		else {
-			datePicker.setValue(LocalDate.now());
+		else{
+			titleTextField.setText(null);
+			descriptionTextArea.setText(null);
 		}
+		
 		roomTextField.setEditable(true);
 		sendBtn.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
@@ -132,8 +144,14 @@ public class AddAppointment implements Initializable {
 				}
 				
 				if(valid) {
-					DBConnect.addAppointment(titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(fromHour, fromMin, 0), new Time(toHour, toMin, 0), Login.getCurrentUser());
-					stage.close();
+					if(editMode){
+						//TODO
+						stage.close();
+					}else{
+						DBConnect.addAppointment(titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(fromHour, fromMin, 0), new Time(toHour, toMin, 0), Login.getCurrentUser());
+						stage.close();
+					}
+
 				}
 			}
 		});
@@ -168,6 +186,20 @@ public class AddAppointment implements Initializable {
 
 		fromTextField.setEditable(false);
 		fromTextField.setUserData(new Integer(0));
+		if(editMode){
+			fromTextField.setText(appointment.getFromTime().toString());
+			toTextField.setText(appointment.getToTime().toString());
+		}
+		else if(startTime != 0){
+			if(startTime < 10) {
+				fromTextField.setText("0"+ startTime + ":00");
+				toTextField.setText("0"+ startTime + ":59");
+			}
+			else {
+				fromTextField.setText(startTime + ":00");
+				toTextField.setText(startTime + ":59");
+			}
+		}
 		fromTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
@@ -270,6 +302,7 @@ public class AddAppointment implements Initializable {
 		
 		toTextField.setEditable(false);
 		toTextField.setUserData(new Integer(0));
+
 		toTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
@@ -445,8 +478,25 @@ public class AddAppointment implements Initializable {
 	}
 	
 	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
+		AddAppointment.editMode = false;
 		AddAppointment.stage = stage;
 		AddAppointment.startDate = new java.sql.Date(date.getTime()).toLocalDate();
+		AddAppointment.startTime = date.getHours();
+		Scene scene = new Scene((Parent)FXMLLoader.load(AddAppointment.class.getResource("/com/gruppe16/main/AddAppointment.fxml")));
+		stage.setResizable(false);
+		stage.initStyle(StageStyle.UTILITY);
+		if(owner != null) {
+			stage.initOwner(owner);
+			stage.initModality(Modality.WINDOW_MODAL);
+		}
+		stage.setScene(scene);
+		stage.show();
+	}
+	
+	public static void start(Stage stage, Window owner, Appointment appointment) throws Exception {
+		AddAppointment.editMode = true;
+		AddAppointment.stage = stage;
+		AddAppointment.appointment = appointment;
 		Scene scene = new Scene((Parent)FXMLLoader.load(AddAppointment.class.getResource("/com/gruppe16/main/AddAppointment.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);

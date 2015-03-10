@@ -2,6 +2,7 @@ package com.gruppe16.main;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.gruppe16.main.DayPlanView;
 import com.gruppe16.database.DBConnect;
@@ -31,6 +32,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 public class AppointmentBox extends AnchorPane{
 	
@@ -124,7 +126,6 @@ public class AppointmentBox extends AnchorPane{
 		
 		//Delete Button
 		Button delBtn = new Button("Delete");
-		delBtn.setVisible(false);
 		
 		//Delete Button controller
 		delBtn.setOnAction(new EventHandler<ActionEvent>(){
@@ -135,12 +136,24 @@ public class AppointmentBox extends AnchorPane{
 		
 		//Edit Button
 		Button editBtn = new Button("Edit");
-		editBtn.setVisible(false);
 		
 		//Edit Button Controller
-		editBtn.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent event) {
-				System.out.println("Edit!");
+		editBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent evnet) {
+				try {
+					Stage newStage = new Stage();
+					newStage.setOnHidden(new EventHandler<WindowEvent>() {
+						@Override
+						public void handle(WindowEvent event) {
+							dpv.showAppointments();
+							dpv.getMainPane().redraw();
+							}
+					});
+					AddAppointment.start(newStage, dpv.getMainPane().getScene().getWindow(), appointment);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -159,7 +172,6 @@ public class AppointmentBox extends AnchorPane{
 		
 		//Show Participants Button
 				Button showBtn = new Button("Show participants");
-				showBtn.setVisible(false);
 				showBtn.setPrefWidth(150);;
 				
 				showBtn.setOnAction(new EventHandler<ActionEvent>(){
@@ -183,7 +195,7 @@ public class AppointmentBox extends AnchorPane{
 				});
 		
 		//Add Everything
-		getChildren().addAll(titleLabel, timeLabel, delBtn, editBtn, showBtn);
+		getChildren().addAll(titleLabel, timeLabel);
 		AnchorPane.setRightAnchor(timeLabel, 5.0);
 		AnchorPane.setTopAnchor(timeLabel, 5.0);
 		AnchorPane.setTopAnchor(titleLabel, 5.0);
@@ -236,9 +248,7 @@ public class AppointmentBox extends AnchorPane{
 						participantsTitleLabel.setText("Participants (" + employeedata.size() + "):");
 
 					}
-					delBtn.setVisible(true);
-					editBtn.setVisible(true);
-					showBtn.setVisible(true);
+					getChildren().addAll(delBtn, editBtn, showBtn);
 				}
 				else{
 					active = false;
@@ -249,9 +259,7 @@ public class AppointmentBox extends AnchorPane{
 					titleLabel.setPrefWidth(getPrefWidth()-10);
 					timeLabel.setVisible(false);
 					getChildren().removeAll(descriptionPane, participantPane);
-					delBtn.setVisible(false);
-					editBtn.setVisible(false);
-					showBtn.setVisible(false);
+					getChildren().removeAll(delBtn, editBtn, showBtn);
 				}
 			}
 		});
