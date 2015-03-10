@@ -25,6 +25,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
 public class DayPlanView extends VBox {
@@ -71,6 +72,7 @@ public class DayPlanView extends VBox {
 		
 		//Create Hour Panes
 		for(int i = 0; i < 24; i++){
+			final int hour = i;
 			VBox timeBoxLeft = new VBox();
 			timeBoxLeft.setPrefSize(80, 60);;
 			timeBoxLeft.setAlignment(Pos.TOP_RIGHT);
@@ -98,9 +100,17 @@ public class DayPlanView extends VBox {
 				@Override
 				public void handle(MouseEvent evnet) {
 					try {
-						AddAppointment.start(new Stage(), mainPane.getScene().getWindow(), getDate());
-						showAppointments(employee);
-						mainPane.redraw();
+						Stage newStage = new Stage();
+						newStage.setOnHidden(new EventHandler<WindowEvent>() {
+							@Override
+							public void handle(WindowEvent event) {
+								showAppointments(employee);
+								mainPane.redraw();
+								}
+						});
+						Date dateTime = getDate();
+						dateTime.setHours(hour);
+						AddAppointment.start(newStage, mainPane.getScene().getWindow(), dateTime);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -118,6 +128,7 @@ public class DayPlanView extends VBox {
 	
 	public void setDate(Date date){
 		this.date = date;
+		this.date.setHours(0);
 		dateTitle.setText(DAY_NAMES[this.date.getDay()]);
 	}
 	

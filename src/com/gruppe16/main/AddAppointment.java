@@ -79,6 +79,7 @@ public class AddAppointment implements Initializable {
 
 	private static Stage stage;
 	private static LocalDate startDate = null;
+	private static int startTime = 0;
 	public static Collection<Employee> cachedEmployees;
 	
 	@Override
@@ -168,6 +169,10 @@ public class AddAppointment implements Initializable {
 
 		fromTextField.setEditable(false);
 		fromTextField.setUserData(new Integer(0));
+		if(startTime != 0){
+			if(startTime < 10) fromTextField.setText("0"+ startTime + ":00");
+			else fromTextField.setText(startTime + ":00");
+		}
 		fromTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
@@ -270,6 +275,11 @@ public class AddAppointment implements Initializable {
 		
 		toTextField.setEditable(false);
 		toTextField.setUserData(new Integer(0));
+		if(startTime != 0){
+				if(startTime < 10) toTextField.setText("0"+ startTime + ":59");
+				else toTextField.setText(startTime + ":59");
+		}
+
 		toTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
@@ -447,6 +457,7 @@ public class AddAppointment implements Initializable {
 	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
 		AddAppointment.stage = stage;
 		AddAppointment.startDate = new java.sql.Date(date.getTime()).toLocalDate();
+		AddAppointment.startTime = date.getHours();
 		Scene scene = new Scene((Parent)FXMLLoader.load(AddAppointment.class.getResource("/com/gruppe16/main/AddAppointment.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);

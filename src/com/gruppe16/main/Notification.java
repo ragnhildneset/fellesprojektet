@@ -40,6 +40,7 @@ public class Notification implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		if(notifications.size() == 0) return;
 		
 		current = notifications.poll();
 		c_title.setText(current.title);
