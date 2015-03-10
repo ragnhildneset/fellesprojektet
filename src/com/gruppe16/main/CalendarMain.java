@@ -130,8 +130,6 @@ public class CalendarMain extends Application {
 
 		
 		setEmployee(employee);
-		//showCalendar(new Date());
-		//updateGroups();
 
 		stage.show();
 		redraw();
