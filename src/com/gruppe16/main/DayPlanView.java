@@ -100,6 +100,7 @@ public class DayPlanView extends VBox {
 					try {
 						AddAppointment.start(new Stage(), mainPane.getScene().getWindow(), getDate());
 						showAppointments(employee);
+						mainPane.redraw();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
