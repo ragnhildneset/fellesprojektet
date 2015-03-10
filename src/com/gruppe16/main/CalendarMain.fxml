@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
@@ -123,11 +124,17 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
                <children>
-                  <ImageView fx:id="alertBtn" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../img/bell.png" />
-                     </image>
-                  </ImageView>
+                  <Pane>
+                     <children>
+                        <ImageView fx:id="notifyBtn" fitHeight="32.0" fitWidth="32.0" layoutX="110.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../img/bell.png" />
+                           </image>
+                        </ImageView>
+                        <Circle fx:id="notificationBubble" fill="#c2d3ff" layoutX="131.0" layoutY="69.0" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
+                        <Label fx:id="notificationLabel" alignment="CENTER" layoutX="125.0" layoutY="60.0" prefWidth="15.0" text="9+" />
+                     </children>
+                  </Pane>
                </children>
             </HBox>
          </children>
