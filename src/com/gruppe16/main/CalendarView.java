@@ -149,7 +149,7 @@ public class CalendarView extends GridPane {
 		Date beforeTime = calendar.getTime();
 		Date nowDate = new Date();
 
-	/*	Map<Integer, Appointment> appointments = DBConnect.getAppointments();
+		Map<Integer, Appointment> appointments = DBConnect.getAppointments();
 		Map<String, List<Appointment>> appointmentDateMap = new HashMap<String, List<Appointment>>();
 		for(Appointment a : appointments.values()) {
 			try {
@@ -164,7 +164,7 @@ public class CalendarView extends GridPane {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}*/
+		}
 		
 		// Set calendar to the first monday
 		calendar.set(Calendar.DAY_OF_MONTH, 1); calendar.getTime(); // Bug workaround
@@ -227,7 +227,7 @@ public class CalendarView extends GridPane {
 				}
 				
 				String dateStr = new java.sql.Date(calendar.getTime().getTime()).toString();
-			/*	if(appointmentDateMap.containsKey(dateStr)) {
+				if(appointmentDateMap.containsKey(dateStr)) {
 					int i = 0;
 					for(Appointment a : appointmentDateMap.get(dateStr)) {
 						Label appLabel = new Label(a.getTitle());
@@ -246,7 +246,7 @@ public class CalendarView extends GridPane {
 						}
 						i++;
 					}
-				}*/
+				}
 				vbox.requestLayout();
 				
 				vbox.setStyle("-fx-background-color: " + backgroundColor + "; -fx-border-width: 1; -fx-border-color: " + borderColor + ";");

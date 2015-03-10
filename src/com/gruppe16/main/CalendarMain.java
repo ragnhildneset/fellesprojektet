@@ -310,12 +310,12 @@ public class CalendarMain extends Application {
 		
 		ContextMenu menu = new ContextMenu();
 		CustomMenuItem item = new CustomMenuItem();
-		Accordion hbox = new Accordion();
+		Accordion accordion = new Accordion();
 		
 		Notification n = new Notification();
 		
-		hbox.getPanes().add(new TitledPane("Invitation for 'Meeting 1'", n.start()));
-		item.setContent(hbox);
+		accordion.getPanes().add(new TitledPane("Invitation for 'Meeting 1'", n.start()));
+		item.setContent(accordion);
 		
 		menu.getItems().add(item);
 		
