@@ -35,12 +35,14 @@ public class DayPlanView extends VBox {
 	private Pane appointmentPane;
 	private Label dateTitle;
 	private Employee employee;
+	private CalendarMain mPane;
 	
 	public DayPlanView(CalendarMain mainPane){
 		setPrefSize(800, 625);
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		mPane = mainPane;
 		
 		VBox bottomPane = new VBox();
 		bottomPane.setPrefSize(800, 1500);
@@ -105,12 +107,12 @@ public class DayPlanView extends VBox {
 							@Override
 							public void handle(WindowEvent event) {
 								showAppointments(employee);
-								mainPane.redraw();
+								mPane.redraw();
 								}
 						});
 						Date dateTime = getDate();
 						dateTime.setHours(hour);
-						AddAppointment.start(newStage, mainPane.getScene().getWindow(), dateTime);
+						AddAppointment.start(newStage, mPane.getScene().getWindow(), dateTime);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -148,6 +150,10 @@ public class DayPlanView extends VBox {
 		date.setDate(this.date.getDate()-1);
 		setDate(date);
 		showAppointments(employee);
+	}
+	
+	public CalendarMain getMainPane() {
+		return mPane;
 	}
 	
 	public void addAppointment(Appointment appointment, panelColors color){
@@ -323,6 +329,11 @@ public class DayPlanView extends VBox {
 			}
 		}
 		
+	}
+	
+	public void showAppointments(){
+		Employee e = Login.getCurrentUser();
+		showAppointments(e);
 	}
 	
 	public void showAppointments(Employee e) {

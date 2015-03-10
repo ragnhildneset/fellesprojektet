@@ -2,6 +2,7 @@ package com.gruppe16.main;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.gruppe16.main.DayPlanView;
 import com.gruppe16.database.DBConnect;
@@ -31,6 +32,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 public class AppointmentBox extends AnchorPane{
 	
@@ -136,9 +138,22 @@ public class AppointmentBox extends AnchorPane{
 		Button editBtn = new Button("Edit");
 		
 		//Edit Button Controller
-		editBtn.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent event) {
-				System.out.println("Edit!");
+		editBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent evnet) {
+				try {
+					Stage newStage = new Stage();
+					newStage.setOnHidden(new EventHandler<WindowEvent>() {
+						@Override
+						public void handle(WindowEvent event) {
+							dpv.showAppointments();
+							dpv.getMainPane().redraw();
+							}
+					});
+					AddAppointment.start(newStage, dpv.getMainPane().getScene().getWindow(), appointment);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
