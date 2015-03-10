@@ -12,17 +12,25 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TitledPane;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -50,7 +58,7 @@ public class CalendarMain extends Application {
 	private ImageView backToCalendarBtn;
 	
 	@FXML
-	private ImageView alertBtn;
+	private ImageView notifyBtn;
 	
 	@FXML
 	private Button selectAllGroupsBtn;
@@ -69,6 +77,12 @@ public class CalendarMain extends Application {
 	
 	@FXML
 	private Label calendarNameLabel;
+	
+	@FXML
+	private Label notificationLabel;
+	
+	@FXML
+	private Circle notificationCircle;
 	
 	private Scene scene;
 	
@@ -222,31 +236,31 @@ public class CalendarMain extends Application {
 			}
 		});
 
-		alertBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+		notifyBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				alertBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+				notifyBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
 			}
 		});
 
-		alertBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+		notifyBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				alertBtn.setEffect(null);
+				notifyBtn.setEffect(null);
 			}
 		});
 
-		alertBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+		notifyBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				alertBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+				notifyBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
 			}
 		});
 
-		alertBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+		notifyBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				alertBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+				notifyBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
 			}
 		});
 
@@ -291,6 +305,24 @@ public class CalendarMain extends Application {
 					}
 				});
 				employeeFinder.show(newStage, scene.getWindow());
+			}
+		});
+		
+		ContextMenu menu = new ContextMenu();
+		CustomMenuItem item = new CustomMenuItem();
+		Accordion hbox = new Accordion();
+		
+		Notification n = new Notification();
+		
+		hbox.getPanes().add(new TitledPane("Invitation for 'Meeting 1'", n.start()));
+		item.setContent(hbox);
+		
+		menu.getItems().add(item);
+		
+		notifyBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent event) {
+				if(menu.isShowing()) menu.hide();
+				else menu.show(notifyBtn, Side.BOTTOM, -280, 10);
 			}
 		});
 	}
