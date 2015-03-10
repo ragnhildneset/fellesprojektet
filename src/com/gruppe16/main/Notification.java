@@ -56,12 +56,30 @@ public class Notification extends Application implements Initializable {
 		c_attend.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				String q = "update Request\n"
+						+"set status = 1\n"
+						+"where employeeid = "+Login.getCurrentUserID()+";";
+				try{
+					PreparedStatement p = DBConnect.getConnection().prepareStatement(q);
+					p.execute();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 				Platform.exit();
 			}
 		});
 		c_decline.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				String q = "update Request\n"
+						+"set status = 2\n"
+						+"where employeeid = "+Login.getCurrentUserID()+";";
+				try{
+					PreparedStatement p = DBConnect.getConnection().prepareStatement(q);
+					p.execute();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 				Platform.exit();
 			}
 		});
