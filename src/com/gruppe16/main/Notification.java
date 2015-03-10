@@ -24,7 +24,7 @@ import javafx.stage.StageStyle;
 
 import com.gruppe16.database.DBConnect;
 
-public class Notification extends Application implements Initializable {
+public class Notification implements Initializable {
 
 	@FXML Button c_attend;
 	@FXML Button c_decline;
@@ -83,15 +83,10 @@ public class Notification extends Application implements Initializable {
 		});
 	}
 
-	@Override
-	public void start(Stage arg0) throws Exception {
+	public Pane start() throws Exception {
 		Login.login("admin", "passord");
 		getInvites(Login.getCurrentUserID());
-		Pane pane = (Pane) FXMLLoader.load(getClass().getResource("/com/gruppe16/main/notif_cell.fxml"));
-		Scene scene = new Scene(pane);
-		arg0.initStyle(StageStyle.UNDECORATED);
-		arg0.setScene(scene);
-		arg0.show();
+		return (Pane)FXMLLoader.load(getClass().getResource("/com/gruppe16/main/notif_cell.fxml"));
 	}
 	
 	static Queue<Notif> notifications = new LinkedList<Notif>();
@@ -124,10 +119,6 @@ public class Notification extends Application implements Initializable {
 		if(!notifications.isEmpty())
 			return notifications.poll();
 		return null;
-	}
-
-	public static void main(String[] args){
-		launch(args);
 	}
 	
 	public static class Notif {
