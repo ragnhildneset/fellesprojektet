@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 import com.gruppe16.database.DBConnect;
 import com.mysql.jdbc.ResultSet;
+import com.gruppe16.main.RoomPicker;
 import com.gruppe16.util.Tuple;
 
 public class RoomReservation {
@@ -69,8 +70,9 @@ public class RoomReservation {
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
-				available.add(new Tuple<Integer>(rs.getInt("roomNumber"), rs.getInt("BuildingID")));
-				
+
+				available.add(new Tuple<Integer>(rs.getInt("roomNumber"), rs.getInt("buildingID")));
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

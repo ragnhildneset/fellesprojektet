@@ -76,10 +76,10 @@ public class AdminPanel extends Application implements Initializable {
     @FXML private TableColumn<Employee, String> usernameCol;
     @FXML private TableColumn<Employee, Boolean> e_delete;
     
-    
+
     static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
     static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees().values());
-    
+    	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -156,8 +156,7 @@ public class AdminPanel extends Application implements Initializable {
             }
          
         });
-		
-		roomlistTable.setItems(roomdata);
+	
 		
 		employeeIDCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("employeeID"));
 		firstNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("firstName"));
