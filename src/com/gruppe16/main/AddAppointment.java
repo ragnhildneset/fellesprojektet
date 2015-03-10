@@ -24,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.InnerShadow;
@@ -77,6 +78,9 @@ public class AddAppointment implements Initializable {
 
 	@FXML
 	private TextField titleTextField;
+	
+	@FXML
+	private Label titleLabel;
 
 	private static Stage stage;
 	private static LocalDate startDate = null;
@@ -96,6 +100,7 @@ public class AddAppointment implements Initializable {
 		if(editMode) {
 			titleTextField.setText(appointment.getTitle());
 			descriptionTextArea.setText(appointment.getDescription());
+			titleLabel.setText("Edit Appointment");
 		}
 		else{
 			titleTextField.setText(null);
