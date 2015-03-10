@@ -18,9 +18,6 @@ import com.gruppe16.entities.Room;
 
 public class DBConnect {
 	
-	private static String userid = "toraho", password = "gruppe16ftw";
-	private static String url = "jdbc:mysql://mysql.stud.ntnu.no:3306/toraho_fellesprosjektet";
-	
 	private static Connection con = null;
 	
 	public static HashMap<Integer,Employee> getEmployees(){
@@ -129,7 +126,7 @@ public class DBConnect {
 			}
 			
 			try {
-				con = DriverManager.getConnection(url, userid, password);
+				con = DriverManager.getConnection(DBLogin.getURL(), DBLogin.getUser(), DBLogin.getPass());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
