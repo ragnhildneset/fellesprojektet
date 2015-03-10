@@ -129,7 +129,7 @@ public class DBConnect {
 			try {
 				con = DriverManager.getConnection(DBLogin.getURL(), DBLogin.getUser(), DBLogin.getPass());
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.err.println("Username, password or the url for the database is wrong.");
 			}
 		}
 		
