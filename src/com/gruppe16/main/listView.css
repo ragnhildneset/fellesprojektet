@@ -1,9 +1,52 @@
+#appBox {
+	cMain: #CCCCFF;
+	cSecondary: #AAAAFF;
+	cBorder: #0000FF;
+	
+	-fx-background-color: cMain; 
+	-fx-border-width: 1; 
+	-fx-border-color: cBorder;
+	-fx-cursor: default;
+}
+
+#appBox:hover {
+	-fx-background-color: cSecondary; 
+	-fx-border-width: 1; 
+	-fx-border-color: cBorder;
+	-fx-cursor: hand;
+}
+
+.button {
+	-fx-background-color: cMain; 
+	-fx-border-width: 1; 
+	-fx-border-color: cBorder;
+	-fx-cursor: hand;
+}
+
+.button:hover {
+	-fx-background-color: cSecondary; 
+	-fx-border-width: 1; 
+	-fx-border-color: cBorder;
+	-fx-cursor: hand;
+}
+
+.button:pressed {
+	-fx-background-color: cMain; 
+	-fx-border-width: 1; 
+	-fx-border-color: cBorder;
+	-fx-cursor: hand;
+}
 
 .list-view {
-	list-view-color: #000000;
-	-fx-border-width: 1; -fx-border-color: #0000FF;
+	-fx-border-width: 1; 
+	-fx-border-color: cBorder;
+	list-cell-color: cMain;
+	-fx-background-color: cMain;
+	-fx-cursor: default;
 }
 
 .list-cell {
-	-fx-background-color: list-view-color;
+	-fx-background-color: list-cell-color;
+	-fx-cursor: default;
+
 }

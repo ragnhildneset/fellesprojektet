@@ -5,10 +5,13 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.main.AppointmentBox.panelColors;
+
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,9 +24,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 
-public class DayPlanView extends ScrollPane {
+public class DayPlanView extends VBox {
 	
 	private static String[] DAY_NAMES = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 	private Date date;
@@ -33,21 +37,22 @@ public class DayPlanView extends ScrollPane {
 	
 	public DayPlanView(CalendarMain mainPane){
 		setPrefSize(800, 625);
-		setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		
 		VBox bottomPane = new VBox();
-		bottomPane.setPrefSize(803, 1500);
+		bottomPane.setPrefSize(800, 1500);
 		bottomPane.setStyle("-fx-background-color: #FFFFFF;");
 		
 		//Create Title Pane
-		Separator separator = new Separator();
 		VBox title = new VBox();
 		title.setPrefSize(790,60);
 		title.setAlignment(Pos.TOP_CENTER);
 		Label dateTitle = new Label();
 		dateTitle.setFont(new Font(24));
 		title.getChildren().add(dateTitle);
+		title.setStyle("-fx-background-color: #FFFFFF;");
 		this.dateTitle = dateTitle;
 		
 		//Create other Panes for Layout
@@ -62,7 +67,7 @@ public class DayPlanView extends ScrollPane {
 		appointmentPane.setPrefSize(710,1500);
 		rightPane.getChildren().add(appointmentPane);
 		lowerPane.getChildren().addAll(leftPane, rightPane);
-		bottomPane.getChildren().addAll(title, separator, lowerPane);
+		bottomPane.getChildren().add(lowerPane);
 		
 		//Create Hour Panes
 		for(int i = 0; i < 24; i++){
@@ -88,12 +93,24 @@ public class DayPlanView extends ScrollPane {
 					timeBoxLeft.setStyle("-fx-background-color: transparent;");
 				}
 			});
-			//timeBoxes[i] = timeBox;
+			
+			timeBoxLeft.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent evnet) {
+					try {
+						AddAppointment.start(new Stage(), mainPane.getScene().getWindow(), getDate());
+						showAppointments(employee);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 		}
 		
-		setContent(bottomPane);
+		scrollPane.setContent(bottomPane);
+		scrollPane.setPannable(true);
 		
-		this.setPannable(true);
+		getChildren().addAll(title, scrollPane);
 		this.appointmentPane = appointmentPane;
 		requestLayout();
 	}
@@ -172,6 +189,93 @@ public class DayPlanView extends ScrollPane {
 						overlapArray.add(overlappingBoxes);
 					}
 				}
+				else if(a.getDuration() < 30 && aNext.getDuration() < 30) {
+					if(a.getStart().plusMinutes(30).isAfter(aNext.getStart()) ^ a.getStart().isAfter(aNext.getStart().plusMinutes(30))) {
+						//Check if in overlapArray already
+						newBox = false;
+						boolean contained = false;
+						for (ArrayList<AppointmentBox> o : overlapArray) {
+							if(o.contains(a)){
+								if(!o.contains(aNext)){
+									o.add(aNext);
+								}
+								contained = true;
+								break;
+							}
+							else if (o.contains(aNext)){
+								if(!o.contains(a)){
+									o.add(a);
+								}
+								contained = true;
+								break;
+							}
+						}
+						if(!contained){
+							ArrayList<AppointmentBox> overlappingBoxes = new ArrayList<AppointmentBox>();
+							overlappingBoxes.add(a);
+							overlappingBoxes.add(aNext);
+							overlapArray.add(overlappingBoxes);
+						}
+					}
+				}
+				else if(a.getDuration() < 30) {
+					if(a.getStart().plusMinutes(30).isAfter(aNext.getStart()) ^ a.getStart().plusMinutes(30).isAfter(aNext.getEnd())) {
+						//Check if in overlapArray already
+						newBox = false;
+						boolean contained = false;
+						for (ArrayList<AppointmentBox> o : overlapArray) {
+							if(o.contains(a)){
+								if(!o.contains(aNext)){
+									o.add(aNext);
+								}
+								contained = true;
+								break;
+							}
+							else if (o.contains(aNext)){
+								if(!o.contains(a)){
+									o.add(a);
+								}
+								contained = true;
+								break;
+							}
+						}
+						if(!contained){
+							ArrayList<AppointmentBox> overlappingBoxes = new ArrayList<AppointmentBox>();
+							overlappingBoxes.add(a);
+							overlappingBoxes.add(aNext);
+							overlapArray.add(overlappingBoxes);
+						}
+					}
+				}
+				else if(aNext.getDuration() < 30) {
+					if(a.getEnd().isAfter(aNext.getStart()) ^ a.getStart().isAfter(aNext.getStart().plusMinutes(30))) {
+						//Check if in overlapArray already
+						newBox = false;
+						boolean contained = false;
+						for (ArrayList<AppointmentBox> o : overlapArray) {
+							if(o.contains(a)){
+								if(!o.contains(aNext)){
+									o.add(aNext);
+								}
+								contained = true;
+								break;
+							}
+							else if (o.contains(aNext)){
+								if(!o.contains(a)){
+									o.add(a);
+								}
+								contained = true;
+								break;
+							}
+						}
+						if(!contained){
+							ArrayList<AppointmentBox> overlappingBoxes = new ArrayList<AppointmentBox>();
+							overlappingBoxes.add(a);
+							overlappingBoxes.add(aNext);
+							overlapArray.add(overlappingBoxes);
+						}
+					}
+				}
 			}
 			
 			
@@ -225,7 +329,7 @@ public class DayPlanView extends ScrollPane {
 						}
 					}
 				}
-				if(notContained) addAppointment(currentApp, panelColors.BLUE);
+				if(notContained) addAppointment(currentApp, panelColors.GREEN);
 			}
 		}
 		arrangeAppointments();
