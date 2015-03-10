@@ -60,6 +60,8 @@ public class RoomPicker implements Initializable {
 		roomNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
 		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));
 		
+		roomlistTable.setItems(roomdata);
+		
 		
 	}
 

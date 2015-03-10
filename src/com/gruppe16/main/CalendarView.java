@@ -43,10 +43,12 @@ public class CalendarView extends GridPane {
 	
 	static String[] DAY_NAMES = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
+	private final CalendarMain calendarMain;
 	private Calendar calendar;
 	private VBox[][] dayVBoxes = new VBox[7][6];
 	
-	CalendarView(CalendarMain mainPane) {
+	CalendarView(CalendarMain calendarMain) {
+		this.calendarMain = calendarMain;
 		
 		calendar = Calendar.getInstance();
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -100,7 +102,7 @@ public class CalendarView extends GridPane {
 				vbox.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent event) {
-						mainPane.showDayPlan((Date)vbox.getUserData());
+						calendarMain.showDayPlan((Date)vbox.getUserData());
 					}
 				});
 				
@@ -151,7 +153,7 @@ public class CalendarView extends GridPane {
 		Map<String, List<Appointment>> appointmentDateMap = new HashMap<String, List<Appointment>>();
 		for(Appointment a : appointments.values()) {
 			try {
-				if(a.getOwnerID() == Login.getCurrentUserID()) {
+				if(a.getOwnerID() == calendarMain.getEmployee().getEmployeeID()) {
 					Date date = java.sql.Date.valueOf(a.getAppDate());
 					if(!appointmentDateMap.containsKey(date.toString())) {
 						appointmentDateMap.put(date.toString(), new ArrayList<Appointment>());

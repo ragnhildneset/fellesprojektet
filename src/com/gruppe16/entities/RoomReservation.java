@@ -44,33 +44,49 @@ public class RoomReservation {
 			e.printStackTrace();
 		}
 	}
+	public static void main(String[] args){
+		findRoom(LocalDate.of(2015,3,3), LocalTime.of(19,0), LocalTime.of(21,0), 10);
+	}
 	
-	public void findRoom(Date appdate, Time fromtime, Time totime, int capacity){
-		//String dateString = "" + appdate.getYear() + "-" + appdate.getMonth() + "-" + appdate.getDayOfMonth();
-		//String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
-		//String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
-		ArrayList<Tuple> available = new ArrayList<Tuple>();
-		String q = "SELECT Room.roomNumber, Room.buildingID, Room.capacity FROM Room JOIN Building ON(Room.buildingID = Building.buildingID) "
-				+ "WHERE Room.roomNumber NOT IN (SELECT RR.roomid FROM Appointment AS A JOIN RoomReservation AS RR ON(A.appointmentID = RR.appid)"
-				+ " WHERE A.appdate = "+appdate+" AND A.fromtime <="+fromtime+" AND A.totime >= "+totime+");";
+	
+	public static void findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime, int capacity){
+		String dateString = "" + appdate.getYear() + "-" + appdate.getMonthValue() + "-" + appdate.getDayOfMonth();
+		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
+		String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
+		ArrayList<Tuple<Integer>> available = new ArrayList<Tuple<Integer>>();
+		String q = "select D.roomNumber, D.BuildingID\n"+
+				"from Room as D\n"+
+				"where (D.roomNumber, D.BuildingID) not in (\n"+
+				"select R.roomNumber, R.BuildingID\n"+
+				"from Room as R, RoomReservation as E, Appointment as A\n"+
+				"where  E.appid = A.appointmentID\n"+
+				"and E.BuildingID = R.BuildingID\n"+
+				"and E.roomid = R.roomNumber\n"+
+				"and A.appdate = '"+dateString+"'\n"+
+				"and ('"+fromtimeString+"' between A.fromtime and A.totime or '"+totimeString+"' between A.fromtime and A.totime)\n"+
+				") and D.capacity >= "+capacity+";";
+		System.out.println(q);
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
-			s.setDate(1, appdate);
-			s.setTime(2, totime);
-			s.setTime(3, fromtime);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
-				available.add(new Tuple<Integer>(rs.getInt("roomNumber"), rs.getInt("buildingID")));
-			}new RoomPicker(available);
 
+				available.add(new Tuple<Integer>(rs.getInt("roomNumber"), rs.getInt("buildingID")));
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		for(Tuple booking:available){
-			System.out.print("" + booking.a + booking.b);
+			System.out.println("");
+			System.out.print(" Room: " + booking.a + " Building: "+ booking.b);
 		}
 		
 	}
+	
 }
+
+
 	
 

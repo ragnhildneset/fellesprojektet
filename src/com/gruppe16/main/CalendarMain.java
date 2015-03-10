@@ -2,54 +2,31 @@ package com.gruppe16.main;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
 import java.util.Date;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ResourceBundle;
-
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Employee;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+
+import com.gruppe16.entities.Employee;
 
 public class CalendarMain extends Application {
 	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
@@ -70,7 +47,10 @@ public class CalendarMain extends Application {
 	private Button findCalendarBtn;
 	
 	@FXML
-	private Button backToCalendarBtn;
+	private ImageView backToCalendarBtn;
+	
+	@FXML
+	private ImageView alertBtn;
 	
 	@FXML
 	private Button selectAllGroupsBtn;
@@ -92,15 +72,15 @@ public class CalendarMain extends Application {
 	
 	private Scene scene;
 	
-	private Stage primaryStage;
+	private Stage stage;
 	
 	private CalendarView calendarView; 
 
 	private DayPlanView dayPlanView;
 	
-	private LocalDate someDate = LocalDate.now();
-	
 	private Employee employee;
+
+	private boolean calendarShown = true;
 	
 	public CalendarMain() {
 		// DEBUG: Use first employee
@@ -113,8 +93,8 @@ public class CalendarMain extends Application {
 	}
 	
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		URL url = getClass().getResource("/com/gruppe16/main/MainPane.fxml");
+	public void start(Stage stage) throws Exception {
+		URL url = getClass().getResource("/com/gruppe16/main/CalendarMain.fxml");
 		
 		FXMLLoader fxmlLoader = new FXMLLoader();
 		fxmlLoader.setLocation(url);
@@ -123,24 +103,23 @@ public class CalendarMain extends Application {
 			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1005, 750);
 			scene.getRoot().setStyle("-fx-background-color: linear-gradient(#FFFFFF, #EEEEEE)");
 			
-			this.primaryStage = primaryStage;
-			primaryStage.setScene(scene);
-			primaryStage.setResizable(false);
-			primaryStage.setTitle(employee.getFirstName() + "'s Calendar");
-			primaryStage.centerOnScreen();
+			this.stage = stage;
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.centerOnScreen();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		calendarNameLabel.setText(employee.getName());
 
 		calendarView = new CalendarView(this);
 		dayPlanView = new DayPlanView(this);
-		
-		showCalendar(new Date());
-		updateGroups();
 
-		primaryStage.show();
+		
+		setEmployee(employee);
+		//showCalendar(new Date());
+		//updateGroups();
+
+		stage.show();
 		redraw();
 
 		selectAllGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -167,7 +146,20 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(ActionEvent evnet) {
 				try {
-					AddAppointment.start(new Stage(), scene.getWindow(), calendarShown ? new Date() : dayPlanView.getDate());
+					Stage newStage = new Stage();
+					newStage.setOnHidden(new EventHandler<WindowEvent>() {
+						@Override
+						public void handle(WindowEvent event) {
+							if(calendarShown) {
+								calendarView.update();
+							}
+							else {
+								dayPlanView.showAppointments(employee);
+							}
+							redraw();
+						}
+					});
+					AddAppointment.start(newStage, scene.getWindow(), calendarShown ? new Date() : dayPlanView.getDate());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -195,6 +187,13 @@ public class CalendarMain extends Application {
 			}
 		});
 
+		nextDateBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				nextDateBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
 		prevDateBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -215,8 +214,86 @@ public class CalendarMain extends Application {
 				prevDateBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
 			}
 		});
+
+		prevDateBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				prevDateBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		alertBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				alertBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		alertBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				alertBtn.setEffect(null);
+			}
+		});
+
+		alertBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				alertBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+			}
+		});
+
+		alertBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				alertBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		backToCalendarBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		backToCalendarBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				backToCalendarBtn.setEffect(null);
+			}
+		});
+
+		backToCalendarBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+			}
+		});
+
+		backToCalendarBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+		
+		findCalendarBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent event) {
+				EmployeeFinder employeeFinder = new EmployeeFinder();
+				Stage newStage = new Stage();
+				newStage.setOnHidden(new EventHandler<WindowEvent>() {
+					public void handle(WindowEvent arg0) {
+						Employee newEmployee = employeeFinder.getEmployee();
+						if(newEmployee != null) {
+							setEmployee(newEmployee);
+						}
+					}
+				});
+				employeeFinder.show(newStage, scene.getWindow());
+			}
+		});
 	}
-	boolean calendarShown = true;
 	
 	void showCalendar(Date date) {
 		calendarShown = true;
@@ -259,12 +336,12 @@ public class CalendarMain extends Application {
 		
 		backToCalendarBtn.setVisible(true);
 		
-		monthLabel.setText(date.toString());
+		monthLabel.setText(MONTH_NAMES[date.getMonth()] + " " + date.getDate());
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
 
-		backToCalendarBtn.setOnAction(new EventHandler<ActionEvent>() {
+		backToCalendarBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(ActionEvent evnet) {
+			public void handle(MouseEvent evnet) {
 				showCalendar(dayPlanView.getDate());
 			}
 		});
@@ -273,7 +350,7 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(MouseEvent evnet) {
 				dayPlanView.nextDay();
-				monthLabel.setText(date.toString());
+				monthLabel.setText(MONTH_NAMES[date.getMonth()] + " " + date.getDate());
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
 				redraw();
 			}
@@ -283,7 +360,7 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(MouseEvent evnet) {
 				dayPlanView.prevDay();
-				monthLabel.setText(date.toString());
+				monthLabel.setText(MONTH_NAMES[date.getMonth()] + " " + date.getDate());
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
 				redraw();
 			}
@@ -317,10 +394,32 @@ public class CalendarMain extends Application {
 		groupListView.setItems(items);
 	}
 	
-	// HAX
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+		
+		// Update calendar label and title
+		if(employee.getEmployeeID() == Login.getCurrentUserID()) {
+			stage.setTitle("My Calendar");
+			calendarNameLabel.setText("Welcome, " + employee.getFirstName() + "!");
+		}
+		else {
+			stage.setTitle(employee.getFirstName() + " " + employee.getLastName() + "'s Calendar");
+			calendarNameLabel.setText(employee.getName());
+		}
+		
+		// Show calendar and redraw
+		showCalendar(new Date());
+		redraw();
+	}
+	
+	public Employee getEmployee() {
+		return employee;
+	}
+	
 	public void redraw() {
-		primaryStage.setScene(null);
-		primaryStage.setScene(scene);
+		// HAX
+		stage.setScene(null);
+		stage.setScene(scene);
 	}
 	
 	public static void main(String[] args) {
