@@ -118,7 +118,8 @@ public class DBConnect {
 	
 	public static Connection getConnection(){
 		
-		if(con == null){			
+		if(con == null){
+			DBLogin.login();
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 			} catch (ClassNotFoundException e1) {
