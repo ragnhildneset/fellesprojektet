@@ -2,6 +2,7 @@ package com.gruppe16.main;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javafx.application.Application;
@@ -34,6 +35,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Employee;
 
 public class CalendarMain extends Application {
@@ -96,6 +98,8 @@ public class CalendarMain extends Application {
 
 	private boolean calendarShown = true;
 	
+	private ContextMenu notificationMenu = null;
+	
 	public CalendarMain() {
 		// DEBUG: Use first employee
 		Login.login("a", "b");
@@ -128,8 +132,11 @@ public class CalendarMain extends Application {
 		calendarView = new CalendarView(this);
 		dayPlanView = new DayPlanView(this);
 
-		
+		notificationMenu = new ContextMenu();
+
 		setEmployee(employee);
+		
+		updateNotifications();
 
 		stage.show();
 		redraw();
@@ -306,21 +313,10 @@ public class CalendarMain extends Application {
 			}
 		});
 		
-		ContextMenu menu = new ContextMenu();
-		CustomMenuItem item = new CustomMenuItem();
-		Accordion accordion = new Accordion();
-		
-		Notification n = new Notification();
-		
-		accordion.getPanes().add(new TitledPane("Invitation for 'Meeting 1'", n.start()));
-		item.setContent(accordion);
-		
-		menu.getItems().add(item);
-		
 		notifyBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
-				if(menu.isShowing()) menu.hide();
-				else menu.show(notifyBtn, Side.BOTTOM, -280, 10);
+				if(notificationMenu.isShowing()) notificationMenu.hide();
+				else notificationMenu.show(notifyBtn, Side.BOTTOM, -280, 10);
 			}
 		});
 	}
@@ -422,6 +418,21 @@ public class CalendarMain extends Application {
 		items.add(hbox);
 		
 		groupListView.setItems(items);
+	}
+	
+	private void updateNotifications() {
+		notificationMenu.getItems().clear();
+		
+		CustomMenuItem item = new CustomMenuItem();
+		Accordion accordion = new Accordion();
+		
+		ArrayList<Notification> notifications = DBConnect.getNotifications(Login.getCurrentUser());
+		for(Notification n : notifications) {
+			accordion.getPanes().add(new TitledPane("Invitation for 'Meeting 1'", new NotificationView(n).start()));
+		}
+		
+		item.setContent(accordion);
+		notificationMenu.getItems().add(item);
 	}
 	
 	public Scene getScene(){
