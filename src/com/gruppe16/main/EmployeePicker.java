@@ -71,22 +71,14 @@ public class EmployeePicker implements Initializable {
 		addBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				Employee e = employeeListView.getSelectionModel().getSelectedItem();
-				if(e != null) {
-					attendingListView.getItems().add(e);
-					employeeListView.getItems().remove(e);
-				}
+				addEmployee(employeeListView.getSelectionModel().getSelectedItem());
 			}
 		});
 		
 		removeBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				Employee e = attendingListView.getSelectionModel().getSelectedItem();
-				if(e != null) {
-					attendingListView.getItems().remove(e);
-					employeeListView.getItems().add(e);
-				}
+				removeEmployee(attendingListView.getSelectionModel().getSelectedItem());
 			}
 		});
 		
@@ -104,7 +96,33 @@ public class EmployeePicker implements Initializable {
 			}
 		});
 		
+		employeeListView.setOnMouseClicked(event -> {
+			if(event.getClickCount() == 2) {
+				addEmployee(employeeListView.getSelectionModel().getSelectedItem());
+			}
+		});
+		
+		attendingListView.setOnMouseClicked(event -> {
+			if(event.getClickCount() == 2) {
+				removeEmployee(attendingListView.getSelectionModel().getSelectedItem());
+			}
+		});
+		
 		updateEmployeeList();
+	}
+	
+	private void addEmployee(Employee e) {
+		if(e != null) {
+			attendingListView.getItems().add(e);
+			employeeListView.getItems().remove(e);
+		}
+	}
+	
+	private void removeEmployee(Employee e) {
+		if(e != null) {
+			attendingListView.getItems().remove(e);
+			employeeListView.getItems().add(e);
+		}
 	}
 	
 	private void updateEmployeeList() {

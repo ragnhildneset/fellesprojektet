@@ -112,7 +112,7 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				boolean valid = true;
-				if(titleTextField.getText().isEmpty()) {
+				if(titleTextField.getText() == null || titleTextField.getText().isEmpty()) {
 					titleTextField.setEffect(new InnerShadow(4.0, Color.RED));
 					valid = false;
 				}
@@ -123,7 +123,7 @@ public class AddAppointment implements Initializable {
 					valid = false;
 				}
 				
-				if(descriptionTextArea.getText().isEmpty()) {
+				if(descriptionTextArea.getText() == null || descriptionTextArea.getText().isEmpty()) {
 					descriptionTextArea.setEffect(new InnerShadow(4.0, Color.RED));
 					valid = false;
 				}
@@ -132,7 +132,7 @@ public class AddAppointment implements Initializable {
 				toTextField.setEffect(null);
 				
 				int fromHour = 0, toHour = 0, fromMin = 0, toMin = 0;
-				if(!fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
+				if(fromTextField.getText() != null && toTextField.getText() != null && !fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
 					fromHour = Integer.parseInt(fromTextField.getText(0, 2)); toHour = Integer.parseInt(toTextField.getText(0, 2));
 					fromMin = Integer.parseInt(fromTextField.getText(3, 5)); toMin = Integer.parseInt(toTextField.getText(3, 5));
 				}
@@ -143,7 +143,7 @@ public class AddAppointment implements Initializable {
 					valid = false;
 				}
 				
-				if(roomTextField.getText().isEmpty()) {
+				if(roomTextField.getText() == null || roomTextField.getText().isEmpty()) {
 					roomTextField.setEffect(new InnerShadow(4.0, Color.RED));
 					valid = false;
 				}
