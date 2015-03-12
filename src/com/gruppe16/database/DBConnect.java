@@ -9,16 +9,49 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Building;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Notif;
 import com.gruppe16.entities.Room;
+import com.gruppe16.main.Login;
 
 public class DBConnect {
 	
 	private static Connection con = null;
+	
+	private static ArrayList<Notif> notifs = null;
+	public static ArrayList<Notif> getInvites(){
+		if(notifs != null){
+			return notifs;
+		}
+		notifs = new ArrayList<Notif>();
+		String q = "select A.Title, A.description, A.totime, A.fromtime, A.appdate, E.givenName, E.surname, R.status, R.alarm, R.appid\n"
+				+ "from AppointmentAndEmployee as R, Appointment as A, Employee as E\n"
+				+ "where R.employeeid = "+Login.getCurrentUserID()+" and A.appointmentID = R.appid and E.employeeid = A.ownerid;";
+		try{
+			PreparedStatement p = DBConnect.getConnection().prepareStatement(q);
+			ResultSet rs = (ResultSet) p.executeQuery();
+			while(rs.next()){
+				notifs.add(new Notif(rs.getString("A.Title"),
+						rs.getString("A.description"),
+						rs.getTime("A.totime").toString(),
+						rs.getTime("A.fromtime").toString(),
+						rs.getDate("A.appdate").toString(),
+						String.valueOf(rs.getInt("R.alarm")),
+						rs.getString("E.surname") + ", " + rs.getString("E.givenName"),
+						rs.getInt("R.appid"),
+						rs.getInt("R.status")));
+			}
+			return notifs;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public static HashMap<Integer,Employee> getEmployees(){
 
@@ -56,14 +89,14 @@ public class DBConnect {
 	
 	
 	public static HashMap<Integer, Room> getRooms(){
-		String q = "SELECT roomNumber, capacity, roomName, description, buildingID FROM Room;";
+		String q = "SELECT roomNumber, capacity, roomName, description, buildingID, B.buildingName FROM Room, Building as B WHERE B.BuildingID = buildingID;";
 		HashMap<Integer, Room> map = new HashMap<Integer, Room>();
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
 				int key = rs.getInt("roomNumber");
-				Room r = new Room(Integer.parseInt(rs.getString("roomNumber")), Integer.parseInt(rs.getString("capacity")), rs.getString("roomName"), rs.getString("description"), Integer.parseInt(rs.getString("buildingID")));
+				Room r = new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("roomName"), rs.getString("description"), rs.getInt("buildingID"), rs.getString("B.buildingName"));
 				map.put(key, r);
 			}return map;
 		} catch (Exception e) {

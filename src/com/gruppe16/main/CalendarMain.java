@@ -45,6 +45,7 @@ import javafx.stage.WindowEvent;
 
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Notif;
 
 public class CalendarMain extends Application {
 	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
@@ -109,11 +110,10 @@ public class CalendarMain extends Application {
 	private Popup notificationMenu = null;
 	private Accordion accordion = null;
 
-	private ArrayList<Notification> notifications = new ArrayList<Notification>();
 	
 	public CalendarMain() {
 		// DEBUG: Use first employee
-		Login.login("a", "b");
+		Login.login("admin", "passord");
 		this.employee = Login.getCurrentUser();
 	}
 	
@@ -147,15 +147,12 @@ public class CalendarMain extends Application {
 		setEmployee(employee);
 		//showCalendar(new Date());
 		updateGroups();
-
-		for(int i = 0; i < 10; i++) notifications.add(new Notification());
 		accordion = new Accordion();
 		notificationMenu = new Popup();
 		notificationMenu.setAutoHide(true);
 		notificationMenu.getContent().add(accordion);
-		updateNotificationCounter();
 		setupNotifications();
-
+		updateNotif();
 		stage.show();
 		redraw();
 
@@ -442,20 +439,25 @@ public class CalendarMain extends Application {
 	}
 
 	private void setupNotifications() {
-		//ArrayList<NotificationView> notifications = DBConnect.getNotifications(Login.getCurrentUser());
-		for(Notification n : notifications) {
+		int c = 0;
+		for(Notif n : DBConnect.getInvites()) {
+			if(n.status > 0){
+				continue;
+			}
+			c++;
 			NotificationView notificationView = new NotificationView(n);
 			TitledPane pane = new TitledPane("", notificationView);
 			
-			Label titleLabel = new Label("Invitation for '" + n.getTitle() + "'");
+			Label titleLabel = new Label("Invitation for '" + n.title + "'");
 			titleLabel.setPrefWidth(140.0);
 			
 			Runnable onAccept = new Runnable() {
 				@Override
 				public void run() {
-					notifications.remove(n);
+					n.accept();
 					accordion.getPanes().remove(pane);
-					updateNotificationCounter();
+					n_count--;
+					updateNotif();
 					//DBConnect.acceptNotification(n);
 				}
 			};
@@ -464,49 +466,48 @@ public class CalendarMain extends Application {
 			Runnable onDecline = new Runnable() {
 				@Override
 				public void run() {
-					notifications.remove(n);
+					n.decline();
+					n_count--;
+					updateNotif();
 					accordion.getPanes().remove(pane);
-					updateNotificationCounter();
-					//DBConnect.declineNotification(n);
 				}
 			};
 			notificationView.setOnDecline(onDecline);
 
-			Button acceptBtn = new Button("Accept");
-			acceptBtn.setOnMouseClicked(event -> {
-				onAccept.run();
-			});
+//			Button acceptBtn = new Button("Accept");
+//			acceptBtn.setOnMouseClicked(event -> {
+//				onAccept.run();
+//			});
+//			
+//			Button declineBtn = new Button("Decline");
+//			declineBtn.setOnMouseClicked(event -> {
+//				onDecline.run();
+//			});
 			
-			Button declineBtn = new Button("Decline");
-			declineBtn.setOnMouseClicked(event -> {
-				onDecline.run();
-			});
-			
-			HBox hbox = new HBox(titleLabel, acceptBtn, declineBtn);
+			HBox hbox = new HBox(titleLabel);
 			hbox.setAlignment(Pos.CENTER_LEFT);
 
-			HBox.setMargin(hbox.getChildren().get(0), new Insets(0.0, 0.0, 0.0, 10.0));
-			HBox.setMargin(hbox.getChildren().get(2), new Insets(0.0, 0.0, 0.0, 10.0));
+//			HBox.setMargin(hbox.getChildren().get(0), new Insets(0.0, 0.0, 0.0, 10.0));
+//			HBox.setMargin(hbox.getChildren().get(2), new Insets(0.0, 0.0, 0.0, 10.0));
 			
 			pane.setGraphic(hbox);
 			pane.setAnimated(false);
 			accordion.getPanes().add(pane);
 		}
+		n_count = c;
 	}
-	
-	public void updateNotificationCounter() {
-		int notifCount = notifications.size();
-		if(notifCount == 0) {
+	private int n_count = 0;
+	private void updateNotif(){
+		System.out.println("c: " + n_count);
+		if(n_count==0){
 			notificationLabel.setVisible(false);
 			notificationCircle.setVisible(false);
-		}
-		else {
+		} else {
 			notificationLabel.setVisible(true);
 			notificationCircle.setVisible(true);
-			if(notifCount < 10) {
-				notificationLabel.setText(Integer.toString(notifications.size()));
-			}
-			else {
+			if(n_count < 10){
+				notificationLabel.setText(String.valueOf(n_count));
+			} else {
 				notificationLabel.setText("9+");
 			}
 		}

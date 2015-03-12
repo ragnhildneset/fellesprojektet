@@ -74,7 +74,7 @@ public class AddAppointment implements Initializable {
 	private TextField toTextField;
 	
 	@FXML
-	private TextField roomTextField;
+	protected TextField roomTextField;
 
 	@FXML
 	private TextField titleTextField;
