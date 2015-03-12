@@ -9,17 +9,21 @@ import com.mysql.jdbc.ResultSet;
 public abstract class Login {
 	
 	private static Employee login = null;
+	private static boolean isAdmin = false;
 	
 	public static boolean login(String username, String password){
 		int id = -1;
 		try{
-			String q = "SELECT username, password, employeeid FROM UserAndID WHERE UserAndID.username=\'" + username + "\';";
+			String q = "SELECT username, password, employeeid, isAdmin FROM UserAndID WHERE UserAndID.username=\'" + username + "\';";
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			String passString = null;
 			while(rs.next()){
 				passString = rs.getString("password");
 				id = rs.getInt("employeeid");
+				if(rs.getBoolean("isAdmin")){
+					isAdmin = true;
+				}
 			}
 			if(password.equals(passString)){
 				login = DBConnect.getEmployees().get(id);
@@ -40,6 +44,10 @@ public abstract class Login {
 	
 	public static int getCurrentUserID() {
 		return login.getEmployeeID();
+	}
+	
+	public static boolean isAdmin(){
+		return isAdmin;
 	}
 
 }

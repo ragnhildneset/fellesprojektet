@@ -14,48 +14,40 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import com.gruppe16.database.DBConnect;
-
-class Notification {
-	String getTitle() { return "Test"; }
-	String getDescription() { return "A description"; }
-	String getDate() { return "Date"; }
-	String getFrom() { return "01:00"; }
-	String getTo() { return "03:00"; }
-	String getOwner() { return "Pending"; }
-}
+import com.gruppe16.entities.Notif;
 
 public class NotificationView extends VBox {
 	private Runnable onAccept;
 	private Runnable onDecline;
 	
-	public NotificationView(Notification notification) {
+	public NotificationView(Notif notification) {
 		setPrefWidth(300.0);
 		
 		Label label = null;
 		HBox hbox = null;
 
 		label = new Label(); label.setText("Title:"); label.setPrefWidth(100.0);
-		hbox = new HBox(label, new Label(notification.getTitle()));
+		hbox = new HBox(label, new Label(notification.title));
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(10.0, 10.0, 10.0, 10.0));
 
 		label = new Label(); label.setText("Description:"); label.setPrefWidth(100.0);
-		hbox = new HBox(label, new Label(notification.getDescription()));
+		hbox = new HBox(label, new Label(notification.desc));
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(0.0, 10.0, 10.0, 10.0));
 
 		label = new Label(); label.setText("Date:"); label.setPrefWidth(100.0);
-		hbox = new HBox(label, new Label(notification.getDate()));
+		hbox = new HBox(label, new Label(notification.date));
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(10.0, 10.0, 10.0, 10.0));
 		
 		label = new Label(); label.setText("From:"); label.setPrefWidth(100.0);
-		hbox = new HBox(label, new Label(notification.getFrom()));
+		hbox = new HBox(label, new Label(notification.from));
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(0.0, 10.0, 10.0, 10.0));
 
 		label = new Label(); label.setText("To:"); label.setPrefWidth(100.0);
-		hbox = new HBox(label, new Label(notification.getTo()));
+		hbox = new HBox(label, new Label(notification.to));
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(0.0, 10.0, 10.0, 10.0));
 
@@ -64,16 +56,7 @@ public class NotificationView extends VBox {
 		acceptBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				/*String q = "update Request\n"
-						+"set status = 1\n"
-						+"where employeeid = "+Login.getCurrentUserID()+";";
-				try{
-					PreparedStatement p = DBConnect.getConnection().prepareStatement(q);
-					p.execute();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				// Remove this*/
+				notification.accept();
 				onAccept.run();
 			}
 		});
@@ -82,21 +65,12 @@ public class NotificationView extends VBox {
 		declineBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				/*String q = "update Request\n"
-						+"set status = 2\n"
-						+"where employeeid = "+Login.getCurrentUserID()+";";
-				try{
-					PreparedStatement p = DBConnect.getConnection().prepareStatement(q);
-					p.execute();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				Platform.exit();*/
+				notification.decline();
 				onDecline.run();
 			}
 		});
 
-		label = new Label(); label.setText(notification.getOwner()); label.setPrefWidth(100.0);
+		label = new Label(); label.setText(notification.owner); label.setPrefWidth(100.0);
 		hbox = new HBox(label, acceptBtn, declineBtn);
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(10.0, 10.0, 10.0, 10.0));

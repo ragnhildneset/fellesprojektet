@@ -71,7 +71,7 @@ public class AppointmentBox extends AnchorPane{
 	private DayPlanView dpv;
 	
 	//Using list of employees for testing
-    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees().values());
+    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
 	
 	public AppointmentBox(Appointment appointment, panelColors color, DayPlanView dpv){
 		setId("appBox");

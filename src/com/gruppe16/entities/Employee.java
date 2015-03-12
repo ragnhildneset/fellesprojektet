@@ -70,6 +70,10 @@ public class Employee {
 	public String toString(){
 		return getName();
 	}
+
+	public void invite(int appid) {
+		DBConnect.inviteEmployee(this, appid);
+	}
 		
 	
 }

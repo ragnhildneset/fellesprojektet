@@ -9,29 +9,65 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Building;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Notif;
 import com.gruppe16.entities.Room;
+import com.gruppe16.main.Login;
 
 public class DBConnect {
 	
 	private static Connection con = null;
 	
-	public static HashMap<Integer,Employee> getEmployees(){
-
+	private static ArrayList<Notif> notifs = null;
+	public static ArrayList<Notif> getInvites(){
+		if(notifs != null){
+			return notifs;
+		}
+		notifs = new ArrayList<Notif>();
+		String q = "select A.Title, A.description, A.totime, A.fromtime, A.appdate, E.givenName, E.surname, R.status, R.alarm, R.appid\n"
+				+ "from AppointmentAndEmployee as R, Appointment as A, Employee as E\n"
+				+ "where R.employeeid = "+Login.getCurrentUserID()+" and A.appointmentID = R.appid and E.employeeid = A.ownerid;";
+		try{
+			PreparedStatement p = DBConnect.getConnection().prepareStatement(q);
+			ResultSet rs = (ResultSet) p.executeQuery();
+			while(rs.next()){
+				notifs.add(new Notif(rs.getString("A.Title"),
+						rs.getString("A.description"),
+						rs.getTime("A.totime").toString(),
+						rs.getTime("A.fromtime").toString(),
+						rs.getDate("A.appdate").toString(),
+						String.valueOf(rs.getInt("R.alarm")),
+						rs.getString("E.surname") + ", " + rs.getString("E.givenName"),
+						rs.getInt("R.appid"),
+						rs.getInt("R.status")));
+			}
+			return notifs;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static ArrayList<Employee> _employees = null;
+	public static ArrayList<Employee> getEmployees(){
+		if(_employees != null){
+			return _employees;
+		}
 		String q = "SELECT E.employeeid, E.givenName, E.surname, E.email, U.username FROM Employee as E, UserAndID as U WHERE U.employeeid = E.employeeid;";
 
-		HashMap<Integer, Employee> map = new HashMap<Integer, Employee>();
+		ArrayList<Employee> map = new ArrayList<Employee>();
 		try{
 			PreparedStatement p = getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) p.executeQuery();
 			while(rs.next()){
 				int key = rs.getInt("E.employeeid");
 				Employee e = new Employee(key,rs.getString("E.givenName"), rs.getString("E.surname"), rs.getString("E.email"), rs.getString("username"));
-				map.put(key, e);
+				map.add(e);
 			}return map;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -39,7 +75,7 @@ public class DBConnect {
 	}
 	
 	public static void addRoomReservation(int appid, int roomid, int BuildingID){
-		String q = "INSERT INTO RoomReservation(appid, roomid) VALUES (?, ?, ?)";
+		String q = "INSERT INTO RoomReservation(appid, roomid, BuildingID) VALUES (?, ?, ?)";
 		try {
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			s.setInt(1, appid);
@@ -69,14 +105,14 @@ public class DBConnect {
 	
 	
 	public static HashMap<Integer, Room> getRooms(){
-		String q = "SELECT roomNumber, capacity, roomName, description, buildingID FROM Room;";
+		String q = "SELECT roomNumber, capacity, roomName, description, buildingID, B.buildingName FROM Room, Building as B WHERE B.BuildingID = buildingID;";
 		HashMap<Integer, Room> map = new HashMap<Integer, Room>();
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
 				int key = rs.getInt("roomNumber");
-				Room r = new Room(Integer.parseInt(rs.getString("roomNumber")), Integer.parseInt(rs.getString("capacity")), rs.getString("roomName"), rs.getString("description"), Integer.parseInt(rs.getString("buildingID")));
+				Room r = new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("roomName"), rs.getString("description"), rs.getInt("buildingID"), rs.getString("B.buildingName"));
 				map.put(key, r);
 			}return map;
 		} catch (Exception e) {
@@ -95,7 +131,7 @@ public class DBConnect {
 		return false;
 	}
 	
-	public static void addAppointment(String title, String description, Date date, Time fromTime, Time toTime, Employee host) {
+	public static int addAppointment(String title, String description, Date date, Time fromTime, Time toTime, Employee host) {
 		String query = "INSERT INTO Appointment (title, description, appdate, fromtime, totime, ownerid) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement e = getConnection().prepareStatement(query);
@@ -106,9 +142,14 @@ public class DBConnect {
 			e.setTime(5, toTime);
 			e.setInt(6, host.getEmployeeID());
 			e.execute();
+			ResultSet rs = e.getGeneratedKeys();
+			if(rs.next()){
+				return rs.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return -1;
 	}
 	
 	public static HashMap<Integer, Appointment> getAppointments(){
@@ -168,5 +209,20 @@ public class DBConnect {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public static void inviteEmployee(Employee employee, int appid) {
+		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(q);
+			s.setInt(1, appid);
+			s.setInt(2, employee.getEmployeeID());
+			s.setInt(3, 0);
+			s.setInt(4, 0);
+			s.setString(5, "BLUE");
+			s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

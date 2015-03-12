@@ -35,6 +35,10 @@ public class Room {
 		rooms.put(key, this);
 	}
 	
+	public Room(int key, int capacity, String name, String descr, int buildingID){
+		this(key, capacity, name, descr, buildingID, null);
+	}
+	
 	public static void main(String[] args){
 		System.out.println(getRooms());
 	}
