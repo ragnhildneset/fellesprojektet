@@ -534,4 +534,8 @@ public class AddAppointment implements Initializable {
 		stage.setScene(scene);
 		stage.show();
 	}
+
+	public void rpClosed() {
+		sendBtn.setDisable(true);
+	}
 }

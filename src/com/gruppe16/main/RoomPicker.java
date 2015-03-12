@@ -48,7 +48,6 @@ public class RoomPicker implements Initializable {
 
 	private static Stage stage;
 	private static AddAppointment addAppointment;
-	private static Room currentRoom;
     static ObservableList<Room> roomdata;
 
 
@@ -80,6 +79,7 @@ public class RoomPicker implements Initializable {
 		
 		cancelButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event){
+				addAppointment.rpClosed();
 				stage.close();
 			}
 		});
