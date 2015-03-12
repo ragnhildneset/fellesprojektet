@@ -121,7 +121,16 @@ public class AppointmentBox extends AnchorPane{
 		descriptionLabel.setWrapText(true);
 		descriptionLabel.setLayoutY(15);
 		
-		descriptionPane.getChildren().addAll(descriptionTitleLabel, descriptionLabel);
+		//Room
+		Label roomTitleLabel = new Label("Room:");
+		roomTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		roomTitleLabel.setLayoutY(150);
+		Label roomLabel = new Label("None");
+		roomLabel.setFont(Font.font("Arial", 16));
+		roomLabel.setLayoutY(150);
+		roomLabel.setLayoutX(55);
+		
+		descriptionPane.getChildren().addAll(descriptionTitleLabel, descriptionLabel, roomTitleLabel, roomLabel);
 		
 		//Delete Button
 		Button delBtn = new Button("Delete");
