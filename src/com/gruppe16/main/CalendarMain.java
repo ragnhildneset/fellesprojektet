@@ -149,8 +149,9 @@ public class CalendarMain extends Application {
 		updateGroups();
 
 		for(int i = 0; i < 10; i++) notifications.add(new Notification());
-		notificationMenu = new Popup();
 		accordion = new Accordion();
+		notificationMenu = new Popup();
+		notificationMenu.setAutoHide(true);
 		notificationMenu.getContent().add(accordion);
 		updateNotificationCounter();
 		setupNotifications();
