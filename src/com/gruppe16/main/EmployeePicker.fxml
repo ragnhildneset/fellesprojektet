@@ -23,7 +23,7 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0">
          <children>
-            <Label prefWidth="80.0" text="Sur name:">
+            <Label prefWidth="80.0" text=" Surname:">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -46,16 +46,16 @@
       </ListView>
       <HBox>
          <children>
-            <Button fx:id="OKBtn" layoutX="221.0" layoutY="10.0" mnemonicParsing="false" text="OK">
+            <Button fx:id="OKBtn" layoutX="221.0" layoutY="10.0" minWidth="50.0" mnemonicParsing="false" prefWidth="100.0" text="OK">
                <HBox.margin>
-                  <Insets right="140.0" />
+                  <Insets right="100.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="addBtn" mnemonicParsing="false" text="Add">
+            <Button fx:id="addBtn" minWidth="44.0" mnemonicParsing="false" text="Add">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin></Button>
-            <Button fx:id="removeBtn" mnemonicParsing="false" text="Remove">
+            <Button fx:id="removeBtn" minWidth="80.0" mnemonicParsing="false" text="Remove">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
