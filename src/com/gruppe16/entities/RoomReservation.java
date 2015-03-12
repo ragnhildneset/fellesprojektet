@@ -7,6 +7,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -44,17 +45,14 @@ public class RoomReservation {
 			e.printStackTrace();
 		}
 	}
-	public static void main(String[] args){
-		findRoom(LocalDate.of(2015,3,3), LocalTime.of(19,0), LocalTime.of(21,0), 10);
-	}
 	
 	
-	public static void findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime, int capacity){
+	public static List<Room> findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime, int capacity){
 		String dateString = "" + appdate.getYear() + "-" + appdate.getMonthValue() + "-" + appdate.getDayOfMonth();
 		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
 		String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
-		ArrayList<Room> available = new ArrayList<Room>();
-		String q = "select D.roomNumber, D.BuildingID\n"+
+		List<Room> available = new ArrayList<Room>();
+		String q = "select *\n"+
 				"from Room as D\n"+
 				"where (D.roomNumber, D.BuildingID) not in (\n"+
 				"select R.roomNumber, R.BuildingID\n"+
@@ -71,17 +69,13 @@ public class RoomReservation {
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
 
-				available.add(new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("name"), rs.getString("descr"), rs.getInt("buildingID"), rs.getString("buildingName")));
+				available.add(new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("roomName"), rs.getString("description"), rs.getInt("buildingID"), "Kosebygget"));
 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		for(Tuple booking:available){
-			System.out.println("");
-			System.out.print(" Room: " + booking.a + " Building: "+ booking.b);
-		}
+		return available;
 		
 	}
 	
