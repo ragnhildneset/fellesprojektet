@@ -456,7 +456,7 @@ public class AddAppointment implements Initializable {
 				
 				if(valid){
 					try{
-						RoomPicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this, datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin), attendees);
+						RoomPicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this, datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin));
 					}catch (Exception rr){
 						rr.printStackTrace();
 					}
@@ -479,7 +479,7 @@ public class AddAppointment implements Initializable {
 		});
 	}
 
-	private ArrayList<Employee> attendees = new ArrayList<Employee>(); 
+	protected ArrayList<Employee> attendees = new ArrayList<Employee>(); 
 	
 	public void setAttendees(Collection<Employee> employees) {
 		attendeesTextField.clear();

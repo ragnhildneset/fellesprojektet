@@ -36,7 +36,7 @@ public class RoomReservation {
 	
 	
 	
-	public static List<Room> findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime, int capacity){
+	public static List<Room> findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime){
 		String dateString = "" + appdate.getYear() + "-" + appdate.getMonthValue() + "-" + appdate.getDayOfMonth();
 		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
 		String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
@@ -51,7 +51,7 @@ public class RoomReservation {
 				"and E.roomid = R.roomNumber\n"+
 				"and A.appdate = '"+dateString+"'\n"+
 				"and ('"+fromtimeString+"' between A.fromtime and A.totime or '"+totimeString+"' between A.fromtime and A.totime)\n"+
-				") and D.capacity >= "+capacity+";";
+				");";
 		System.out.println(q);
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
