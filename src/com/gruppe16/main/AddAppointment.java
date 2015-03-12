@@ -480,7 +480,7 @@ public class AddAppointment implements Initializable {
 	}
 
 	protected ArrayList<Employee> attendees = new ArrayList<Employee>(); 
-	
+
 	public void setAttendees(Collection<Employee> employees) {
 		attendeesTextField.clear();
 		int i = 0;

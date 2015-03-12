@@ -9,6 +9,7 @@ import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Employee;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -24,6 +25,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.InnerShadow;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 
@@ -37,11 +42,19 @@ public class Main extends Application implements Initializable {
 	@FXML
 	private Button loginBtn;
 	
+	@FXML
+	private Button cancelBtn;
+	
+	@FXML
+	private Pane pane;
+	
 	static private Stage stage;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
 		loginBtn.setOnAction(new EventHandler<ActionEvent>() {
+			
 			@Override
 			public void handle(ActionEvent event) {
 				if(Login.login(user.getText(), pass.getText())) {
@@ -60,6 +73,15 @@ public class Main extends Application implements Initializable {
 			}
 		});
 		
+		cancelBtn.setOnAction(new EventHandler<ActionEvent>(){
+
+			@Override
+			public void handle(ActionEvent event) {
+				stage.close();
+			}
+			
+		});
+		
 		user.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
@@ -76,7 +98,7 @@ public class Main extends Application implements Initializable {
 		
 		loginBtn.setDefaultButton(true);
 	}
-
+	
 	@Override
 	public void start(Stage stage) throws Exception {
 		Main.stage = stage;
@@ -86,6 +108,10 @@ public class Main extends Application implements Initializable {
 			stage.setTitle("Calendar login");
 			stage.setResizable(false);
 			stage.setScene(scene);
+<<<<<<< HEAD
+			stage.initStyle(StageStyle.UNDECORATED);
+=======
+>>>>>>> 1b3b4397536b19a2c04ba77bf430ab10f7ed51d3
 			stage.show();
 		} catch (Exception e) {
 			e.printStackTrace();
