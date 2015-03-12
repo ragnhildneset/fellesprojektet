@@ -15,6 +15,7 @@ import java.util.HashMap;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Building;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Employee.Group;
 import com.gruppe16.entities.Notif;
 import com.gruppe16.entities.Room;
 import com.gruppe16.main.Login;
@@ -22,6 +23,22 @@ import com.gruppe16.main.Login;
 public class DBConnect {
 	
 	private static Connection con = null;
+	
+	public static void getGroups(){
+		try{
+			String q = "select G.groupID, G.name, E.employeeid from Grouup as G, GroupMember as E where G.groupID = E.employeeid;";
+			PreparedStatement p = getConnection().prepareStatement(q);
+			ResultSet rs = (ResultSet) p.executeQuery();
+			while(rs.next()){
+				int employeeid = rs.getInt("E.employeeid");
+				int groupid = rs.getInt("G.groupID");
+				String name = rs.getString("G.name");
+				Employee.addToGroup(groupid, name, employeeid);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private static ArrayList<Notif> notifs = null;
 	public static ArrayList<Notif> getInvites(){

@@ -45,6 +45,7 @@ import javafx.stage.WindowEvent;
 
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Employee.Group;
 import com.gruppe16.entities.Notif;
 
 public class CalendarMain extends Application {
@@ -412,29 +413,17 @@ public class CalendarMain extends Application {
 	}
 	
 	private void updateGroups() {
+		
 		ObservableList<HBox> items = FXCollections.observableArrayList();
 		
 		// Testkode
-		HBox hbox = new HBox();
-		hbox.getChildren().add(new CheckBox("Group 1"));
-		items.add(hbox);
 		
-		hbox = new HBox();
-		hbox.getChildren().add(new CheckBox("Group 2"));
-		items.add(hbox);
-		
-		hbox = new HBox();
-		CheckBox checkBox = new CheckBox("Group 3");
-		checkBox.setPadding(new Insets(0,80,0,0));
-		hbox.getChildren().add(checkBox);
-		
-		ImageView button = new ImageView("http://findicons.com/files/icons/2226/matte_basic/16/edit.png");
-		button.setScaleX(0.75);
-		button.setScaleY(0.75);
-		hbox.getChildren().add(button);
-		
-		items.add(hbox);
-		
+		for(Group g : Employee.getGroups()){			
+			HBox hbox = new HBox();
+			hbox.getChildren().add(new CheckBox(g.name));
+			items.add(hbox);
+		}
+				
 		groupListView.setItems(items);
 	}
 
