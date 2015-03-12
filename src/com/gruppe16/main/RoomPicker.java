@@ -50,13 +50,6 @@ public class RoomPicker implements Initializable {
 	private static AddAppointment addAppointment;
     static ObservableList<Room> roomdata;
 
-
-	//public RoomPicker(ArrayList<Tuple> available) {
-		//this.availableRooms = available;
-	//}
-    
-    
-    
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		buildingNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingname"));
