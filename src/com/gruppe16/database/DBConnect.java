@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.entities.Building;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Notif;
@@ -22,6 +23,14 @@ import com.gruppe16.main.Login;
 public class DBConnect {
 	
 	private static Connection con = null;
+	
+	public static void main(String[] args){
+		ArrayList<AppointmentAndEmployee>  a = getAttendees(62);
+		for (AppointmentAndEmployee ae : a){
+			
+			System.out.println("" + getEmployeeFromID(ae.getEmployeeid()).getName());
+		}
+	}
 	
 	private static ArrayList<Notif> notifs = null;
 	public static ArrayList<Notif> getInvites(){
@@ -129,6 +138,37 @@ public class DBConnect {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public static ArrayList<AppointmentAndEmployee> getAttendees(int appId){
+		String query = "SELECT * FROM AppointmentAndEmployee WHERE appid = '" + appId + "'";
+		ArrayList<AppointmentAndEmployee> ae = new ArrayList<AppointmentAndEmployee>();
+		try{
+			PreparedStatement e = getConnection().prepareStatement(query);
+			ResultSet rs = (ResultSet) e.executeQuery();
+			while(rs.next()){
+				ae.add(new AppointmentAndEmployee(rs.getInt("appid"), rs.getInt("employeeid"), rs.getInt("status"), rs.getInt("alarm"), rs.getString("farge")));
+
+			} 
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
+		return ae;
+	}
+	
+	public static Employee getEmployeeFromID(int id){
+		String query = "SELECT * FROM Employee JOIN UserAndID ON(Employee.employeeid = UserAndID.employeeid) WHERE Employee.employeeid = '" + id + "'";
+		Employee employee = null;
+		try{
+			PreparedStatement e = getConnection().prepareStatement(query);
+			ResultSet rs = (ResultSet) e.executeQuery();
+			while(rs.next()){
+				employee = new Employee(rs.getInt("employeeid"), rs.getString("givenName"), rs.getString("surname"), rs.getString("email"), rs.getString("username"));
+			}	
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+		return employee;
 	}
 	
 	public static int addAppointment(String title, String description, Date date, Time fromTime, Time toTime, Employee host) {
