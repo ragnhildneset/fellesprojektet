@@ -67,9 +67,10 @@ public class RoomReservation {
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
+			
 			while(rs.next()){
 
-				available.add(new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("roomName"), rs.getString("description"), rs.getInt("buildingID"), "Kosebygget"));
+				available.add(new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("roomName"), rs.getString("description"), rs.getInt("buildingID"), DBConnect.getBuildings().get(rs.getInt("BuildingID")).getName()));
 
 			}
 		} catch (Exception e) {

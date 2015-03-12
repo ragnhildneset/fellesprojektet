@@ -38,6 +38,19 @@ public class DBConnect {
 		}return null;
 	}
 	
+	public static void addRoomReservation(int appid, int roomid, int BuildingID){
+		String q = "INSERT INTO RoomReservation(appid, roomid) VALUES (?, ?, ?)";
+		try {
+			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
+			s.setInt(1, appid);
+			s.setInt(2, roomid);
+			s.setInt(3,  BuildingID);
+			s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static HashMap<Integer, Building> getBuildings(){
 		String q = "SELECT buildingID, name, description FROM Building;";
 		HashMap<Integer, Building> map = new HashMap<Integer, Building>();

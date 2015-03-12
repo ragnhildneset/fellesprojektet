@@ -43,6 +43,7 @@ import com.gruppe16.admin.AdminPanel;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Room;
 import com.gruppe16.entities.RoomReservation;
 
 public class AddAppointment implements Initializable {
@@ -88,6 +89,7 @@ public class AddAppointment implements Initializable {
 	private static Appointment appointment = null;
 	private static boolean editMode = false;
 	public static Collection<Employee> cachedEmployees;
+	public Room room;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -159,7 +161,8 @@ public class AddAppointment implements Initializable {
 						//TODO
 						stage.close();
 					}else{
-						DBConnect.addAppointment(titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(fromHour, fromMin, 0), new Time(toHour, toMin, 0), Login.getCurrentUser());
+						int appid = DBConnect.addAppointment(titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(fromHour, fromMin, 0), new Time(toHour, toMin, 0), Login.getCurrentUser());
+						DBConnect.addRoomReservation(appid, room.getID(), room.getBuildingID());
 						stage.close();
 					}
 
