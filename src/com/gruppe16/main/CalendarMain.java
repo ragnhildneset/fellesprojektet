@@ -147,9 +147,9 @@ public class CalendarMain extends Application {
 		setEmployee(employee);
 		//showCalendar(new Date());
 		updateGroups();
-
-		notificationMenu = new Popup();
 		accordion = new Accordion();
+		notificationMenu = new Popup();
+		notificationMenu.setAutoHide(true);
 		notificationMenu.getContent().add(accordion);
 		setupNotifications();
 		updateNotif();
