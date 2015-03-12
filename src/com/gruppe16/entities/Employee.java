@@ -103,6 +103,18 @@ public class Employee {
 	public void invite(int appid) {
 		DBConnect.inviteEmployee(this, appid);
 	}
+	
+	@Override
+	public boolean equals(Object other){
+		if(other == null){
+			return false;
+		}
+		Employee e = (Employee) other;
+		if(e.getEmployeeID() == this.getEmployeeID()){
+			return true;
+		}
+		return false;
+	}
 		
 	
 }
