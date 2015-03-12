@@ -438,7 +438,7 @@ public class CalendarMain extends Application {
 			TitledPane pane = new TitledPane("", notificationView);
 			
 			Label titleLabel = new Label("Invitation for '" + n.title + "'");
-			titleLabel.setPrefWidth(240.0);
+			titleLabel.setPrefWidth(250.0);
 			
 			Runnable onAccept = new Runnable() {
 				@Override
@@ -481,7 +481,6 @@ public class CalendarMain extends Application {
 			hbox.setAlignment(Pos.CENTER_LEFT);
 
 			HBox.setMargin(hbox.getChildren().get(0), new Insets(0.0, 0.0, 0.0, 10.0));
-			HBox.setMargin(hbox.getChildren().get(2), new Insets(0.0, 0.0, 0.0, 10.0));
 			
 			pane.setGraphic(hbox);
 			pane.setAnimated(false);

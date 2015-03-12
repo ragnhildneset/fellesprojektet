@@ -1,21 +1,15 @@
 package com.gruppe16.main;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Notif;
 
 public class NotificationView extends VBox {
@@ -28,13 +22,15 @@ public class NotificationView extends VBox {
 		Label label = null;
 		HBox hbox = null;
 
-		label = new Label(); label.setText("Title:"); label.setPrefWidth(100.0);
+		label = new Label(); label.setText("Title:"); label.setPrefWidth(100.0);  label.setMinWidth(100.0);
 		hbox = new HBox(label, new Label(notification.title));
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(10.0, 10.0, 10.0, 10.0));
 
-		label = new Label(); label.setText("Description:"); label.setPrefWidth(100.0);
-		hbox = new HBox(label, new Label(notification.desc));
+		label = new Label(); label.setText("Description:"); label.setPrefWidth(100.0); label.setMinWidth(100.0);
+		Label descLabel = new Label(notification.desc);
+		descLabel.setWrapText(true);
+		hbox = new HBox(label, descLabel);
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(0.0, 10.0, 10.0, 10.0));
 
