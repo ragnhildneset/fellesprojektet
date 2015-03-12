@@ -82,7 +82,7 @@ public class Main extends Application implements Initializable {
 		Main.stage = stage;
 		try{
 			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/main/Login.fxml")));
-			stage.initStyle(StageStyle.UTILITY);
+			stage.setResizable(false);
 			stage.setTitle("Calendar login");
 			stage.setResizable(false);
 			stage.setScene(scene);
