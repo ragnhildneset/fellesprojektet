@@ -285,7 +285,7 @@ public class AdminPanel extends Application implements Initializable {
 			e.setString(5, _r_desc);
 			e.execute();
 			System.out.println("Added new room.");
-			roomdata.add(new Room(_r_id, _r_cap, _r_name, _r_desc, _r_bin));
+			roomdata.add(new Room(_r_id, _r_cap, _r_name, _r_desc, _r_bin, "<REPLACE THIS>"));
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
