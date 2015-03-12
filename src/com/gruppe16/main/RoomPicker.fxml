@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="395.0" prefWidth="475.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gruppe16.main.RoomPicker">
+<VBox prefHeight="395.0" prefWidth="536.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gruppe16.main.RoomPicker">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
@@ -15,26 +15,30 @@
          <children>
             <HBox>
                <children>
-                  <Label text="Room list">
+                  <Label text="Available Rooms">
                      <font>
                         <Font size="20.0" />
                      </font>
+                     <HBox.margin>
+                        <Insets left="25.0" top="10.0" />
+                     </HBox.margin>
                   </Label>
                </children>
             </HBox>
          </children>
       </VBox>
-      <AnchorPane prefHeight="350.0" prefWidth="473.0">
+      <AnchorPane prefHeight="333.0" prefWidth="529.0">
          <children>
-            <TableView fx:id="roomlistTable" prefHeight="371.0" prefWidth="529.0">
+            <TableView fx:id="roomlistTable" layoutX="18.0" layoutY="19.0" prefHeight="276.0" prefWidth="481.0">
                <columns>
                   <TableColumn fx:id="roomNameCol" prefWidth="101.0" text="Room name" />
-                  <TableColumn fx:id="buildingNameCol" prefWidth="110.0" text="Building name" />
-                  <TableColumn fx:id="roomdescrCol" prefWidth="163.0" text="Description" />
-                  <TableColumn fx:id="roomCapCol" prefWidth="82.0" text="Capacity" />
-                  <TableColumn fx:id="roomPickCol" prefWidth="72.0" text="Pick" />
+                  <TableColumn fx:id="buildingNameCol" prefWidth="117.22306823730469" text="Building name" />
+                  <TableColumn fx:id="roomdescrCol" prefWidth="186.9871368408203" text="Description" />
+                  <TableColumn fx:id="roomCapCol" prefWidth="79.01284790039062" text="Capacity" />
                </columns>
             </TableView>
+            <Button fx:id="cancelButton" layoutX="438.0" layoutY="306.0" mnemonicParsing="false" text="Cancel" />
+            <Button fx:id="chooseButton" layoutX="360.0" layoutY="306.0" mnemonicParsing="false" text="Choose" />
          </children>
       </AnchorPane>
    </children>

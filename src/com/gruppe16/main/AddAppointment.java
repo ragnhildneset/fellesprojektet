@@ -74,7 +74,7 @@ public class AddAppointment implements Initializable {
 	private TextField toTextField;
 	
 	@FXML
-	private TextField roomTextField;
+	protected TextField roomTextField;
 
 	@FXML
 	private TextField titleTextField;
@@ -92,6 +92,12 @@ public class AddAppointment implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		cachedEmployees = DBConnect.getEmployees().values();
+		for(Employee e : cachedEmployees) {
+			if(e.getEmployeeID() == Login.getCurrentUserID()) {
+				cachedEmployees.remove(e);
+				break;
+			}
+		}
 		
 		if(editMode) datePicker.setValue(appointment.getAppDate());
 		else if(startDate != null) datePicker.setValue(startDate);
