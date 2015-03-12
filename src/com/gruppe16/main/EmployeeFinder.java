@@ -67,7 +67,7 @@ public class EmployeeFinder {
 			e.printStackTrace();
 		}
 		
-		cachedEmployees = DBConnect.getEmployees().values();
+		cachedEmployees = DBConnect.getEmployees();
 		employeeListView.setItems(FXCollections.observableArrayList(cachedEmployees));
 		
 		OKBtn.setOnAction(new EventHandler<ActionEvent>() {
