@@ -68,20 +68,6 @@ public class EmployeePicker implements Initializable {
 			}
 		});
 		
-		addBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				addEmployee(employeeListView.getSelectionModel().getSelectedItem());
-			}
-		});
-		
-		removeBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				removeEmployee(attendingListView.getSelectionModel().getSelectedItem());
-			}
-		});
-		
 		givenNameTextField.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
@@ -96,29 +82,45 @@ public class EmployeePicker implements Initializable {
 			}
 		});
 		
+		addBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				addSelectedEmployee();
+			}
+		});
+		
+		removeBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				removeSelectedEmployee();
+			}
+		});
+		
 		employeeListView.setOnMouseClicked(event -> {
 			if(event.getClickCount() == 2) {
-				addEmployee(employeeListView.getSelectionModel().getSelectedItem());
+				addSelectedEmployee();
 			}
 		});
 		
 		attendingListView.setOnMouseClicked(event -> {
 			if(event.getClickCount() == 2) {
-				removeEmployee(attendingListView.getSelectionModel().getSelectedItem());
+				removeSelectedEmployee();
 			}
 		});
 		
 		updateEmployeeList();
 	}
 	
-	private void addEmployee(Employee e) {
+	private void addSelectedEmployee() {
+		Employee e = employeeListView.getSelectionModel().getSelectedItem();
 		if(e != null) {
 			attendingListView.getItems().add(e);
 			employeeListView.getItems().remove(e);
 		}
 	}
 	
-	private void removeEmployee(Employee e) {
+	private void removeSelectedEmployee() {
+		Employee e = attendingListView.getSelectionModel().getSelectedItem();
 		if(e != null) {
 			attendingListView.getItems().remove(e);
 			employeeListView.getItems().add(e);
