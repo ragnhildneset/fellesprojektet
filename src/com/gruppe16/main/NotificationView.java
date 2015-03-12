@@ -7,8 +7,10 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -70,8 +72,9 @@ public class NotificationView extends VBox {
 			}
 		});
 
-		label = new Label(); label.setText(notification.owner); label.setPrefWidth(100.0);
+		label = new Label(); label.setText(notification.owner); label.setPrefWidth(150.0);
 		hbox = new HBox(label, acceptBtn, declineBtn);
+		hbox.setAlignment(Pos.CENTER_LEFT);
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(10.0, 10.0, 10.0, 10.0));
 		

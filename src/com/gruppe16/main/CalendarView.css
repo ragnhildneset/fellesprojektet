@@ -41,6 +41,11 @@
 -fx-rotate: -90;
 }
 
+.titled-pane:collapsed > .title
+{
+-fx-background-radius: 5;
+}
+
 .titled-pane > *.content 
 {
 -fx-background-color:
