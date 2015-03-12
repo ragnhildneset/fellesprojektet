@@ -69,14 +69,7 @@
             </Label>
             <HBox alignment="BOTTOM_LEFT" prefWidth="290.0">
                <children>
-                  <ImageView fx:id="backToCalendarBtn" fitHeight="32.0" fitWidth="32.0" layoutX="10.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../img/calendar.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </ImageView>
+                  <Button fx:id="backToCalendarBtn" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-graphic: url(file:img/calendar.png); -fx-background-color: transparent;" />
                </children>
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" top="10.0" />
@@ -126,11 +119,7 @@
                <children>
                   <Pane>
                      <children>
-                        <ImageView fx:id="notifyBtn" fitHeight="32.0" fitWidth="32.0" layoutX="110.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../img/bell.png" />
-                           </image>
-                        </ImageView>
+                        <Button fx:id="notificationBtn" layoutX="110.0" layoutY="40.0" maxHeight="32.0" maxWidth="24.0" minHeight="32.0" minWidth="24.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="24.0" style="-fx-graphic: url(file:img/bell.png); -fx-background-color: transparent;" />
                         <Circle fx:id="notificationCircle" fill="#c2d3ff" layoutX="131.0" layoutY="69.0" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
                         <Label fx:id="notificationLabel" alignment="CENTER" layoutX="124.0" layoutY="60.0" prefWidth="15.0" text="+9" />
                      </children>
