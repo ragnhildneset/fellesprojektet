@@ -83,7 +83,7 @@ public class DBConnect {
 	}
 	
 	public static void addAppointment(String title, String description, Date date, Time fromTime, Time toTime, Employee host) {
-		String query = "INSERT INTO Appointment (title, description, appdate, fromtime, totime, ownerid, creationtime) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO Appointment (title, description, appdate, fromtime, totime, ownerid) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement e = getConnection().prepareStatement(query);
 			e.setString(1, title);
@@ -92,7 +92,6 @@ public class DBConnect {
 			e.setTime(4, fromTime);
 			e.setTime(5, toTime);
 			e.setInt(6, host.getEmployeeID());
-			e.setDate(7, Date.valueOf(LocalDate.now()));
 			e.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();

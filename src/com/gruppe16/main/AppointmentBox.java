@@ -83,7 +83,7 @@ public class AppointmentBox extends AnchorPane{
 		getStylesheets().add("/com/gruppe16/main/listView.css");
 		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
 		int appointmentStart = start.toSecondOfDay()/60;
-		setPrefSize(PANEL_WIDTH_PARENT, Math.max(appointmentTime, 30));
+		setPrefSize(PANEL_WIDTH_PARENT, Math.max(appointmentTime, 40));
 		relocate(0, appointmentStart);
 		updateLabels();
 		}
@@ -107,7 +107,6 @@ public class AppointmentBox extends AnchorPane{
 		//TimeStamps
 		Label timeLabel = new Label("From: " + appointment.getFromTime()+"\nTo: " + appointment.getToTime());
 		timeLabel.setTextAlignment(TextAlignment.RIGHT);
-		timeLabel.setVisible(false);
 		
 		//Description
 		Pane descriptionPane = new Pane();
@@ -195,7 +194,7 @@ public class AppointmentBox extends AnchorPane{
 				});
 		
 		//Add Everything
-		getChildren().addAll(titleLabel, timeLabel);
+		getChildren().add(titleLabel);
 		AnchorPane.setRightAnchor(timeLabel, 5.0);
 		AnchorPane.setTopAnchor(timeLabel, 5.0);
 		AnchorPane.setTopAnchor(titleLabel, 5.0);
@@ -226,10 +225,10 @@ public class AppointmentBox extends AnchorPane{
 					if(panelHeight < PANEL_HEIGHT_OPEN) setPrefHeight(PANEL_HEIGHT_OPEN);
 					if(panelX > PANEL_WIDTH_PARENT - PANEL_WIDTH_OPEN) setLayoutX(PANEL_WIDTH_PARENT - PANEL_WIDTH_OPEN);
 					if(panelY > PANEL_HEIGHT_PARENT) setLayoutY(PANEL_HEIGHT_PARENT);
+					getChildren().addAll(timeLabel, descriptionPane, participantPane);
 					titleLabel.setClip(null);
 					titleLabel.setPrefWidth(getPrefWidth()-10);
 					timeLabel.setVisible(true);
-					getChildren().addAll(descriptionPane, participantPane);
 					participantPane.setVisible(false);
 					descriptionPane.setPrefWidth(getPrefWidth()-10);
 					descriptionPane.setPrefHeight(getPrefHeight()-100);
@@ -258,8 +257,7 @@ public class AppointmentBox extends AnchorPane{
 					setLayoutY(panelY);
 					titleLabel.setPrefWidth(getPrefWidth()-10);
 					timeLabel.setVisible(false);
-					getChildren().removeAll(descriptionPane, participantPane);
-					getChildren().removeAll(delBtn, editBtn, showBtn);
+					getChildren().removeAll(timeLabel, descriptionPane, participantPane, delBtn, editBtn, showBtn);
 				}
 			}
 		});

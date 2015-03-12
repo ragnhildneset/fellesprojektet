@@ -207,8 +207,8 @@ public class DayPlanView extends VBox {
 						overlapArray.add(overlappingBoxes);
 					}
 				}
-				else if(a.getDuration() < 30 && aNext.getDuration() < 30) {
-					if(a.getStart().plusMinutes(30).isAfter(aNext.getStart()) ^ a.getStart().isAfter(aNext.getStart().plusMinutes(30))) {
+				else if(a.getDuration() < 40 && aNext.getDuration() < 40) {
+					if(a.getStart().plusMinutes(40).isAfter(aNext.getStart()) ^ a.getStart().isAfter(aNext.getStart().plusMinutes(40))) {
 						//Check if in overlapArray already
 						newBox = false;
 						boolean contained = false;
@@ -236,8 +236,8 @@ public class DayPlanView extends VBox {
 						}
 					}
 				}
-				else if(a.getDuration() < 30) {
-					if(a.getStart().plusMinutes(30).isAfter(aNext.getStart()) ^ a.getStart().plusMinutes(30).isAfter(aNext.getEnd())) {
+				else if(a.getDuration() < 40) {
+					if(a.getStart().plusMinutes(40).isAfter(aNext.getStart()) ^ a.getStart().plusMinutes(40).isAfter(aNext.getEnd())) {
 						//Check if in overlapArray already
 						newBox = false;
 						boolean contained = false;
@@ -265,8 +265,8 @@ public class DayPlanView extends VBox {
 						}
 					}
 				}
-				else if(aNext.getDuration() < 30) {
-					if(a.getEnd().isAfter(aNext.getStart()) ^ a.getStart().isAfter(aNext.getStart().plusMinutes(30))) {
+				else if(aNext.getDuration() < 40) {
+					if(a.getEnd().isAfter(aNext.getStart()) ^ a.getStart().isAfter(aNext.getStart().plusMinutes(40))) {
 						//Check if in overlapArray already
 						newBox = false;
 						boolean contained = false;
