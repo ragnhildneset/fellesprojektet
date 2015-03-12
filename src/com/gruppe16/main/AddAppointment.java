@@ -456,7 +456,7 @@ public class AddAppointment implements Initializable {
 				
 				if(valid){
 					try{
-						RoomPicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this, datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin, 0));
+						RoomPicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this, datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin), attendees);
 					}catch (Exception rr){
 						rr.printStackTrace();
 					}

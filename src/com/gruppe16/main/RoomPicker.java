@@ -50,13 +50,6 @@ public class RoomPicker implements Initializable {
 	private static AddAppointment addAppointment;
     static ObservableList<Room> roomdata;
 
-
-	//public RoomPicker(ArrayList<Tuple> available) {
-		//this.availableRooms = available;
-	//}
-    
-    
-    
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		buildingNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingname"));
@@ -89,7 +82,7 @@ public class RoomPicker implements Initializable {
 	public static void start(Stage stage, Window owner, AddAppointment addApp, LocalDate date, LocalTime fromTime, LocalTime toTime ) throws IOException {
 		RoomPicker.stage = stage;
 		RoomPicker.addAppointment = addApp;
-		RoomPicker.roomdata = FXCollections.observableArrayList(RoomReservation.findRoom(date, fromTime, toTime, 1));
+		RoomPicker.roomdata = FXCollections.observableArrayList(RoomReservation.findRoom(date, fromTime, toTime, 10));
 		//RoomPicker.currentRoom = addApp.getRoom();
 		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/RoomPicker.fxml")));
 		stage.setResizable(false);
