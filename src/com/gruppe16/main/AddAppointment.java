@@ -183,6 +183,7 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
 				if(newValue) datePicker.setEffect(null);
+				sendBtn.setDisable(true);
 			}
 		});
 

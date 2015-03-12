@@ -86,6 +86,7 @@ public class Main extends Application implements Initializable {
 			stage.setTitle("Calendar login");
 			stage.setResizable(false);
 			stage.setScene(scene);
+			//stage.set
 			stage.show();
 		} catch (Exception e) {
 			e.printStackTrace();

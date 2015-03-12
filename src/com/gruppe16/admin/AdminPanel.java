@@ -78,7 +78,7 @@ public class AdminPanel extends Application implements Initializable {
     
 
     static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
-    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees().values());
+    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
     	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
