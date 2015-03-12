@@ -86,6 +86,7 @@ public class AddAppointment implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		_availableEmployees = new ArrayList<Employee>();
+		sendBtn.setDisable(true);
 		for(Employee e : DBConnect.getEmployees()) {
 			if(!e.equals(Login.getCurrentUser())){
 				_availableEmployees.add(e);
@@ -182,6 +183,7 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
 				if(newValue) datePicker.setEffect(null);
+				sendBtn.setDisable(true);
 			}
 		});
 
@@ -263,6 +265,7 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(KeyEvent event)
 			{
+				
 				char c = event.getCharacter().charAt(0);
 				String beforeText = fromTextField.getText();
 				
@@ -298,6 +301,7 @@ public class AddAppointment implements Initializable {
 					fromTextField.selectForward();
 					fromTextField.selectForward();
 				}
+				sendBtn.setDisable(true);
 			}
 		});
 		
@@ -366,6 +370,9 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(KeyEvent event)
 			{
+				
+				sendBtn.setDisable(true);
+				
 				char c = event.getCharacter().charAt(0);
 				String beforeText = toTextField.getText();
 				
@@ -411,7 +418,17 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
 				if(newValue) roomTextField.setEffect(null);
+				
 			}
+		});
+		
+		roomTextField.setOnKeyTyped(new EventHandler<KeyEvent>(){
+
+			@Override
+			public void handle(KeyEvent arg0) {
+				sendBtn.setDisable(true);
+			}
+			
 		});
 		
 		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -444,6 +461,8 @@ public class AddAppointment implements Initializable {
 						rr.printStackTrace();
 					}
 				}
+				
+				sendBtn.setDisable(false);
 				
 			}
 		});
@@ -515,5 +534,9 @@ public class AddAppointment implements Initializable {
 		}
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	public void rpClosed() {
+		sendBtn.setDisable(true);
 	}
 }

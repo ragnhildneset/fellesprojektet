@@ -1,4 +1,5 @@
 package com.gruppe16.entities;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,34 @@ import com.mysql.jdbc.ResultSet;
 
 public class Employee {
 	
+	private static HashMap<Integer, Group> map = null;
+	public static void addToGroup(int groupID, String g_name, int employeeid){
+		if(!map.containsKey(groupID)){
+			map.put(groupID, new Group(groupID, g_name));
+		}
+		map.get(groupID).members.add(getEmployee(employeeid));
+	}
+	
+	public static class Group {
+		public int id; public String name;
+		ArrayList<Employee> members = new ArrayList<Employee>();
+		Group(int i, String n){
+			this.id = i;
+			this.name = n;
+		}
+	}
+	
+	public static ArrayList<Group> getGroups(){
+		if(map == null){
+			map = new HashMap<Integer, Group>();
+			DBConnect.getGroups();
+		}
+		ArrayList<Group> e = new ArrayList<Group>();
+		for(Map.Entry<Integer, Group> s : map.entrySet()){
+			e.add(s.getValue());
+		}
+		return e;
+	}
 
 	SimpleStringProperty firstName;
 	SimpleStringProperty lastName;

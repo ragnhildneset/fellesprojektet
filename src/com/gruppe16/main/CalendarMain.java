@@ -45,6 +45,7 @@ import javafx.stage.WindowEvent;
 
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Employee.Group;
 import com.gruppe16.entities.Notif;
 
 public class CalendarMain extends Application {
@@ -332,7 +333,7 @@ public class CalendarMain extends Application {
 			public void handle(MouseEvent event) {
 				if(notificationMenu.isShowing()) notificationMenu.hide();
 				else /*if(DBConnect.getNotifications().size() > 0)*/ {
-					Point2D pos = notifyBtn.localToScreen(-270.0, 40.0);
+					Point2D pos = notifyBtn.localToScreen(-315.0, 40.0);
 					notificationMenu.show(scene.getWindow(), pos.getX(), pos.getY());
 				}
 			}
@@ -412,29 +413,17 @@ public class CalendarMain extends Application {
 	}
 	
 	private void updateGroups() {
+		
 		ObservableList<HBox> items = FXCollections.observableArrayList();
 		
 		// Testkode
-		HBox hbox = new HBox();
-		hbox.getChildren().add(new CheckBox("Group 1"));
-		items.add(hbox);
 		
-		hbox = new HBox();
-		hbox.getChildren().add(new CheckBox("Group 2"));
-		items.add(hbox);
-		
-		hbox = new HBox();
-		CheckBox checkBox = new CheckBox("Group 3");
-		checkBox.setPadding(new Insets(0,80,0,0));
-		hbox.getChildren().add(checkBox);
-		
-		ImageView button = new ImageView("http://findicons.com/files/icons/2226/matte_basic/16/edit.png");
-		button.setScaleX(0.75);
-		button.setScaleY(0.75);
-		hbox.getChildren().add(button);
-		
-		items.add(hbox);
-		
+		for(Group g : Employee.getGroups()){			
+			HBox hbox = new HBox();
+			hbox.getChildren().add(new CheckBox(g.name));
+			items.add(hbox);
+		}
+				
 		groupListView.setItems(items);
 	}
 
@@ -449,7 +438,7 @@ public class CalendarMain extends Application {
 			TitledPane pane = new TitledPane("", notificationView);
 			
 			Label titleLabel = new Label("Invitation for '" + n.title + "'");
-			titleLabel.setPrefWidth(140.0);
+			titleLabel.setPrefWidth(250.0);
 			
 			Runnable onAccept = new Runnable() {
 				@Override
@@ -474,21 +463,24 @@ public class CalendarMain extends Application {
 			};
 			notificationView.setOnDecline(onDecline);
 
-//			Button acceptBtn = new Button("Accept");
-//			acceptBtn.setOnMouseClicked(event -> {
-//				onAccept.run();
-//			});
-//			
-//			Button declineBtn = new Button("Decline");
-//			declineBtn.setOnMouseClicked(event -> {
-//				onDecline.run();
-//			});
+			Button acceptBtn = new Button();
+			acceptBtn.setTooltip(new Tooltip("Accept"));
+			acceptBtn.setGraphic(new ImageView("http://findicons.com/files/icons/1581/silk/16/tick.png"));
+			acceptBtn.setOnMouseClicked(event -> {
+				onAccept.run();
+			});
 			
-			HBox hbox = new HBox(titleLabel);
+			Button declineBtn = new Button();
+			declineBtn.setTooltip(new Tooltip("Decline"));
+			declineBtn.setGraphic(new ImageView("http://findicons.com/files/icons/1715/gion/16/dialog_cancel.png"));
+			declineBtn.setOnMouseClicked(event -> {
+				onDecline.run();
+			});
+			
+			HBox hbox = new HBox(titleLabel, acceptBtn, declineBtn);
 			hbox.setAlignment(Pos.CENTER_LEFT);
 
-//			HBox.setMargin(hbox.getChildren().get(0), new Insets(0.0, 0.0, 0.0, 10.0));
-//			HBox.setMargin(hbox.getChildren().get(2), new Insets(0.0, 0.0, 0.0, 10.0));
+			HBox.setMargin(hbox.getChildren().get(0), new Insets(0.0, 0.0, 0.0, 10.0));
 			
 			pane.setGraphic(hbox);
 			pane.setAnimated(false);
