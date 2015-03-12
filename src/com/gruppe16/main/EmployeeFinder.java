@@ -98,6 +98,13 @@ public class EmployeeFinder {
 				updateEmployeeList();
 			}
 		});
+
+		employeeListView.setOnMouseClicked(event -> {
+			if(event.getClickCount() == 2) {
+				employee = employeeListView.getSelectionModel().getSelectedItem();
+				stage.close();
+			}
+		});
 		
 		updateEmployeeList();
 	}

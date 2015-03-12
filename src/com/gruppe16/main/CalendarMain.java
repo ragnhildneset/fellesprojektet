@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Parent;
@@ -26,13 +29,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.HBoxBuilder;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 import com.gruppe16.database.DBConnect;
@@ -98,7 +106,10 @@ public class CalendarMain extends Application {
 
 	private boolean calendarShown = true;
 	
-	private ContextMenu notificationMenu = null;
+	private Popup notificationMenu = null;
+	private Accordion accordion = null;
+
+	private ArrayList<Notification> notifications = new ArrayList<Notification>();
 	
 	public CalendarMain() {
 		// DEBUG: Use first employee
@@ -120,6 +131,7 @@ public class CalendarMain extends Application {
 		try {
 			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1005, 750);
 			scene.getRoot().setStyle("-fx-background-color: linear-gradient(#FFFFFF, #EEEEEE)");
+			scene.getStylesheets().add("/com/gruppe16/main/CalendarView.css");
 			
 			this.stage = stage;
 			stage.setScene(scene);
@@ -132,11 +144,16 @@ public class CalendarMain extends Application {
 		calendarView = new CalendarView(this);
 		dayPlanView = new DayPlanView(this);
 
-		notificationMenu = new ContextMenu();
-
 		setEmployee(employee);
-		
-		updateNotifications();
+		//showCalendar(new Date());
+		updateGroups();
+
+		for(int i = 0; i < 10; i++) notifications.add(new Notification());
+		notificationMenu = new Popup();
+		accordion = new Accordion();
+		notificationMenu.getContent().add(accordion);
+		updateNotificationCounter();
+		setupNotifications();
 
 		stage.show();
 		redraw();
@@ -316,7 +333,10 @@ public class CalendarMain extends Application {
 		notifyBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 				if(notificationMenu.isShowing()) notificationMenu.hide();
-				else notificationMenu.show(notifyBtn, Side.BOTTOM, -280, 10);
+				else /*if(DBConnect.getNotifications().size() > 0)*/ {
+					Point2D pos = notifyBtn.localToScreen(-270.0, 40.0);
+					notificationMenu.show(scene.getWindow(), pos.getX(), pos.getY());
+				}
 			}
 		});
 	}
@@ -393,7 +413,7 @@ public class CalendarMain extends Application {
 		});
 	}
 	
-	void updateGroups() {
+	private void updateGroups() {
 		ObservableList<HBox> items = FXCollections.observableArrayList();
 		
 		// Testkode
@@ -419,20 +439,76 @@ public class CalendarMain extends Application {
 		
 		groupListView.setItems(items);
 	}
-	
-	private void updateNotifications() {
-		notificationMenu.getItems().clear();
-		
-		CustomMenuItem item = new CustomMenuItem();
-		Accordion accordion = new Accordion();
-		
-		ArrayList<Notification> notifications = DBConnect.getNotifications(Login.getCurrentUser());
+
+	private void setupNotifications() {
+		//ArrayList<NotificationView> notifications = DBConnect.getNotifications(Login.getCurrentUser());
 		for(Notification n : notifications) {
-			accordion.getPanes().add(new TitledPane("Invitation for 'Meeting 1'", new NotificationView(n).start()));
+			NotificationView notificationView = new NotificationView(n);
+			TitledPane pane = new TitledPane("", notificationView);
+			
+			Label titleLabel = new Label("Invitation for '" + n.getTitle() + "'");
+			titleLabel.setPrefWidth(140.0);
+			
+			Runnable onAccept = new Runnable() {
+				@Override
+				public void run() {
+					notifications.remove(n);
+					accordion.getPanes().remove(pane);
+					updateNotificationCounter();
+					//DBConnect.acceptNotification(n);
+				}
+			};
+			notificationView.setOnAccept(onAccept);
+			
+			Runnable onDecline = new Runnable() {
+				@Override
+				public void run() {
+					notifications.remove(n);
+					accordion.getPanes().remove(pane);
+					updateNotificationCounter();
+					//DBConnect.declineNotification(n);
+				}
+			};
+			notificationView.setOnDecline(onDecline);
+
+			Button acceptBtn = new Button("Accept");
+			acceptBtn.setOnMouseClicked(event -> {
+				onAccept.run();
+			});
+			
+			Button declineBtn = new Button("Decline");
+			declineBtn.setOnMouseClicked(event -> {
+				onDecline.run();
+			});
+			
+			HBox hbox = new HBox(titleLabel, acceptBtn, declineBtn);
+			hbox.setAlignment(Pos.CENTER_LEFT);
+
+			HBox.setMargin(hbox.getChildren().get(0), new Insets(0.0, 0.0, 0.0, 10.0));
+			HBox.setMargin(hbox.getChildren().get(2), new Insets(0.0, 0.0, 0.0, 10.0));
+			
+			pane.setGraphic(hbox);
+			pane.setAnimated(false);
+			accordion.getPanes().add(pane);
 		}
-		
-		item.setContent(accordion);
-		notificationMenu.getItems().add(item);
+	}
+	
+	public void updateNotificationCounter() {
+		int notifCount = notifications.size();
+		if(notifCount == 0) {
+			notificationLabel.setVisible(false);
+			notificationCircle.setVisible(false);
+		}
+		else {
+			notificationLabel.setVisible(true);
+			notificationCircle.setVisible(true);
+			if(notifCount < 10) {
+				notificationLabel.setText(Integer.toString(notifications.size()));
+			}
+			else {
+				notificationLabel.setText("9+");
+			}
+		}
 	}
 	
 	public Scene getScene(){

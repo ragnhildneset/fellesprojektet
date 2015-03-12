@@ -67,6 +67,9 @@ public class Employee {
 		return employeeid.get();
 	}
 
-
+	public String toString(){
+		return getName();
+	}
+		
 	
 }
