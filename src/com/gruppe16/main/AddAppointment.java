@@ -3,15 +3,12 @@ package com.gruppe16.main;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
-import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -22,28 +19,22 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
-import com.gruppe16.admin.AdminPanel;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
-import com.gruppe16.entities.RoomReservation;
 
 public class AddAppointment implements Initializable {
 	@FXML
@@ -87,15 +78,14 @@ public class AddAppointment implements Initializable {
 	private static int startTime = 0;
 	private static Appointment appointment = null;
 	private static boolean editMode = false;
-	public static Collection<Employee> cachedEmployees;
+	static ArrayList<Employee> _availableEmployees = null;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		cachedEmployees = DBConnect.getEmployees().values();
-		for(Employee e : cachedEmployees) {
-			if(e.getEmployeeID() == Login.getCurrentUserID()) {
-				cachedEmployees.remove(e);
-				break;
+		_availableEmployees = new ArrayList<Employee>();
+		for(Employee e : DBConnect.getEmployees()) {
+			if(!e.equals(Login.getCurrentUser())){
+				_availableEmployees.add(e);
 			}
 		}
 		
@@ -159,7 +149,10 @@ public class AddAppointment implements Initializable {
 						//TODO
 						stage.close();
 					}else{
-						DBConnect.addAppointment(titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(fromHour, fromMin, 0), new Time(toHour, toMin, 0), Login.getCurrentUser());
+						int appid = DBConnect.addAppointment(titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(fromHour, fromMin, 0), new Time(toHour, toMin, 0), Login.getCurrentUser());
+						for(Employee e : attendees){
+							e.invite(appid);
+						}
 						stage.close();
 					}
 
@@ -462,31 +455,32 @@ public class AddAppointment implements Initializable {
 			}
 		});
 	}
+
+	private ArrayList<Employee> attendees = new ArrayList<Employee>(); 
 	
 	public void setAttendees(Collection<Employee> employees) {
 		attendeesTextField.clear();
 		int i = 0;
 		for(Employee e : employees) {
+			attendees.add(e);
 			if(i++ > 0) {
 				attendeesTextField.appendText(", ");
 			}
 			attendeesTextField.appendText(e.getFirstName() + " " + e.getLastName());
 		}
 	}
-	
-	public Collection<Employee> getAttendees() {
-		ArrayList<Employee> attendees = new ArrayList<Employee>();
-		for(String fullName : attendeesTextField.getText().split(", ")) {
-			String[] names = fullName.split(" ");
-			for(Employee e : cachedEmployees) {
-				if(names[0].equals(e.getFirstName()) && names[1].equals(e.getLastName())) {
-					attendees.add(e);
-					break;
-				}
-			}
-		}
-		return attendees;
-	}
+//	public Collection<Employee> getAttendees() {
+//		for(String fullName : attendeesTextField.getText().split(", ")) {
+//			String[] names = fullName.split(" ");
+//			for(Employee e : _availableEmployees) {
+//				if(names[0].equals(e.getFirstName()) && names[1].equals(e.getLastName())) {
+//					attendees.add(e);
+//					break;
+//				}
+//			}
+//		}
+//		return attendees;
+//	}
 	
 	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
 		AddAppointment.editMode = false;

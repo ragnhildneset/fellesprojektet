@@ -241,7 +241,6 @@ public class AdminPanel extends Application implements Initializable {
 
 	@Override
 	public void start(Stage arg0) throws Exception {
-		
 		try{
 			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/admin/mainPane.fxml")));
 			arg0.setScene(scene);

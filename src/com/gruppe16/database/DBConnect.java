@@ -53,18 +53,21 @@ public class DBConnect {
 		return null;
 	}
 	
-	public static HashMap<Integer,Employee> getEmployees(){
-
+	private static ArrayList<Employee> _employees = null;
+	public static ArrayList<Employee> getEmployees(){
+		if(_employees != null){
+			return _employees;
+		}
 		String q = "SELECT E.employeeid, E.givenName, E.surname, E.email, U.username FROM Employee as E, UserAndID as U WHERE U.employeeid = E.employeeid;";
 
-		HashMap<Integer, Employee> map = new HashMap<Integer, Employee>();
+		ArrayList<Employee> map = new ArrayList<Employee>();
 		try{
 			PreparedStatement p = getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) p.executeQuery();
 			while(rs.next()){
 				int key = rs.getInt("E.employeeid");
 				Employee e = new Employee(key,rs.getString("E.givenName"), rs.getString("E.surname"), rs.getString("E.email"), rs.getString("username"));
-				map.put(key, e);
+				map.add(e);
 			}return map;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -115,7 +118,7 @@ public class DBConnect {
 		return false;
 	}
 	
-	public static void addAppointment(String title, String description, Date date, Time fromTime, Time toTime, Employee host) {
+	public static int addAppointment(String title, String description, Date date, Time fromTime, Time toTime, Employee host) {
 		String query = "INSERT INTO Appointment (title, description, appdate, fromtime, totime, ownerid) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement e = getConnection().prepareStatement(query);
@@ -126,9 +129,14 @@ public class DBConnect {
 			e.setTime(5, toTime);
 			e.setInt(6, host.getEmployeeID());
 			e.execute();
+			ResultSet rs = e.getGeneratedKeys();
+			if(rs.next()){
+				return rs.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return -1;
 	}
 	
 	public static HashMap<Integer, Appointment> getAppointments(){
@@ -188,5 +196,20 @@ public class DBConnect {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public static void inviteEmployee(Employee employee, int appid) {
+		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(q);
+			s.setInt(1, appid);
+			s.setInt(2, employee.getEmployeeID());
+			s.setInt(3, 0);
+			s.setInt(4, 0);
+			s.setString(5, "BLUE");
+			s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

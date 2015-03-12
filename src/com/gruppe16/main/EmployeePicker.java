@@ -58,7 +58,7 @@ public class EmployeePicker implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		attendingListView.setItems(FXCollections.observableArrayList(currentAttendees));
+		//attendingListView.setItems(FXCollections.observableArrayList(currentAttendees));
 		
 		OKBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -129,7 +129,7 @@ public class EmployeePicker implements Initializable {
 	
 	private void updateEmployeeList() {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
-		for(Employee e : AddAppointment.cachedEmployees) {
+		for(Employee e : AddAppointment._availableEmployees) {
 			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(surNameTextField.getText().toLowerCase()) &&
 					!attendingListView.getItems().contains(e)) {
 				employees.add(e);
@@ -142,7 +142,7 @@ public class EmployeePicker implements Initializable {
 	public static void start(Stage stage, Window owner, AddAppointment addApp) throws IOException {
 		EmployeePicker.stage = stage;
 		EmployeePicker.addAppointment = addApp;
-		EmployeePicker.currentAttendees = addApp.getAttendees();
+		//EmployeePicker.currentAttendees = addApp.getAttendees();
 		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/EmployeePicker.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);
