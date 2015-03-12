@@ -150,8 +150,8 @@ public class DBConnect {
 		return false;
 	}
 	
-	public static ArrayList<AppointmentAndEmployee> getAttendees(int appId){
-		String query = "SELECT * FROM AppointmentAndEmployee WHERE appid = '" + appId + "'";
+	public static ArrayList<AppointmentAndEmployee> getAppointmentAndEmployee(){
+		String query = "SELECT * FROM AppointmentAndEmployee";
 		ArrayList<AppointmentAndEmployee> ae = new ArrayList<AppointmentAndEmployee>();
 		try{
 			PreparedStatement e = getConnection().prepareStatement(query);

@@ -56,7 +56,6 @@ public class AppointmentBox extends AnchorPane{
 	    private String getStyle;
 	    panelColors(String cMain, String cSecondary, String cBorder){
 	    	getStyle = "cMain: " + cMain + "; cSecondary: " + cSecondary + "; cBorder: " + cBorder + ";";
-	    
 	    }
 	}
 	
@@ -69,12 +68,14 @@ public class AppointmentBox extends AnchorPane{
 	private boolean show = false;
 	private panelColors color;
 	private DayPlanView dpv;
+	private Employee e;
 	
 	//Using list of employees for testing
     static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
 	
-	public AppointmentBox(Appointment appointment, panelColors color, DayPlanView dpv){
+	public AppointmentBox(Appointment appointment, Employee e, panelColors color, DayPlanView dpv){
 		setId("appBox");
+		this.e = e;
 		this.appointment = appointment;
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
@@ -139,6 +140,9 @@ public class AppointmentBox extends AnchorPane{
 				deleteDialog();
 			}
 		});
+		
+		//Leave Button
+		Button leaveBtn = new Button("Leave");
 		
 		//Edit Button
 		Button editBtn = new Button("Edit");
@@ -212,6 +216,8 @@ public class AppointmentBox extends AnchorPane{
 		AnchorPane.setLeftAnchor(participantPane, 5.0);
 		AnchorPane.setBottomAnchor(delBtn, 5.0);
 		AnchorPane.setRightAnchor(delBtn, 5.0);
+		AnchorPane.setBottomAnchor(leaveBtn, 5.0);
+		AnchorPane.setRightAnchor(leaveBtn, 5.0);
 		AnchorPane.setBottomAnchor(editBtn, 5.0);
 		AnchorPane.setRightAnchor(editBtn, 70.0);
 		AnchorPane.setBottomAnchor(showBtn, 5.0);
@@ -256,7 +262,9 @@ public class AppointmentBox extends AnchorPane{
 						participantsTitleLabel.setText("Participants (" + employeedata.size() + "):");
 
 					}
-					getChildren().addAll(delBtn, editBtn, showBtn);
+					if(e.getEmployeeID() == appointment.getOwnerID()) getChildren().addAll(delBtn, editBtn, showBtn);
+					else if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID());
+					else getChildren().add(leaveBtn);
 				}
 				else{
 					active = false;
@@ -266,7 +274,7 @@ public class AppointmentBox extends AnchorPane{
 					setLayoutY(panelY);
 					titleLabel.setPrefWidth(getPrefWidth()-10);
 					timeLabel.setVisible(false);
-					getChildren().removeAll(timeLabel, descriptionPane, participantPane, delBtn, editBtn, showBtn);
+					getChildren().removeAll(timeLabel, descriptionPane, participantPane, delBtn, editBtn, showBtn, leaveBtn);
 				}
 			}
 		});

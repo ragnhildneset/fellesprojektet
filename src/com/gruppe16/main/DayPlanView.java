@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.main.AppointmentBox.panelColors;
 
@@ -157,7 +158,7 @@ public class DayPlanView extends VBox {
 	}
 	
 	public void addAppointment(Appointment appointment, panelColors color){
-		AppointmentBox appointmentBox = new AppointmentBox(appointment, color, this);
+		AppointmentBox appointmentBox = new AppointmentBox(appointment, employee, color, this);
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	
@@ -339,24 +340,47 @@ public class DayPlanView extends VBox {
 	public void showAppointments(Employee e) {
 		employee = e;
 		removeAppointments();
+		ArrayList<AppointmentAndEmployee> AppAndEmp = DBConnect.getAppointmentAndEmployee();
 		HashMap<Integer, Appointment> appointments = DBConnect.getAppointments();
 		LocalDate date = this.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		for (Appointment currentApp : appointments.values()){
-			if(e.getEmployeeID() == currentApp.getOwnerID() && currentApp.getAppDate().equals(date)){
-				boolean notContained = true;
-				for (Node aBoxes : appointmentPane.getChildren()) {
-					if(aBoxes instanceof AppointmentBox) {
-						if(((AppointmentBox) aBoxes).getID() == currentApp.getID()){
-							notContained = false;
-							break;
+		for (AppointmentAndEmployee currentApp : AppAndEmp){
+			if(e.getEmployeeID() == currentApp.getEmployeeid() && currentApp.getStatus() == 1){
+				int appID = currentApp.getAppid();
+				for (Appointment app : appointments.values()){
+					if(appID == app.getID() && app.getAppDate().equals(date)){
+						boolean notContained = true;
+						for (Node aBoxes : appointmentPane.getChildren()) {
+							if(aBoxes instanceof AppointmentBox) {
+								if(((AppointmentBox) aBoxes).getID() == app.getID()){
+									notContained = false;
+									break;
+								}
+							}
 						}
+						String color = currentApp.getColor();
+						
+						if(notContained) addAppointment(app, toEnumColor(color));
 					}
 				}
-				if(notContained) addAppointment(currentApp, panelColors.GREEN);
+				
 			}
 		}
 		arrangeAppointments();
 	}
+    public panelColors toEnumColor(String color){
+    	System.out.println(color);
+    	color.toUpperCase();
+    	if(color.equals("RED")) return panelColors.RED;
+    	else if(color.equals("GREEN")) return panelColors.GREEN;
+    	else if(color.equals("BLUE")) return panelColors.BLUE;
+    	else if(color.equals("YELLOW")) return panelColors.YELLOW;
+    	else if(color.equals("BROWN")) return panelColors.BROWN;
+    	else if(color.equals("PURPLE")) return panelColors.PURPLE;
+    	else if(color.equals("ORANGE")) return panelColors.ORANGE;
+    	else if(color.equals("TURQUOISE")) return panelColors.TURQUOISE;
+    	else if(color.equals("GREY")) return panelColors.GREY;
+    	else return panelColors.GREEN;
+    }
 	
 	private void removeAppointments(){
 		ArrayList<AppointmentBox> appointmentBoxes = new ArrayList<AppointmentBox>();
