@@ -2,13 +2,6 @@ package com.gruppe16.main;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
-
-import com.gruppe16.main.DayPlanView;
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Appointment;
-import com.gruppe16.entities.AppointmentAndEmployee;
-import com.gruppe16.entities.Employee;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +27,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.AppointmentAndEmployee;
+import com.gruppe16.entities.Employee;
 
 public class AppointmentBox extends AnchorPane{
 	
@@ -184,7 +182,7 @@ public class AppointmentBox extends AnchorPane{
 		participantsTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 		
 		//Participants ListView
-		ListView<Employee> participants = new ListView<Employee>();
+		ListView<AnchorPane> participants = new ListView<AnchorPane>();
 		participants.setFocusTraversable( false );
 		participantPane.getChildren().addAll(participantsTitleLabel,participants);
 		participants.setLayoutY(20);
@@ -200,7 +198,34 @@ public class AppointmentBox extends AnchorPane{
 							descriptionPane.setVisible(false);
 							participantPane.setVisible(true);
 							ObservableList<Employee> attendees = FXCollections.observableArrayList(getParticipants());
-							participants.setItems(attendees);
+							ObservableList<AnchorPane> attendeeAnchorPane = FXCollections.observableArrayList();
+							
+							for(Employee a : attendees){			
+								AnchorPane attendeePane = new AnchorPane();
+								Label nameLabel = new Label(a.getName());
+								Label statusLabel = new Label();
+								AnchorPane.setLeftAnchor(nameLabel, 5.0);
+								AnchorPane.setRightAnchor(statusLabel, 5.0);
+								if(a.getEmployeeID() == appointment.getOwnerID()) {
+									statusLabel.setText("Owner");
+									statusLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+								}
+								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getEmployeeID()).getStatus() == 1) {
+									statusLabel.setText("Attending");
+									statusLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+								}
+								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getEmployeeID()).getStatus() == 2) {
+									statusLabel.setText("Declined");
+									statusLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+								}
+								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getEmployeeID()).getStatus() == 0) {
+									statusLabel.setText("Pending");
+									statusLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+								}
+								attendeePane.getChildren().addAll(nameLabel, statusLabel);
+								attendeeAnchorPane.add(attendeePane);
+							}
+							participants.setItems(attendeeAnchorPane);
 							participantsTitleLabel.setText("Participants (" + attendees.size() + "):");
 							
 							showBtn.setText("Hide participants");
@@ -269,8 +294,8 @@ public class AppointmentBox extends AnchorPane{
 					else {
 						participantPane.setVisible(true);
 					}
-					if(e.getEmployeeID() == appointment.getOwnerID()) getChildren().addAll(delBtn, editBtn, showBtn);
-					else if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID());
+					if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()) getChildren().addAll(delBtn, editBtn, showBtn);
+					else if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
 					else getChildren().addAll(showBtn, leaveBtn);
 				}
 				else{
@@ -384,17 +409,25 @@ public class AppointmentBox extends AnchorPane{
 	public ArrayList<Employee> getParticipants() {
 	    ArrayList<AppointmentAndEmployee> AppAndEmp = DBConnect.getAppointmentAndEmployee();
 	    ArrayList<Employee> participants = new ArrayList<Employee>();
-	    for(AppointmentAndEmployee aae : AppAndEmp) {
-	    	if(aae.getAppid() == appointment.getID()) {
-	    		participants.add(employeedata.get(aae.getEmployeeid()));
-	    	}
+	    if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
+		    for(AppointmentAndEmployee aae : AppAndEmp) {
+		    	if(aae.getAppid() == appointment.getID()) {
+		    		participants.add(employeedata.get(aae.getEmployeeid()));
+		    	}
+		    }
+	    }
+	    else {
+	    	 for(AppointmentAndEmployee aae : AppAndEmp) {
+			    	if(aae.getAppid() == appointment.getID() && aae.getStatus() == 1) {
+			    		participants.add(employeedata.get(aae.getEmployeeid()));
+			    	}
+			    }
 	    }
 	    
 		return participants;
 	}
 	
     public panelColors toEnumColor(String color){
-    	System.out.println(color);
     	color.toUpperCase();
     	if(color.equals("RED")) return panelColors.RED;
     	else if(color.equals("GREEN")) return panelColors.GREEN;
