@@ -93,6 +93,8 @@ public class AddAppointment implements Initializable {
 			}
 		}
 		
+		descriptionTextArea.setWrapText(true);
+		
 		if(editMode) datePicker.setValue(appointment.getAppDate());
 		else if(startDate != null) datePicker.setValue(startDate);
 		else datePicker.setValue(LocalDate.now());
