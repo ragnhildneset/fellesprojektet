@@ -160,7 +160,7 @@ public class AppointmentBox extends AnchorPane{
 							dpv.getMainPane().redraw();
 							}
 					});
-					AddAppointment.start(newStage, dpv.getMainPane().getScene().getWindow(), appointment);
+					AddAppointment.start(newStage, dpv.getMainPane().getScene().getWindow(), appointment, getParticipants());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -190,7 +190,7 @@ public class AppointmentBox extends AnchorPane{
 							show = true;
 							descriptionPane.setVisible(false);
 							participantPane.setVisible(true);
-							ObservableList<Employee> attendees = getParticipants();
+							ObservableList<Employee> attendees = FXCollections.observableArrayList(getParticipants());
 							participants.setItems(attendees);
 							participantsTitleLabel.setText("Participants (" + attendees.size() + "):");
 							
@@ -366,8 +366,8 @@ public class AppointmentBox extends AnchorPane{
 		return getEnd().getMinute() - getStart().getMinute();
 	}	
 	
-	public ObservableList<Employee> getParticipants() {
-	    ObservableList<AppointmentAndEmployee> AppAndEmp = FXCollections.observableArrayList(DBConnect.getAppointmentAndEmployee());
+	public ArrayList<Employee> getParticipants() {
+	    ArrayList<AppointmentAndEmployee> AppAndEmp = DBConnect.getAppointmentAndEmployee();
 	    ArrayList<Employee> participants = new ArrayList<Employee>();
 	    for(AppointmentAndEmployee aae : AppAndEmp) {
 	    	if(aae.getAppid() == appointment.getID()) {
@@ -375,7 +375,7 @@ public class AppointmentBox extends AnchorPane{
 	    	}
 	    }
 	    
-		return FXCollections.observableArrayList(participants);
+		return participants;
 	}
 	
 }

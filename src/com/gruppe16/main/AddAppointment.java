@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -79,6 +80,7 @@ public class AddAppointment implements Initializable {
 	private static LocalDate startDate = null;
 	private static int startTime = 0;
 	private static Appointment appointment = null;
+	private static ArrayList<Employee> participants = null;
 	private static boolean editMode = false;
 	public Room room;
 	private static ArrayList<Employee> _availableEmployees = null;
@@ -103,10 +105,12 @@ public class AddAppointment implements Initializable {
 			titleTextField.setText(appointment.getTitle());
 			descriptionTextArea.setText(appointment.getDescription());
 			titleLabel.setText("Edit Appointment");
+			setAttendees(participants);
 		}
 		else{
 			titleTextField.setText(null);
 			descriptionTextArea.setText(null);
+			setAttendees(null);
 		}
 		
 		roomTextField.setEditable(true);
@@ -523,10 +527,11 @@ public class AddAppointment implements Initializable {
 		stage.show();
 	}
 	
-	public static void start(Stage stage, Window owner, Appointment appointment) throws Exception {
+	public static void start(Stage stage, Window owner, Appointment appointment, ArrayList<Employee> attendees) throws Exception {
 		AddAppointment.editMode = true;
 		AddAppointment.stage = stage;
 		AddAppointment.appointment = appointment;
+		AddAppointment.participants = attendees;
 		Scene scene = new Scene((Parent)FXMLLoader.load(AddAppointment.class.getResource("/com/gruppe16/main/AddAppointment.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);
