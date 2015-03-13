@@ -13,27 +13,62 @@
    <children>
       <VBox prefHeight="18.0" prefWidth="455.0">
          <children>
-            <HBox>
+            <HBox prefHeight="36.0" prefWidth="444.0">
                <children>
-                  <Label text="Available Rooms">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets left="25.0" top="10.0" />
-                     </HBox.margin>
-                  </Label>
+                  <HBox prefHeight="41.0" prefWidth="308.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="189.0" text="Available Rooms">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="25.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="41.0" prefWidth="141.0">
+                     <children>
+                        <HBox prefHeight="36.0" prefWidth="89.0">
+                           <children>
+                              <Label prefHeight="16.0" prefWidth="60.0" text="Capacity:">
+                                 <HBox.margin>
+                                    <Insets left="25.0" top="20.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="41.0" prefWidth="52.0">
+                           <children>
+                              <TextField fx:id="capacityField" prefHeight="26.0" prefWidth="41.0">
+                                 <HBox.margin>
+                                    <Insets left="4.0" top="15.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="41.0" prefWidth="60.0">
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="50.0" text="Filter">
+                           <HBox.margin>
+                              <Insets top="14.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
             </HBox>
          </children>
       </VBox>
       <AnchorPane prefHeight="333.0" prefWidth="529.0">
          <children>
-            <TableView fx:id="roomlistTable" layoutX="18.0" layoutY="19.0" prefHeight="276.0" prefWidth="481.0">
+            <TableView fx:id="roomlistTable" layoutX="18.0" layoutY="4.0" prefHeight="291.0" prefWidth="481.0">
                <columns>
                   <TableColumn fx:id="roomNameCol" prefWidth="101.0" text="Room name" />
-                  <TableColumn fx:id="buildingNameCol" prefWidth="117.22306823730469" text="Building name" />
-                  <TableColumn fx:id="roomdescrCol" prefWidth="186.9871368408203" text="Description" />
+                  <TableColumn fx:id="buildingNameCol" prefWidth="118.0" text="Building name" />
+                  <TableColumn fx:id="roomdescrCol" prefWidth="187.0" text="Description" />
                   <TableColumn fx:id="roomCapCol" prefWidth="79.01284790039062" text="Capacity" />
                </columns>
             </TableView>

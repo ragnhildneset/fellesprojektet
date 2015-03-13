@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
@@ -45,6 +48,7 @@ public class RoomPicker implements Initializable {
     @FXML private TableColumn<Room, Boolean> rlist_pick;
     @FXML private Button cancelButton;
     @FXML private Button chooseButton;
+    @FXML private TextField capacityField;
 
 	private static Stage stage;
 	private static AddAppointment addAppointment;
@@ -57,6 +61,16 @@ public class RoomPicker implements Initializable {
 		roomNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
 		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));	
 		roomlistTable.setItems(roomdata);
+		capacityField.textProperty().addListener(new ChangeListener<String>(){
+
+			@Override
+			public void changed(ObservableValue<? extends String> arg0,
+					String arg1, String arg2) {
+				updateRoomdata();
+				
+			}
+			
+		});
 		
 		chooseButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -77,6 +91,10 @@ public class RoomPicker implements Initializable {
 			}
 		});
 			
+	}
+	
+	public void updateRoomdata(){
+		
 	}
 	
 	public static void start(Stage stage, Window owner, AddAppointment addApp, LocalDate date, LocalTime fromTime, LocalTime toTime ) throws IOException {

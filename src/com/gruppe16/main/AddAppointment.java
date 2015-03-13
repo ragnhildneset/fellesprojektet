@@ -479,7 +479,7 @@ public class AddAppointment implements Initializable {
 		});
 	}
 
-	protected ArrayList<Employee> attendees = new ArrayList<Employee>(); 
+	public ArrayList<Employee> attendees = new ArrayList<Employee>(); 
 
 	public void setAttendees(Collection<Employee> employees) {
 		attendeesTextField.clear();
