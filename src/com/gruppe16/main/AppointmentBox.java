@@ -7,6 +7,7 @@ import java.util.Date;
 import com.gruppe16.main.DayPlanView;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.entities.Employee;
 
 import javafx.collections.FXCollections;
@@ -70,8 +71,7 @@ public class AppointmentBox extends AnchorPane{
 	private DayPlanView dpv;
 	private Employee e;
 	
-	//Using list of employees for testing
-    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
+	static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
 	
 	public AppointmentBox(Appointment appointment, Employee e, panelColors color, DayPlanView dpv){
 		setId("appBox");
@@ -190,8 +190,9 @@ public class AppointmentBox extends AnchorPane{
 							show = true;
 							descriptionPane.setVisible(false);
 							participantPane.setVisible(true);
-							participants.setItems(employeedata);
-							participantsTitleLabel.setText("Participants (" + employeedata.size() + "):");
+							ObservableList<Employee> attendees = getParticipants();
+							participants.setItems(attendees);
+							participantsTitleLabel.setText("Participants (" + attendees.size() + "):");
 							
 							showBtn.setText("Hide participants");
 						}
@@ -367,5 +368,17 @@ public class AppointmentBox extends AnchorPane{
 	public int getDuration() {
 		return getEnd().getMinute() - getStart().getMinute();
 	}	
+	
+	public ObservableList<Employee> getParticipants() {
+	    ObservableList<AppointmentAndEmployee> AppAndEmp = FXCollections.observableArrayList(DBConnect.getAppointmentAndEmployee());
+	    ArrayList<Employee> participants = new ArrayList<Employee>();
+	    for(AppointmentAndEmployee aae : AppAndEmp) {
+	    	if(aae.getAppid() == appointment.getID()) {
+	    		participants.add(employeedata.get(aae.getEmployeeid()));
+	    	}
+	    }
+	    
+		return FXCollections.observableArrayList(participants);
+	}
 	
 }
