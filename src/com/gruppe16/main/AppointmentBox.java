@@ -2,14 +2,6 @@ package com.gruppe16.main;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
-
-import com.gruppe16.main.DayPlanView;
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Appointment;
-import com.gruppe16.entities.AppointmentAndEmployee;
-import com.gruppe16.entities.Employee;
-import com.gruppe16.entities.Employee.Group;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,13 +12,11 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -37,6 +27,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.AppointmentAndEmployee;
+import com.gruppe16.entities.Employee;
 
 public class AppointmentBox extends AnchorPane{
 	
@@ -433,7 +428,6 @@ public class AppointmentBox extends AnchorPane{
 	}
 	
     public panelColors toEnumColor(String color){
-    	System.out.println(color);
     	color.toUpperCase();
     	if(color.equals("RED")) return panelColors.RED;
     	else if(color.equals("GREEN")) return panelColors.GREEN;

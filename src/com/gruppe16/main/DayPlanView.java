@@ -6,20 +6,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Appointment;
-import com.gruppe16.entities.AppointmentAndEmployee;
-import com.gruppe16.entities.Employee;
-import com.gruppe16.main.AppointmentBox.panelColors;
-
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -27,6 +19,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.AppointmentAndEmployee;
+import com.gruppe16.entities.Employee;
 
 
 public class DayPlanView extends VBox {
