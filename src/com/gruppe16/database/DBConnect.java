@@ -16,9 +16,11 @@ import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.entities.Building;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Employee.Group;
 import com.gruppe16.entities.Notif;
 import com.gruppe16.entities.Room;
 import com.gruppe16.main.Login;
+import com.gruppe16.util.ListOperations;
 
 public class DBConnect {
 	
@@ -72,22 +74,21 @@ public class DBConnect {
 		return null;
 	}
 	
-	private static ArrayList<Employee> _employees = null;
+	private static HashMap<Integer, Employee> _employees = null;
 	public static ArrayList<Employee> getEmployees(){
 		if(_employees != null){
-			return _employees;
+			return (ArrayList<Employee>) ListOperations.hashToList(_employees);
 		}
 		String q = "SELECT E.employeeid, E.givenName, E.surname, E.email, U.username FROM Employee as E, UserAndID as U WHERE U.employeeid = E.employeeid;";
-
-		ArrayList<Employee> map = new ArrayList<Employee>();
+		_employees = new HashMap<Integer, Employee>();
 		try{
 			PreparedStatement p = getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) p.executeQuery();
 			while(rs.next()){
 				int key = rs.getInt("E.employeeid");
 				Employee e = new Employee(key,rs.getString("E.givenName"), rs.getString("E.surname"), rs.getString("E.email"), rs.getString("username"));
-				map.add(e);
-			}return map;
+				_employees.put(key, e);
+			}return (ArrayList<Employee>) ListOperations.hashToList(_employees);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}return null;
@@ -202,17 +203,21 @@ public class DBConnect {
 		return -1;
 	}
 	
+	private static HashMap<Integer, Appointment> appointments = null;
 	public static HashMap<Integer, Appointment> getAppointments(){
+		if(appointments != null){
+			return appointments;
+		}
 		String q = "SELECT appointmentID, title, description, appdate, totime, fromtime, ownerid FROM Appointment ";
-		HashMap<Integer, Appointment> map = new HashMap<Integer, Appointment>();
+		appointments = new HashMap<Integer, Appointment>();
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 				while(rs.next()){
 					int key = rs.getInt("appointmentID");
 					Appointment a = new Appointment(Integer.parseInt(rs.getString("appointmentID")), rs.getString("title"), rs.getString("description"), LocalDate.parse(rs.getString("appdate")), LocalTime.parse(rs.getString("totime")), LocalTime.parse(rs.getString("fromtime")), Integer.parseInt(rs.getString("ownerid")), LocalTime.now());
-					map.put(key, a);
-				}return map;
+					appointments.put(key, a);
+				}return appointments;
 		}catch (Exception e) {
 			e.printStackTrace();
 			
@@ -276,7 +281,56 @@ public class DBConnect {
 		}
 	}
 	
-	public static void close(){
-		//if(con != null) DBConnect.close();
+	
+	private static HashMap<Integer, ArrayList<Appointment>> groupApp = null;
+	public static ArrayList<Appointment> getGroupApp(Group group){
+		getAppointments();
+		if(groupApp!=null){
+			return groupApp.get(group.id);
+		}
+		groupApp = new HashMap<Integer, ArrayList<Appointment>>();
+		try{
+			String q = "select distinct GM.groupID, A.appointmentID\n"+
+					"from Appointment as A, AppointmentAndEmployee as AAE, Employee as E, GroupMember as GM\n"+
+					"where AAE.appid = A.appointmentID\n"+
+					"and AAE.employeeid = E.employeeid\n"+
+					"and GM.employeeid = E.employeeid;\n";
+			PreparedStatement p = getConnection().prepareStatement(q);
+			ResultSet rs = p.executeQuery();
+			while(rs.next()){
+				int g_id = rs.getInt("GM.groupID");
+				if(!groupApp.containsKey(g_id)){
+					groupApp.put(g_id, new ArrayList<Appointment>());
+				}
+				Appointment app = appointments.get(rs.getInt("A.appointmentID"));
+				groupApp.get(g_id).add(app);
+			}
+			return groupApp.get(group.id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
+
+	public static ArrayList<Appointment> getAppointmentsFromEmployee(Employee e) {
+		getAppointments();
+		String query = "select AAE.appid, AAE.employeeid from AppointmentAndEmployee as "
+				+ "AAE where AAE.employeeid = " + String.valueOf(e.getEmployeeID()) + ";";
+		ArrayList<Appointment> app = new ArrayList<Appointment>();
+		try{
+			PreparedStatement we = getConnection().prepareStatement(query);
+			ResultSet rs = (ResultSet) we.executeQuery();
+			while(rs.next()){
+				app.add(appointments.get(rs.getInt("AAE.appid")));
+			}
+			return app;
+		}catch (SQLException wae){
+			wae.printStackTrace();
+		}
+		return app;
+	}
+	
+//	public static void close(){
+//		if(con != null) DBConnect.close();
+//	}
 }

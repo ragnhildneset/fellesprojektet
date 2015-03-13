@@ -13,7 +13,6 @@ import com.mysql.jdbc.ResultSet;
 
 public class Appointment {
 	
-	private static HashMap<Integer, Appointment> appointments = new HashMap<Integer, Appointment>(); 
 	
 	int appoinmentID;
 	private String title, description;
@@ -25,25 +24,10 @@ public class Appointment {
 	LocalTime creationtime;
 	//private Employee host;
 	//private Employee[] attendees;
-	
 
-	
-	public static void initialize(){
-		String q = "SELECT appointmentID, title, description, appdate, totime, fromtime, ownerid, creationtime FROM Appointment;";
-		try{
-			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
-			ResultSet rs = (ResultSet) s.executeQuery();
-			while(rs.next()){
-				new Appointment(Integer.parseInt(rs.getString("appointmentID")), rs.getString("title"), rs.getString("description"),LocalDate.parse(rs.getString("appdate")), LocalTime.parse(rs.getString("totime")),  LocalTime.parse(rs.getString("fromtime")), Integer.parseInt(rs.getString("ownerid")), LocalTime.parse(rs.getString("creationtime")));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	public Appointment(int appoinmentID, String title, String description,
 			LocalDate date, LocalTime toTime, LocalTime fromTime, int ownerid, LocalTime creationtime) {
-		Appointment.appointments.put(appoinmentID, this);
 		this.appoinmentID = appoinmentID;
 		this.title = title;
 		this.description = description;
@@ -71,7 +55,6 @@ public class Appointment {
 			e.printStackTrace();
 		}
 		System.out.println("Added addpointment.");
-		initialize();
 	}
 	
 	public String getTitle() {
@@ -83,6 +66,7 @@ public class Appointment {
 	}
 
 	public LocalTime getFromTime() {
+		
 		return fromTime;
 	}
 	
@@ -94,14 +78,16 @@ public class Appointment {
 		return this.appoinmentID;
 	}
 	
-	public static Appointment get(int id){
-		return appointments.get(id);
-	}
-	
 	public int getOwnerID(){
 		return ownerid;
 	}
 	
+	@Override
+	public String toString() {
+		return "Appointment [appoinmentID=" + appoinmentID + ", title=" + title
+				+ "]";
+	}
+
 	public LocalDate getAppDate(){
 		return date;
 	}
