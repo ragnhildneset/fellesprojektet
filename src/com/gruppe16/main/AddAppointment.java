@@ -81,7 +81,7 @@ public class AddAppointment implements Initializable {
 	private static Appointment appointment = null;
 	private static boolean editMode = false;
 	public Room room;
-	static ArrayList<Employee> _availableEmployees = null;
+	private static ArrayList<Employee> _availableEmployees = null;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

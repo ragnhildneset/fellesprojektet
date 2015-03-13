@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 
 import com.gruppe16.database.DBConnect;
 import com.mysql.jdbc.ResultSet;
@@ -19,12 +20,25 @@ public class Employee {
 		map.get(groupID).members.add(getEmployee(employeeid));
 	}
 	
+	public static Group getFromName(String input){
+		for(Map.Entry<Integer, Group> e : map.entrySet()){
+			if(e.getValue().name.contentEquals(input)){
+				return e.getValue();
+			}
+		}
+		return null;
+	}
+	
 	public static class Group {
 		public int id; public String name;
-		ArrayList<Employee> members = new ArrayList<Employee>();
+		private ArrayList<Employee> members = new ArrayList<Employee>();
 		Group(int i, String n){
 			this.id = i;
 			this.name = n;
+		}
+		@SuppressWarnings("unchecked")
+		public ArrayList<Employee> getMembers() {
+			return (ArrayList<Employee>) members.clone();
 		}
 	}
 	
@@ -47,6 +61,14 @@ public class Employee {
 	SimpleIntegerProperty employeeid;
 	
 	private static HashMap<Integer, Employee> employees = new HashMap<Integer, Employee>();
+	
+	public static ArrayList<Employee> getAll(){
+		ArrayList<Employee> e = new ArrayList<Employee>();
+		for(Employee r : employees.values()){
+			e.add(r);
+		}
+		return e;
+	}
 	
 	public static String[] getNames(){
 		String[] ls = new String[employees.size()];

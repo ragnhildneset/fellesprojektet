@@ -114,6 +114,17 @@ public class CalendarMain extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+
+			@Override
+			public void handle(WindowEvent arg0) {
+				System.out.println("Closing window.");
+				DBConnect.close();
+			}
+			
+		});
+		
 		URL url = getClass().getResource("/com/gruppe16/main/CalendarMain.fxml");
 		
 		FXMLLoader fxmlLoader = new FXMLLoader();
