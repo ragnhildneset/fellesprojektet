@@ -259,13 +259,10 @@ public class AppointmentBox extends AnchorPane{
 					}
 					else {
 						participantPane.setVisible(true);
-						participants.setItems(employeedata);
-						participantsTitleLabel.setText("Participants (" + employeedata.size() + "):");
-
 					}
 					if(e.getEmployeeID() == appointment.getOwnerID()) getChildren().addAll(delBtn, editBtn, showBtn);
 					else if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID());
-					else getChildren().add(leaveBtn);
+					else getChildren().addAll(showBtn, leaveBtn);
 				}
 				else{
 					active = false;
