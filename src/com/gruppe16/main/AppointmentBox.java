@@ -61,6 +61,7 @@ public class AppointmentBox extends AnchorPane{
 	}
 	
 	private Appointment appointment;
+	private AppointmentAndEmployee appAndEmp;
 	private double panelWidth;
 	private double panelHeight;
 	private double panelX;
@@ -73,13 +74,14 @@ public class AppointmentBox extends AnchorPane{
 	
 	static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
 	
-	public AppointmentBox(Appointment appointment, Employee e, panelColors color, DayPlanView dpv){
+	public AppointmentBox(Appointment appointment, AppointmentAndEmployee appAndEmp, DayPlanView dpv){
 		setId("appBox");
-		this.e = e;
+		this.e = Employee.getEmployee(appAndEmp.getEmployeeid());
+		this.appAndEmp = appAndEmp;
 		this.appointment = appointment;
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
-		this.color = color;
+		this.color = toEnumColor(appAndEmp.getColor());
 		this.dpv = dpv;
 		getStylesheets().add("/com/gruppe16/main/listView.css");
 		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
@@ -137,12 +139,19 @@ public class AppointmentBox extends AnchorPane{
 		//Delete Button controller
 		delBtn.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent event) {
-				deleteDialog();
+				deleteLeaveDialog(true);
 			}
 		});
 		
 		//Leave Button
 		Button leaveBtn = new Button("Leave");
+		
+		//Leave Button controller
+		leaveBtn.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent event) {
+				deleteLeaveDialog(false);
+			}
+		});
 		
 		//Edit Button
 		Button editBtn = new Button("Edit");
@@ -296,13 +305,16 @@ public class AppointmentBox extends AnchorPane{
 		
 	}
 	
-	private void deleteDialog() {
+	private void deleteLeaveDialog(boolean b) {
+		//To Leave, set False. To Delete, set True;
+		boolean delete = b;
 		Stage dialogStage = new Stage();
 		VBox deleteBox = new VBox();
 		VBox deleteBox2 = new VBox();
 		FlowPane buttonPane = new FlowPane();
-		
-		Label deleteLabel = new Label("Delete "+ appointment.getTitle()+"?");
+		Label deleteLabel;
+		if(delete) deleteLabel = new Label("Delete "+ appointment.getTitle()+"?");
+		else deleteLabel = new Label("Leave "+ appointment.getTitle()+"?");
 		deleteLabel.setFont(new Font(18));
 		deleteLabel.setAlignment(Pos.CENTER);
 		deleteLabel.setPrefSize(250,60);
@@ -323,14 +335,17 @@ public class AppointmentBox extends AnchorPane{
 		dialogStage.setScene(deleteScene);
 		dialogStage.setResizable(false);
 		dialogStage.initStyle(StageStyle.UTILITY);
-		dialogStage.setTitle("Delete "+ appointment.getTitle()+"?");
+		if(delete) dialogStage.setTitle("Delete "+ appointment.getTitle()+"?");
+		else dialogStage.setTitle("Leave "+ appointment.getTitle()+"?");
 		dialogStage.initOwner(dpv.getScene().getWindow());
 		dialogStage.initModality(Modality.WINDOW_MODAL);
 		dialogStage.show();
 		
 		yesBtn.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent event) {
-				DBConnect.deleteAppointment(appointment.getID());
+				if(delete) DBConnect.deleteAppointment(appointment.getID());
+				else //TODO;
+				
 				dpv.showAppointments(Login.getCurrentUser());
 				dialogStage.close();
 			}
@@ -378,4 +393,18 @@ public class AppointmentBox extends AnchorPane{
 		return participants;
 	}
 	
+    public panelColors toEnumColor(String color){
+    	System.out.println(color);
+    	color.toUpperCase();
+    	if(color.equals("RED")) return panelColors.RED;
+    	else if(color.equals("GREEN")) return panelColors.GREEN;
+    	else if(color.equals("BLUE")) return panelColors.BLUE;
+    	else if(color.equals("YELLOW")) return panelColors.YELLOW;
+    	else if(color.equals("BROWN")) return panelColors.BROWN;
+    	else if(color.equals("PURPLE")) return panelColors.PURPLE;
+    	else if(color.equals("ORANGE")) return panelColors.ORANGE;
+    	else if(color.equals("TURQUOISE")) return panelColors.TURQUOISE;
+    	else if(color.equals("GREY")) return panelColors.GREY;
+    	else return panelColors.GREEN;
+    }
 }

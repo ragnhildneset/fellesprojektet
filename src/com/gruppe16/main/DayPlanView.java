@@ -157,8 +157,8 @@ public class DayPlanView extends VBox {
 		return mPane;
 	}
 	
-	public void addAppointment(Appointment appointment, panelColors color){
-		AppointmentBox appointmentBox = new AppointmentBox(appointment, employee, color, this);
+	public void addAppointment(Appointment appointment, AppointmentAndEmployee appointmentAndEmployee){
+		AppointmentBox appointmentBox = new AppointmentBox(appointment, appointmentAndEmployee, this);
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	
@@ -359,7 +359,7 @@ public class DayPlanView extends VBox {
 						}
 						String color = currentApp.getColor();
 						
-						if(notContained) addAppointment(app, toEnumColor(color));
+						if(notContained) addAppointment(app, currentApp);
 					}
 				}
 				
@@ -367,20 +367,7 @@ public class DayPlanView extends VBox {
 		}
 		arrangeAppointments();
 	}
-    public panelColors toEnumColor(String color){
-    	System.out.println(color);
-    	color.toUpperCase();
-    	if(color.equals("RED")) return panelColors.RED;
-    	else if(color.equals("GREEN")) return panelColors.GREEN;
-    	else if(color.equals("BLUE")) return panelColors.BLUE;
-    	else if(color.equals("YELLOW")) return panelColors.YELLOW;
-    	else if(color.equals("BROWN")) return panelColors.BROWN;
-    	else if(color.equals("PURPLE")) return panelColors.PURPLE;
-    	else if(color.equals("ORANGE")) return panelColors.ORANGE;
-    	else if(color.equals("TURQUOISE")) return panelColors.TURQUOISE;
-    	else if(color.equals("GREY")) return panelColors.GREY;
-    	else return panelColors.GREEN;
-    }
+
 	
 	private void removeAppointments(){
 		ArrayList<AppointmentBox> appointmentBoxes = new ArrayList<AppointmentBox>();

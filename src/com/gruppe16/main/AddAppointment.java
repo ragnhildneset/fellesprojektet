@@ -110,7 +110,6 @@ public class AddAppointment implements Initializable {
 		else{
 			titleTextField.setText(null);
 			descriptionTextArea.setText(null);
-			setAttendees(null);
 		}
 		
 		roomTextField.setEditable(true);
