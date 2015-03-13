@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -25,7 +26,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -37,6 +40,7 @@ import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Room;
 import com.gruppe16.entities.RoomReservation;
 import com.gruppe16.util.Tuple;
+import com.sun.xml.internal.ws.util.StringUtils;
 
 public class RoomPicker implements Initializable {
 	
@@ -52,15 +56,11 @@ public class RoomPicker implements Initializable {
 
 	private static Stage stage;
 	private static AddAppointment addAppointment;
-    static ObservableList<Room> roomdata;
+    static List<Room> awailableRooms;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		buildingNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingname"));
-		roomCapCol.setCellValueFactory(new PropertyValueFactory<Room, String>("capacity"));
-		roomNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
-		roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));	
-		roomlistTable.setItems(roomdata);
+		
 		capacityField.textProperty().addListener(new ChangeListener<String>(){
 
 			@Override
@@ -90,17 +90,37 @@ public class RoomPicker implements Initializable {
 				stage.close();
 			}
 		});
+		
+		updateRoomdata();
 			
 	}
 	
 	public void updateRoomdata(){
+		ArrayList<Room> rooms = new ArrayList<Room>();
+		try{
+			for(Room r : awailableRooms){
+				if (capacityField.getText().equals("") || r.getCapacity() >= Integer.parseInt(capacityField.getText())){
+					rooms.add(r);
+				}
+			}
+			buildingNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingname"));
+			roomCapCol.setCellValueFactory(new PropertyValueFactory<Room, String>("capacity"));
+			roomNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
+			roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));	
+			roomlistTable.setItems(FXCollections.observableArrayList(rooms));
+		} catch (NumberFormatException e){
+			System.out.println("FEIL");
+			capacityField.setEffect(new InnerShadow(4.0, Color.RED));
+		}	
+		
 		
 	}
 	
 	public static void start(Stage stage, Window owner, AddAppointment addApp, LocalDate date, LocalTime fromTime, LocalTime toTime ) throws IOException {
 		RoomPicker.stage = stage;
 		RoomPicker.addAppointment = addApp;
-		RoomPicker.roomdata = FXCollections.observableArrayList(RoomReservation.findRoom(date, fromTime, toTime));
+		//RoomPicker.awailableRooms = FXCollections.observableArrayList(RoomReservation.findRoom(date, fromTime, toTime));
+		RoomPicker.awailableRooms = RoomReservation.findRoom(date, fromTime, toTime);
 		//RoomPicker.currentRoom = addApp.getRoom();
 		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/RoomPicker.fxml")));
 		stage.setResizable(false);
