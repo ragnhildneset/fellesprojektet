@@ -53,4 +53,8 @@ public class AppointmentAndEmployee {
 		return color.get();
 	}	
 	
+	public void setStatus(int i) {
+		this.status = new SimpleIntegerProperty(i);
+	}
+	
 }

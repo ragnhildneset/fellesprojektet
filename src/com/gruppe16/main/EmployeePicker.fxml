@@ -10,12 +10,12 @@
    <children>
       <HBox alignment="CENTER_LEFT">
          <children>
-            <Label prefWidth="80.0" text="Given name:">
+            <Label prefWidth="80.0" text="Given name">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </Label>
-            <TextField fx:id="givenNameTextField" />
+            <TextField fx:id="givenNameTextField" prefHeight="25.0" prefWidth="197.0" />
          </children>
          <VBox.margin>
             <Insets bottom="10.0" />
@@ -23,20 +23,30 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0">
          <children>
-            <Label prefWidth="80.0" text=" Surname:">
+            <Label prefWidth="80.0" text=" Surname">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </Label>
-            <TextField fx:id="surNameTextField" />
+            <TextField fx:id="surNameTextField" prefHeight="25.0" prefWidth="197.0" />
          </children>
          <VBox.margin>
             <Insets bottom="10.0" />
          </VBox.margin>
       </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="55.0">
+         <children>
+            <Label prefWidth="80.0" text="Group">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+            <ChoiceBox fx:id="e_group" prefHeight="25.0" prefWidth="197.0" />
+         </children>
+      </HBox>
       <ListView fx:id="employeeListView" prefHeight="200.0" prefWidth="200.0">
          <VBox.margin>
-            <Insets bottom="10.0" />
+            <Insets bottom="10.0" top="10.0" />
          </VBox.margin>
       </ListView>
       <ListView fx:id="attendingListView" prefHeight="200.0" prefWidth="200.0">

@@ -3,17 +3,11 @@ package com.gruppe16.main;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.ResourceBundle;
 
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Employee;
-
-import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -22,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -29,6 +24,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Employee.Group;
 
 public class EmployeePicker implements Initializable {
 	@FXML
@@ -39,6 +38,9 @@ public class EmployeePicker implements Initializable {
 	
 	@FXML
 	private Button removeBtn;
+	
+	@FXML
+	private ChoiceBox<String> e_group;
 	
 	@FXML
 	private TextField givenNameTextField;
@@ -52,13 +54,38 @@ public class EmployeePicker implements Initializable {
 	@FXML
 	private ListView<Employee> attendingListView;
 	
+	private ArrayList<Employee> _availableEmployees = DBConnect.getEmployees();
+	
 	private static Stage stage;
 	private static AddAppointment addAppointment;
-	private static Collection<Employee> currentAttendees;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//attendingListView.setItems(FXCollections.observableArrayList(currentAttendees));
+		
+		ArrayList<String> g = new ArrayList<String>();
+		g.add("All");
+		for(Group v : Employee.getGroups()){
+			g.add(v.name);
+		}
+		
+		e_group.setItems(FXCollections.observableArrayList(g));
+		e_group.getSelectionModel().selectFirst();
+		e_group.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>(){
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0,
+					Number arg1, Number arg2) {
+				if((Integer) arg2 == 0){
+					_availableEmployees = DBConnect.getEmployees();
+				} else {					
+					String f = e_group.getItems().get((Integer) arg2);
+					Group g = Employee.getFromName(f);
+					_availableEmployees = g.getMembers();
+				}
+				updateEmployeeList();
+			}
+			
+		});
 		
 		OKBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -129,7 +156,7 @@ public class EmployeePicker implements Initializable {
 	
 	private void updateEmployeeList() {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
-		for(Employee e : AddAppointment._availableEmployees) {
+		for(Employee e : _availableEmployees) {
 			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(surNameTextField.getText().toLowerCase()) &&
 					!attendingListView.getItems().contains(e)) {
 				employees.add(e);

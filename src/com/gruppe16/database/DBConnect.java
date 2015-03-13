@@ -16,7 +16,6 @@ import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.entities.Building;
 import com.gruppe16.entities.Employee;
-import com.gruppe16.entities.Employee.Group;
 import com.gruppe16.entities.Notif;
 import com.gruppe16.entities.Room;
 import com.gruppe16.main.Login;
@@ -28,13 +27,14 @@ public class DBConnect {
 
 	public static void getGroups(){
 		try{
-			String q = "select G.groupID, G.name, E.employeeid from Grouup as G, GroupMember as E where G.groupID = E.employeeid;";
+			String q = "select G.groupID, G.name, E.employeeid from Grouup as G, GroupMember as E, Employee as D where D.employeeid = E.employeeid and E.groupid = G.groupid;";
 			PreparedStatement p = getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) p.executeQuery();
 			while(rs.next()){
 				int employeeid = rs.getInt("E.employeeid");
 				int groupid = rs.getInt("G.groupID");
 				String name = rs.getString("G.name");
+				System.out.println(String.valueOf(employeeid) + "; " + String.valueOf(groupid) + "; " + name);
 				Employee.addToGroup(groupid, name, employeeid);
 			}
 		} catch (SQLException e) {
@@ -150,8 +150,8 @@ public class DBConnect {
 		return false;
 	}
 	
-	public static ArrayList<AppointmentAndEmployee> getAttendees(int appId){
-		String query = "SELECT * FROM AppointmentAndEmployee WHERE appid = '" + appId + "'";
+	public static ArrayList<AppointmentAndEmployee> getAppointmentAndEmployee(){
+		String query = "SELECT * FROM AppointmentAndEmployee";
 		ArrayList<AppointmentAndEmployee> ae = new ArrayList<AppointmentAndEmployee>();
 		try{
 			PreparedStatement e = getConnection().prepareStatement(query);
@@ -274,5 +274,9 @@ public class DBConnect {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void close(){
+		//if(con != null) DBConnect.close();
 	}
 }

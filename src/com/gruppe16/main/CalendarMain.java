@@ -2,12 +2,9 @@ package com.gruppe16.main;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,17 +14,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
@@ -35,12 +28,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.HBoxBuilder;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 import com.gruppe16.database.DBConnect;
@@ -67,10 +57,10 @@ public class CalendarMain extends Application {
 	private Button findCalendarBtn;
 	
 	@FXML
-	private ImageView backToCalendarBtn;
+	private Button backToCalendarBtn;
 	
 	@FXML
-	private ImageView notifyBtn;
+	private Button notificationBtn;
 	
 	@FXML
 	private Button selectAllGroupsBtn;
@@ -124,6 +114,17 @@ public class CalendarMain extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+
+			@Override
+			public void handle(WindowEvent arg0) {
+				System.out.println("Closing window.");
+				DBConnect.close();
+			}
+			
+		});
+		
 		URL url = getClass().getResource("/com/gruppe16/main/CalendarMain.fxml");
 		
 		FXMLLoader fxmlLoader = new FXMLLoader();
@@ -257,31 +258,31 @@ public class CalendarMain extends Application {
 			}
 		});
 
-		notifyBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+		notificationBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				notifyBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+				notificationBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
 			}
 		});
 
-		notifyBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+		notificationBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				notifyBtn.setEffect(null);
+				notificationBtn.setEffect(null);
 			}
 		});
 
-		notifyBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+		notificationBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				notifyBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+				notificationBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
 			}
 		});
 
-		notifyBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+		notificationBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				notifyBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+				notificationBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
 			}
 		});
 
@@ -329,15 +330,16 @@ public class CalendarMain extends Application {
 			}
 		});
 		
-		notifyBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent event) {
-				if(notificationMenu.isShowing()) notificationMenu.hide();
-				else /*if(DBConnect.getNotifications().size() > 0)*/ {
-					Point2D pos = notifyBtn.localToScreen(-315.0, 40.0);
-					notificationMenu.show(scene.getWindow(), pos.getX(), pos.getY());
-				}
+		notificationBtn.setOnAction(event -> {
+			if(notificationMenu.isShowing()) notificationMenu.hide();
+			else /*if(DBConnect.getNotifications().size() > 0)*/ {
+				Point2D pos = notificationBtn.localToScreen(-315.0, 40.0);
+				notificationMenu.show(scene.getWindow(), pos.getX(), pos.getY());
 			}
 		});
+		
+		notificationBtn.setTooltip(new Tooltip("Notifications"));
+		backToCalendarBtn.setTooltip(new Tooltip("Back to calendar"));
 	}
 	
 	void showCalendar(Date date) {
@@ -384,11 +386,8 @@ public class CalendarMain extends Application {
 		monthLabel.setText(MONTH_NAMES[date.getMonth()] + " " + date.getDate());
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
 
-		backToCalendarBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent evnet) {
-				showCalendar(dayPlanView.getDate());
-			}
+		backToCalendarBtn.setOnAction(event -> {
+			showCalendar(dayPlanView.getDate());
 		});
 
 		nextDateBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -415,8 +414,6 @@ public class CalendarMain extends Application {
 	private void updateGroups() {
 		
 		ObservableList<HBox> items = FXCollections.observableArrayList();
-		
-		// Testkode
 		
 		for(Group g : Employee.getGroups()){			
 			HBox hbox = new HBox();
