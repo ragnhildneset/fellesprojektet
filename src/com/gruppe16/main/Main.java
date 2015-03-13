@@ -103,7 +103,7 @@ public class Main extends Application implements Initializable {
 	public void start(Stage stage) throws Exception {
 		Main.stage = stage;
 		try{
-			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/main/Login.fxml")), 350, 170);
+			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/main/Login.fxml")));
 			stage.setResizable(false);
 			stage.setTitle("Calendar login");
 			stage.setResizable(false);

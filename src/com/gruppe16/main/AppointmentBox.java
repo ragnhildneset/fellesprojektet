@@ -7,6 +7,7 @@ import java.util.Date;
 import com.gruppe16.main.DayPlanView;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.entities.Employee;
 
 import javafx.collections.FXCollections;
@@ -56,7 +57,6 @@ public class AppointmentBox extends AnchorPane{
 	    private String getStyle;
 	    panelColors(String cMain, String cSecondary, String cBorder){
 	    	getStyle = "cMain: " + cMain + "; cSecondary: " + cSecondary + "; cBorder: " + cBorder + ";";
-	    
 	    }
 	}
 	
@@ -69,12 +69,13 @@ public class AppointmentBox extends AnchorPane{
 	private boolean show = false;
 	private panelColors color;
 	private DayPlanView dpv;
+	private Employee e;
 	
-	//Using list of employees for testing
-    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
+	static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
 	
-	public AppointmentBox(Appointment appointment, panelColors color, DayPlanView dpv){
+	public AppointmentBox(Appointment appointment, Employee e, panelColors color, DayPlanView dpv){
 		setId("appBox");
+		this.e = e;
 		this.appointment = appointment;
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
@@ -140,6 +141,9 @@ public class AppointmentBox extends AnchorPane{
 			}
 		});
 		
+		//Leave Button
+		Button leaveBtn = new Button("Leave");
+		
 		//Edit Button
 		Button editBtn = new Button("Edit");
 		
@@ -186,8 +190,9 @@ public class AppointmentBox extends AnchorPane{
 							show = true;
 							descriptionPane.setVisible(false);
 							participantPane.setVisible(true);
-							participants.setItems(employeedata);
-							participantsTitleLabel.setText("Participants (" + employeedata.size() + "):");
+							ObservableList<Employee> attendees = getParticipants();
+							participants.setItems(attendees);
+							participantsTitleLabel.setText("Participants (" + attendees.size() + "):");
 							
 							showBtn.setText("Hide participants");
 						}
@@ -212,6 +217,8 @@ public class AppointmentBox extends AnchorPane{
 		AnchorPane.setLeftAnchor(participantPane, 5.0);
 		AnchorPane.setBottomAnchor(delBtn, 5.0);
 		AnchorPane.setRightAnchor(delBtn, 5.0);
+		AnchorPane.setBottomAnchor(leaveBtn, 5.0);
+		AnchorPane.setRightAnchor(leaveBtn, 5.0);
 		AnchorPane.setBottomAnchor(editBtn, 5.0);
 		AnchorPane.setRightAnchor(editBtn, 70.0);
 		AnchorPane.setBottomAnchor(showBtn, 5.0);
@@ -256,7 +263,9 @@ public class AppointmentBox extends AnchorPane{
 						participantsTitleLabel.setText("Participants (" + employeedata.size() + "):");
 
 					}
-					getChildren().addAll(delBtn, editBtn, showBtn);
+					if(e.getEmployeeID() == appointment.getOwnerID()) getChildren().addAll(delBtn, editBtn, showBtn);
+					else if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID());
+					else getChildren().add(leaveBtn);
 				}
 				else{
 					active = false;
@@ -266,7 +275,7 @@ public class AppointmentBox extends AnchorPane{
 					setLayoutY(panelY);
 					titleLabel.setPrefWidth(getPrefWidth()-10);
 					timeLabel.setVisible(false);
-					getChildren().removeAll(timeLabel, descriptionPane, participantPane, delBtn, editBtn, showBtn);
+					getChildren().removeAll(timeLabel, descriptionPane, participantPane, delBtn, editBtn, showBtn, leaveBtn);
 				}
 			}
 		});
@@ -359,5 +368,17 @@ public class AppointmentBox extends AnchorPane{
 	public int getDuration() {
 		return getEnd().getMinute() - getStart().getMinute();
 	}	
+	
+	public ObservableList<Employee> getParticipants() {
+	    ObservableList<AppointmentAndEmployee> AppAndEmp = FXCollections.observableArrayList(DBConnect.getAppointmentAndEmployee());
+	    ArrayList<Employee> participants = new ArrayList<Employee>();
+	    for(AppointmentAndEmployee aae : AppAndEmp) {
+	    	if(aae.getAppid() == appointment.getID()) {
+	    		participants.add(employeedata.get(aae.getEmployeeid()));
+	    	}
+	    }
+	    
+		return FXCollections.observableArrayList(participants);
+	}
 	
 }
