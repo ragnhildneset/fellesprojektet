@@ -361,6 +361,7 @@ public class CalendarMain extends Application {
 					} else {
 						selectedGroups.remove(g);
 					}
+					appointments.clear();
 					if(!selectedGroups.isEmpty()){						
 						for(Group g : selectedGroups){
 							appointments = (ArrayList<Appointment>) ListOperations.union(appointments, DBConnect.getGroupApp(g));
@@ -369,12 +370,12 @@ public class CalendarMain extends Application {
 						appointments = DBConnect.getAppointmentsFromEmployee(Login.getCurrentUser());
 					}
 					calendarView.setAppointments(appointments);
-					redraw();
+					calendarView.update();
 				}
 				
 			});
 		}
-		
+		calendarView.update();
 	}
 	
 	private ArrayList<Appointment> appointments = new ArrayList<Appointment>(); 
