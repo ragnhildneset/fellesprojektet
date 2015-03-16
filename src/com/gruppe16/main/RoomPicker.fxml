@@ -49,15 +49,7 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <HBox prefHeight="41.0" prefWidth="60.0">
-                     <children>
-                        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="50.0" text="Filter">
-                           <HBox.margin>
-                              <Insets top="14.0" />
-                           </HBox.margin>
-                        </Button>
-                     </children>
-                  </HBox>
+                  <HBox prefHeight="41.0" prefWidth="60.0" />
                </children>
             </HBox>
          </children>

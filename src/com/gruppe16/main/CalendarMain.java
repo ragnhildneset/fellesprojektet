@@ -327,6 +327,8 @@ public class CalendarMain extends Application {
 						Employee newEmployee = employeeFinder.getEmployee();
 						if(newEmployee != null) {
 							setEmployee(newEmployee);
+							calendarView.setAppointments(DBConnect.getAppointmentsFromEmployee(newEmployee));
+							calendarView.update();
 						}
 					}
 				});
@@ -362,12 +364,13 @@ public class CalendarMain extends Application {
 						selectedGroups.remove(g);
 					}
 					appointments.clear();
-					if(!selectedGroups.isEmpty()){						
+					if(!selectedGroups.isEmpty()){
+						appointments.clear();
 						for(Group g : selectedGroups){
 							appointments = (ArrayList<Appointment>) ListOperations.union(appointments, DBConnect.getGroupApp(g));
 						}
 					} else {
-						appointments = DBConnect.getAppointmentsFromEmployee(Login.getCurrentUser());
+						appointments = DBConnect.getAppointmentsFromEmployee(employee);
 					}
 					calendarView.setAppointments(appointments);
 					calendarView.update();

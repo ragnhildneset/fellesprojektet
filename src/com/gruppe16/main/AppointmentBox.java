@@ -279,7 +279,8 @@ public class AppointmentBox extends AnchorPane{
 				colorPicker.setValue(color);
 				colorPicker.setOnAction(new EventHandler<ActionEvent>(){
 					public void handle(ActionEvent event) {
-						//TODO ColorPicker actually working
+						DBConnect.setColorOfAppointment(Login.getCurrentUser(), appointment.getID(), toStringColor(colorPicker.getValue()));
+						dpv.showAppointments();
 					}
 				});
 				 
@@ -340,11 +341,11 @@ public class AppointmentBox extends AnchorPane{
 					else {
 						participantPane.setVisible(true);
 					}
-					if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
+					if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
+					else if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
 						AnchorPane.setRightAnchor(colorPicker, 118.0);
 						getChildren().addAll(delBtn, editBtn, showBtn, colorPicker);
 					}
-					else if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
 					else {
 						AnchorPane.setRightAnchor(colorPicker, 65.0);
 						getChildren().addAll(showBtn, leaveBtn, colorPicker);
@@ -490,6 +491,19 @@ public class AppointmentBox extends AnchorPane{
     	else if(color.equals("ORANGE")) return panelColors.ORANGE;
     	else if(color.equals("TURQUOISE")) return panelColors.TURQUOISE;
     	else if(color.equals("GREY")) return panelColors.GREY;
-    	else return panelColors.GREEN;
+    	else return panelColors.BLUE;
+    }
+    
+    public String toStringColor(panelColors color){
+    	if(color == panelColors.RED) return "RED";
+    	else if(color == panelColors.GREEN) return "GREEN";
+    	else if(color == panelColors.BLUE) return "BLUE";
+    	else if(color == panelColors.YELLOW) return "YELLOW";
+    	else if(color == panelColors.BROWN) return "BROWN";
+    	else if(color == panelColors.PURPLE) return "PURPLE";
+    	else if(color == panelColors.ORANGE) return "ORANGE";
+    	else if(color == panelColors.TURQUOISE) return "TURQUOISE";
+    	else if(color == panelColors.GREY) return "GREY";
+    	else return "BLUE";
     }
 }

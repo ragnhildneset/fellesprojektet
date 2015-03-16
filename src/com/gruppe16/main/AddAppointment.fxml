@@ -93,6 +93,18 @@
       </HBox>
       <HBox alignment="TOP_RIGHT">
          <children>
+            <HBox prefHeight="26.0" prefWidth="314.0">
+               <children>
+                  <Label fx:id="errorMessage" textFill="#c30707">
+                     <HBox.margin>
+                        <Insets top="3.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
             <Button fx:id="sendBtn" layoutX="402.0" layoutY="10.0" mnemonicParsing="false" text="Send">
                <HBox.margin>
                   <Insets right="10.0" />

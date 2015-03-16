@@ -60,6 +60,7 @@
 	-fx-background-color: cSecondary; 
 	-fx-border-width: 1; 
 	-fx-border-color: cBorder;
+	-fx-cursor: hand;
 }
 
 .combo-box:pressed {
