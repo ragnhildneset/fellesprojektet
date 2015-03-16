@@ -369,7 +369,7 @@ public class AppointmentBox extends AnchorPane{
 		yesBtn.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent event) {
 				if(delete) DBConnect.deleteAppointment(appointment.getID());
-				else //TODO;
+				else DBConnect.deleteAppointmentAndEmployee(appointment.getID(), Login.getCurrentUser().getEmployeeID());
 				
 				dpv.showAppointments(Login.getCurrentUser());
 				dialogStage.close();

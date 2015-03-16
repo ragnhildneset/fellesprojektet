@@ -260,6 +260,17 @@ public class DBConnect {
 		}
 		return false;
 	}
+	
+	public static boolean deleteAppointmentAndEmployee(int appID, int empID) {
+		String q = "delete from AppointmentAndEmployee where appid = " + appID + " AND employeeid = " + empID + ";";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(q);
+			return s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	public static void inviteEmployee(Employee employee, int appid) {
 		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
