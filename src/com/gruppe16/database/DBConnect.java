@@ -352,6 +352,17 @@ public class DBConnect {
 		}
 	}
 	
+	public static boolean setColorOfAppointment(Employee employee, int appid, String color){
+		String query = "UPDATE AppointmentAndEmployee SET farge='"+color+"' WHERE appID='"+appid+"' AND employeeid='"+employee.getEmployeeID()+"';";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(query);
+			return s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	private static HashMap<Integer, ArrayList<Appointment>> groupApp = null;
 	public static ArrayList<Appointment> getGroupApp(Group group){
 		getAppointments();
