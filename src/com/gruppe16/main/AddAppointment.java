@@ -165,11 +165,12 @@ public class AddAppointment implements Initializable {
 				
 				if(valid) {
 					if(editMode){
-						//TODO
+						DBConnect.editAppointment(appointment.getID(), titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(toHour, toMin, 0), new Time(fromHour, fromMin, 0));
 						stage.close();
 					}else{
 						int appid = DBConnect.addAppointment(titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(fromHour, fromMin, 0), new Time(toHour, toMin, 0), Login.getCurrentUser());
 						DBConnect.addRoomReservation(appid, room.getID(), room.getBuildingID());
+						DBConnect.setOwnerOfAppointment(Login.getCurrentUser(), appid);
 						for(Employee e : attendees){
 							e.invite(appid);
 						}
