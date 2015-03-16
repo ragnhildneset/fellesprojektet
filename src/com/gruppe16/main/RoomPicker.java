@@ -72,6 +72,8 @@ public class RoomPicker implements Initializable {
 			
 		});
 		
+		capacityField.setText("" + addAppointment.attendees.size());
+		
 		chooseButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -109,7 +111,6 @@ public class RoomPicker implements Initializable {
 			roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));	
 			roomlistTable.setItems(FXCollections.observableArrayList(rooms));
 		} catch (NumberFormatException e){
-			System.out.println("FEIL");
 			capacityField.setEffect(new InnerShadow(4.0, Color.RED));
 		}	
 		
@@ -119,8 +120,7 @@ public class RoomPicker implements Initializable {
 	public static void start(Stage stage, Window owner, AddAppointment addApp, LocalDate date, LocalTime fromTime, LocalTime toTime ) throws IOException {
 		RoomPicker.stage = stage;
 		RoomPicker.addAppointment = addApp;
-		//RoomPicker.awailableRooms = FXCollections.observableArrayList(RoomReservation.findRoom(date, fromTime, toTime));
-		RoomPicker.awailableRooms = RoomReservation.findRoom(date, fromTime, toTime);
+		RoomPicker.awailableRooms = DBConnect.findRoom(date, fromTime, toTime);
 		//RoomPicker.currentRoom = addApp.getRoom();
 		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/RoomPicker.fxml")));
 		stage.setResizable(false);

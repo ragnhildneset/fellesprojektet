@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.AppointmentAndEmployee;
@@ -150,6 +151,39 @@ public class DBConnect {
 		return false;
 	}
 	
+	public static List<Room> findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime){
+		String dateString = "" + appdate.getYear() + "-" + appdate.getMonthValue() + "-" + appdate.getDayOfMonth();
+		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
+		String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
+		List<Room> available = new ArrayList<Room>();
+		String q = "select *\n"+
+				"from Room as D\n"+
+				"where (D.roomNumber, D.BuildingID) not in (\n"+
+				"select R.roomNumber, R.BuildingID\n"+
+				"from Room as R, RoomReservation as E, Appointment as A\n"+
+				"where  E.appid = A.appointmentID\n"+
+				"and E.BuildingID = R.BuildingID\n"+
+				"and E.roomid = R.roomNumber\n"+
+				"and A.appdate = '"+dateString+"'\n"+
+				"and ('"+fromtimeString+"' between A.fromtime and A.totime or '"+totimeString+"' between A.fromtime and A.totime)\n"+
+				");";
+		try{
+			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
+			ResultSet rs = (ResultSet) s.executeQuery();
+			
+			while(rs.next()){
+
+				available.add(new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("roomName"), rs.getString("description"), rs.getInt("buildingID"), DBConnect.getBuildings().get(rs.getInt("BuildingID")).getName()));
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return available;
+		
+	}
+	
+
 	public static ArrayList<AppointmentAndEmployee> getAppointmentAndEmployee(){
 		String query = "SELECT * FROM AppointmentAndEmployee";
 		ArrayList<AppointmentAndEmployee> ae = new ArrayList<AppointmentAndEmployee>();

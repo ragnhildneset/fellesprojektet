@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -72,6 +73,9 @@ public class AddAppointment implements Initializable {
 
 	@FXML
 	private TextField titleTextField;
+	
+	@FXML
+	private Label errorMessage;
 	
 	@FXML
 	private Label titleLabel;
@@ -150,6 +154,12 @@ public class AddAppointment implements Initializable {
 				
 				if(roomTextField.getText() == null || roomTextField.getText().isEmpty()) {
 					roomTextField.setEffect(new InnerShadow(4.0, Color.RED));
+					valid = false;
+				}
+				
+				if (!checkRoom(datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin))){
+					System.out.println(room.getName());
+					errorMessage.setText("Room is now reserved, please choose again.");
 					valid = false;
 				}
 				
@@ -525,6 +535,17 @@ public class AddAppointment implements Initializable {
 		stage.setScene(scene);
 		stage.show();
 	}
+	public boolean checkRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime){
+		List<Room> rooms = DBConnect.findRoom(appdate, fromtime, totime);
+		Boolean check = false;
+		for (Room r: rooms){
+			if (r.getBuildingID() == room.getBuildingID() && r.getID() == room.getID()){
+				check = true;
+			}
+		}
+		return check;
+	}
+	
 	
 	public static void start(Stage stage, Window owner, Appointment appointment, ArrayList<Employee> attendees) throws Exception {
 		AddAppointment.editMode = true;
