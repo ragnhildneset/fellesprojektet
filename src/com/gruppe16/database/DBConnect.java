@@ -238,7 +238,19 @@ public class DBConnect {
 		
 		return con;
 	}
+	
+	public static boolean editAppointment(int appointmentid, String title, String description, LocalDate appdate, LocalTime totime, LocalTime fromtime){
+		String query = "UPDATE Appointment SET title='"+title+"',description='"+description+"',appdate='"+appdate+"',totime='"+totime+"',fromtime='"+fromtime+"' WHERE appointmentID='"+appointmentid+"';";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(query);
+			return s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
+	
 	public static boolean deleteEmployee(int employeeID) {
 		String q = "delete from Employee where employeeid = " + employeeID + ";";
 		try{
