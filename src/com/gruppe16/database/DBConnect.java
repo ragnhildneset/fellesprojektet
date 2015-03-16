@@ -323,13 +323,18 @@ public class DBConnect {
 	}
 
 	public static void inviteEmployee(Employee employee, int appid) {
+		int status = 0;
+		if(employee.getEmployeeID() == Login.getCurrentUserID()){
+			status = 1;
+			System.out.println("jejeje");
+		}
 		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(q);
 			s.setInt(1, appid);
 			s.setInt(2, employee.getEmployeeID());
-			s.setInt(3, 0);
-			s.setInt(4, 0);
+			s.setInt(3, status);
+			s.setInt(4, 1);
 			s.setString(5, "BLUE");
 			s.execute();
 		} catch (SQLException e) {

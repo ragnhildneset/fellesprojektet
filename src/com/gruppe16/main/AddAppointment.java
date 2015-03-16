@@ -173,6 +173,7 @@ public class AddAppointment implements Initializable {
 						for(Employee e : attendees){
 							e.invite(appid);
 						}
+						Login.getCurrentUser().invite(appid);
 						stage.close();
 					}
 

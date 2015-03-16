@@ -60,8 +60,8 @@ public class Main extends Application implements Initializable {
 				if(Login.login(user.getText(), pass.getText())) {
 					try {
 						CalendarMain calendar = new CalendarMain(Login.getCurrentUser());
-						stage.close();
 						calendar.start(new Stage());
+						stage.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

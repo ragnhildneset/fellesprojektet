@@ -2,11 +2,14 @@ package com.gruppe16.main;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -68,6 +71,9 @@ public class CalendarMain extends Application {
 	
 	@FXML
 	private Button notificationBtn;
+	
+	@FXML
+	private Button refresh;
 	
 	@FXML
 	private Button selectAllGroupsBtn;
@@ -318,6 +324,22 @@ public class CalendarMain extends Application {
 			}
 		});
 		
+		refresh.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
+			@Override
+			public void handle(MouseEvent event) {
+				try {
+					CalendarMain calendar = new CalendarMain(Login.getCurrentUser());
+					calendar.start(new Stage());
+					stage.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		
 		findCalendarBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 				EmployeeFinder employeeFinder = new EmployeeFinder();
@@ -524,6 +546,18 @@ public class CalendarMain extends Application {
 			pane.setGraphic(hbox);
 			pane.setAnimated(false);
 			accordion.getPanes().add(pane);
+		}
+		for(Appointment p : DBConnect.getAppointmentsFromEmployee(Login.getCurrentUser())){
+			System.out.println(p);
+			if(LocalDate.now().equals(p.getAppDate())){
+				if(p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() < 3600 &&
+						p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() > 0){
+					Label l = new Label("Appointment " + p.getTitle() + " in " + String.valueOf(p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay()) + " seconds.");
+					TitledPane pd = new TitledPane("Alarm for " + p.getTitle(), l);
+					accordion.getPanes().add(pd);
+					c++;
+				}
+			}
 		}
 		n_count = c;
 	}
