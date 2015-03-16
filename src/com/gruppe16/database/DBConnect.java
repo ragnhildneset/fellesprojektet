@@ -310,7 +310,7 @@ public class DBConnect {
 			PreparedStatement s = getConnection().prepareStatement(q);
 			s.setInt(1, appid);
 			s.setInt(2, employee.getEmployeeID());
-			s.setInt(3, 2);
+			s.setInt(3, 1);
 			s.setInt(4, 0);
 			s.setString(5, "BLUE");
 			s.execute();
