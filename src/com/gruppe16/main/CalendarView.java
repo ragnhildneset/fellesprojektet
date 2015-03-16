@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.AppointmentAndEmployee;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -149,17 +150,22 @@ public class CalendarView extends GridPane {
 		Date beforeTime = calendar.getTime();
 		Date nowDate = new Date();
 
-		Map<Integer, Appointment> appointments = DBConnect.getAppointments();
+		Map<Integer, Appointment> allAppointments = DBConnect.getAppointments();
+		ArrayList<AppointmentAndEmployee> appointmentAndEmployee = DBConnect.getAppointmentAndEmployee();
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		Map<String, List<Appointment>> appointmentDateMap = new HashMap<String, List<Appointment>>();
-		for(Appointment a : appointments.values()) {
+		for(AppointmentAndEmployee appAndEmp : appointmentAndEmployee) {
+			if(appAndEmp.getEmployeeid() == calendarMain.getEmployee().getEmployeeID() && appAndEmp.getStatus() == 1){
+				appointments.add(allAppointments.get(appAndEmp.getAppid()));
+			}
+		}
+		for(Appointment a : appointments) {
 			try {
-				if(a.getOwnerID() == calendarMain.getEmployee().getEmployeeID()) {
 					Date date = java.sql.Date.valueOf(a.getAppDate());
 					if(!appointmentDateMap.containsKey(date.toString())) {
 						appointmentDateMap.put(date.toString(), new ArrayList<Appointment>());
 					}
 					appointmentDateMap.get(date.toString()).add(a);
-				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
