@@ -1,7 +1,5 @@
 package com.gruppe16.main;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,25 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Appointment;
-
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+
+import com.gruppe16.entities.Appointment;
 
 public class CalendarView extends GridPane {
 	static String TEXT_DAY_COLOR = "#FFFFFF";
@@ -145,21 +138,24 @@ public class CalendarView extends GridPane {
 		update();
 	}
 	
+	private ArrayList<Appointment> in = new ArrayList<Appointment>();
+	public void setAppointments(ArrayList<Appointment> input){
+		in = input;
+	}
+	
 	void update() {
 		Date beforeTime = calendar.getTime();
 		Date nowDate = new Date();
 
-		Map<Integer, Appointment> appointments = DBConnect.getAppointments();
+		ArrayList<Appointment> appointments = in;
 		Map<String, List<Appointment>> appointmentDateMap = new HashMap<String, List<Appointment>>();
-		for(Appointment a : appointments.values()) {
+		for(Appointment a : appointments) {
 			try {
-				if(a.getOwnerID() == calendarMain.getEmployee().getEmployeeID()) {
 					Date date = java.sql.Date.valueOf(a.getAppDate());
 					if(!appointmentDateMap.containsKey(date.toString())) {
 						appointmentDateMap.put(date.toString(), new ArrayList<Appointment>());
 					}
 					appointmentDateMap.get(date.toString()).add(a);
-				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

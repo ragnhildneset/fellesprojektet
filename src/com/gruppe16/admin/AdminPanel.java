@@ -76,9 +76,16 @@ public class AdminPanel extends Application implements Initializable {
     @FXML private TableColumn<Employee, String> usernameCol;
     @FXML private TableColumn<Employee, Boolean> e_delete;
     
+    @FXML private TableView<Employee> buildinglistTable;
+    @FXML private TableColumn<Employee, String> buildingIDCol;
+    @FXML private TableColumn<Employee, String> buildingNameCol;
+    @FXML private TableColumn<Employee, String> descriptionNameCol;
+    @FXML private TableColumn<Employee, String> usernameCol;
+    @FXML private TableColumn<Employee, Boolean> e_delete;
+    
 
     static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
-    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
+    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees().values());
     	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -241,6 +248,7 @@ public class AdminPanel extends Application implements Initializable {
 
 	@Override
 	public void start(Stage arg0) throws Exception {
+		
 		try{
 			Scene scene = new Scene( (Parent) FXMLLoader.load(getClass().getResource("/com/gruppe16/admin/mainPane.fxml")));
 			arg0.setScene(scene);

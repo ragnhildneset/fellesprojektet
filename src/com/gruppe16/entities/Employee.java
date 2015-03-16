@@ -29,6 +29,10 @@ public class Employee {
 		return null;
 	}
 	
+	public static Group getFromID(int id){
+		return map.get(id);
+	}
+	
 	public static class Group {
 		public int id; public String name;
 		private ArrayList<Employee> members = new ArrayList<Employee>();

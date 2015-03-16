@@ -2,9 +2,13 @@ package com.gruppe16.main;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,15 +32,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Employee.Group;
 import com.gruppe16.entities.Notif;
+import com.gruppe16.util.ListOperations;
 
 public class CalendarMain extends Application {
 	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
@@ -45,7 +52,7 @@ public class CalendarMain extends Application {
 	private BorderPane mainPane;
 	
 	@FXML
-	private ListView<HBox> groupListView;
+	private ListView<CheckBox> groupListView;
 	
 	@FXML
 	private ImageView nextDateBtn;
@@ -120,7 +127,6 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(WindowEvent arg0) {
 				System.out.println("Closing window.");
-				DBConnect.close();
 			}
 			
 		});
@@ -157,12 +163,11 @@ public class CalendarMain extends Application {
 		updateNotif();
 		stage.show();
 		redraw();
-
+		
 		selectAllGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
-				for(HBox hbox : groupListView.getItems()) {
-					CheckBox checkBox = (CheckBox)hbox.getChildren().get(0);
+				for(CheckBox checkBox : groupListView.getItems()) {
 					checkBox.setSelected(true);
 				}
 			}
@@ -171,8 +176,7 @@ public class CalendarMain extends Application {
 		selectNoneGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
-				for(HBox hbox : groupListView.getItems()) {
-					CheckBox checkBox = (CheckBox)hbox.getChildren().get(0);
+				for(CheckBox checkBox : groupListView.getItems()) {
 					checkBox.setSelected(false);
 				}
 			}
@@ -323,6 +327,8 @@ public class CalendarMain extends Application {
 						Employee newEmployee = employeeFinder.getEmployee();
 						if(newEmployee != null) {
 							setEmployee(newEmployee);
+							calendarView.setAppointments(DBConnect.getAppointmentsFromEmployee(newEmployee));
+							calendarView.update();
 						}
 					}
 				});
@@ -340,7 +346,44 @@ public class CalendarMain extends Application {
 		
 		notificationBtn.setTooltip(new Tooltip("Notifications"));
 		backToCalendarBtn.setTooltip(new Tooltip("Back to calendar"));
+		
+		calendarView.setAppointments(DBConnect.getAppointmentsFromEmployee(Login.getCurrentUser()));
+		
+		for(CheckBox cb : groupListView.getItems()){
+			
+			Group g = Employee.getFromName(cb.getText());
+			
+			cb.selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Boolean> arg0,
+						Boolean arg1, Boolean arg2) {
+					if(arg2&&!selectedGroups.contains(g)){
+						selectedGroups.add(g);
+					} else {
+						selectedGroups.remove(g);
+					}
+					appointments.clear();
+					if(!selectedGroups.isEmpty()){
+						appointments.clear();
+						for(Group g : selectedGroups){
+							appointments = (ArrayList<Appointment>) ListOperations.union(appointments, DBConnect.getGroupApp(g));
+						}
+					} else {
+						appointments = DBConnect.getAppointmentsFromEmployee(employee);
+					}
+					calendarView.setAppointments(appointments);
+					calendarView.update();
+				}
+				
+			});
+		}
+		calendarView.update();
 	}
+	
+	private ArrayList<Appointment> appointments = new ArrayList<Appointment>(); 
+	
+	private ArrayList<Group> selectedGroups = new ArrayList<Group>();
 	
 	void showCalendar(Date date) {
 		calendarShown = true;
@@ -413,14 +456,13 @@ public class CalendarMain extends Application {
 	
 	private void updateGroups() {
 		
-		ObservableList<HBox> items = FXCollections.observableArrayList();
+		ObservableList<CheckBox> items = FXCollections.observableArrayList();
 		
 		for(Group g : Employee.getGroups()){			
-			HBox hbox = new HBox();
-			hbox.getChildren().add(new CheckBox(g.name));
-			items.add(hbox);
+			CheckBox djd = new CheckBox(g.name);
+			items.add(djd);
 		}
-				
+		
 		groupListView.setItems(items);
 	}
 
