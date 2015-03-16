@@ -244,7 +244,7 @@ public class DBConnect {
 		return con;
 	}
 	
-	public static boolean editAppointment(int appointmentid, String title, String description, LocalDate appdate, LocalTime totime, LocalTime fromtime){
+	public static boolean editAppointment(int appointmentid, String title, String description, Date appdate, Time totime, Time fromtime){
 		String query = "UPDATE Appointment SET title='"+title+"',description='"+description+"',appdate='"+appdate+"',totime='"+totime+"',fromtime='"+fromtime+"' WHERE appointmentID='"+appointmentid+"';";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(query);
