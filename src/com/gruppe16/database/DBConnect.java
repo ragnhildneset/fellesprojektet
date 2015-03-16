@@ -304,6 +304,20 @@ public class DBConnect {
 		}
 	}
 	
+	public static void setOwnerOfAppointment(Employee employee, int appid) {
+		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(q);
+			s.setInt(1, appid);
+			s.setInt(2, employee.getEmployeeID());
+			s.setInt(3, 2);
+			s.setInt(4, 0);
+			s.setString(5, "BLUE");
+			s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private static HashMap<Integer, ArrayList<Appointment>> groupApp = null;
 	public static ArrayList<Appointment> getGroupApp(Group group){
