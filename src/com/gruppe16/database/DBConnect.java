@@ -25,7 +25,6 @@ import com.gruppe16.util.ListOperations;
 public class DBConnect {
 	
 	private static Connection con = null;
-	
 
 	public static void getGroups(){
 		try{
@@ -125,14 +124,14 @@ public class DBConnect {
 	
 	
 	public static HashMap<Integer, Room> getRooms(){
-		String q = "SELECT roomNumber, capacity, roomName, description, buildingID, B.buildingName FROM Room, Building as B WHERE B.BuildingID = buildingID;";
+		String q = "SELECT roomNumber, capacity, roomName, R. description, R.buildingID, B.name FROM Room as R, Building as B WHERE B.BuildingID = R.buildingID;";
 		HashMap<Integer, Room> map = new HashMap<Integer, Room>();
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
 				int key = rs.getInt("roomNumber");
-				Room r = new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("roomName"), rs.getString("description"), rs.getInt("buildingID"), rs.getString("B.buildingName"));
+				Room r = new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("roomName"), rs.getString("R.description"), rs.getInt("buildingID"), rs.getString("B.name"));
 				map.put(key, r);
 			}return map;
 		} catch (Exception e) {
@@ -338,7 +337,7 @@ public class DBConnect {
 	public static ArrayList<Appointment> getAppointmentsFromEmployee(Employee e) {
 		getAppointments();
 		String query = "select AAE.appid, AAE.employeeid from AppointmentAndEmployee as "
-				+ "AAE where AAE.employeeid = " + String.valueOf(e.getEmployeeID()) + ";";
+				+ "AAE where AAE.employeeid = " + String.valueOf(e.getEmployeeID()) + " and AAE.status = 1;";
 		ArrayList<Appointment> app = new ArrayList<Appointment>();
 		try{
 			PreparedStatement we = getConnection().prepareStatement(query);
