@@ -243,7 +243,7 @@ public class DBConnect {
 		return con;
 	}
 	
-	public static boolean editAppointment(int appointmentid, String title, String description, LocalDate appdate, LocalTime totime, LocalTime fromtime){
+	public static boolean editAppointment(int appointmentid, String title, String description, Date appdate, Time totime, Time fromtime){
 		String query = "UPDATE Appointment SET title='"+title+"',description='"+description+"',appdate='"+appdate+"',totime='"+totime+"',fromtime='"+fromtime+"' WHERE appointmentID='"+appointmentid+"';";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(query);
@@ -303,6 +303,20 @@ public class DBConnect {
 		}
 	}
 	
+	public static void setOwnerOfAppointment(Employee employee, int appid) {
+		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(q);
+			s.setInt(1, appid);
+			s.setInt(2, employee.getEmployeeID());
+			s.setInt(3, 1);
+			s.setInt(4, 0);
+			s.setString(5, "BLUE");
+			s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private static HashMap<Integer, ArrayList<Appointment>> groupApp = null;
 	public static ArrayList<Appointment> getGroupApp(Group group){
