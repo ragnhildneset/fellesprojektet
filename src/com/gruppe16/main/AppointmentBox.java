@@ -341,11 +341,11 @@ public class AppointmentBox extends AnchorPane{
 					else {
 						participantPane.setVisible(true);
 					}
-					if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
+					if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
+					else if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
 						AnchorPane.setRightAnchor(colorPicker, 118.0);
 						getChildren().addAll(delBtn, editBtn, showBtn, colorPicker);
 					}
-					else if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
 					else {
 						AnchorPane.setRightAnchor(colorPicker, 65.0);
 						getChildren().addAll(showBtn, leaveBtn, colorPicker);
