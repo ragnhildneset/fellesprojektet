@@ -321,7 +321,7 @@ public class DBConnect {
 		return false;
 	}
 
-	public static void inviteEmployee(Employee employee, int appid) {
+	public static boolean inviteEmployee(Employee employee, int appid) {
 		int status = 0;
 		if(employee.getEmployeeID() == Login.getCurrentUserID()){
 			status = 1;
@@ -335,9 +335,11 @@ public class DBConnect {
 			s.setInt(4, 1);
 			s.setString(5, "BLUE");
 			s.execute();
+			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
+		return false;
 	}
 	
 	public static void setOwnerOfAppointment(Employee employee, int appid) {
@@ -369,9 +371,9 @@ public class DBConnect {
 	private static HashMap<Integer, ArrayList<Appointment>> groupApp = null;
 	public static ArrayList<Appointment> getGroupApp(Group group){
 		getAppointments();
-		if(groupApp!=null){
-			return groupApp.get(group.id);
-		}
+//		if(groupApp!=null){
+//			return groupApp.get(group.id);
+//		}
 		groupApp = new HashMap<Integer, ArrayList<Appointment>>();
 		try{
 			String q = "select distinct GM.groupID, A.appointmentID\n"+
@@ -389,14 +391,23 @@ public class DBConnect {
 				Appointment app = appointments.get(rs.getInt("A.appointmentID"));
 				groupApp.get(g_id).add(app);
 			}
-			return groupApp.get(group.id);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		ArrayList<Appointment> hello = new ArrayList<Appointment>();
+		for(Appointment p : groupApp.get(group.id)){
+			ArrayList<Employee> ejeje = getEmployeesFromAppointment(p);
+			if(ListOperations.contains(ejeje, group.getMembers())
+					&& ListOperations.contains(group.getMembers(), ejeje)){
+				hello.add(p);
+				System.out.println(p);
+			}
+		}
+		return hello;
 	}
-
-	public static ArrayList<Appointment> getAppointmentsFromEmployee(Employee e) {
+	
+	public static ArrayList<Appointment> getActiveAppointmentsFromEmployee(Employee e) {
 		getAppointments();
 		String query = "select AAE.appid, AAE.employeeid from AppointmentAndEmployee as "
 				+ "AAE where AAE.employeeid = " + String.valueOf(e.getEmployeeID()) + " and AAE.status = 1;";
@@ -405,13 +416,40 @@ public class DBConnect {
 			PreparedStatement we = getConnection().prepareStatement(query);
 			ResultSet rs = (ResultSet) we.executeQuery();
 			while(rs.next()){
-				app.add(appointments.get(rs.getInt("AAE.appid")));
+				if(appointments.containsKey(rs.getInt("AAE.appid"))){					
+					app.add(appointments.get(rs.getInt("AAE.appid")));
+				}
 			}
 			return app;
 		}catch (SQLException wae){
 			wae.printStackTrace();
 		}
 		return app;
+	}
+	
+	public static ArrayList<Employee> getEmployeesFromAppointment(Appointment e) {
+		getEmployees();
+		String query = "select AAE.appid, AAE.employeeid from AppointmentAndEmployee as "
+				+ "AAE where AAE.appid = " + String.valueOf(e.getID()) +";";
+		ArrayList<Employee> app = new ArrayList<Employee>();
+		try{
+			PreparedStatement we = getConnection().prepareStatement(query);
+			ResultSet rs = (ResultSet) we.executeQuery();
+			while(rs.next()){
+				app.add(_employees.get(rs.getInt("AAE.employeeid")));
+			}
+			return app;
+		}catch (SQLException wae){
+			wae.printStackTrace();
+		}
+		return app;
+	}
+	
+	public static void update(){
+		_employees.clear();
+		appointments.clear();
+		groupApp.clear();
+		notifs.clear();
 	}
 	
 //	public static void close(){

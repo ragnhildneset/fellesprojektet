@@ -346,7 +346,7 @@ public class CalendarMain extends Application {
 						Employee newEmployee = employeeFinder.getEmployee();
 						if(newEmployee != null) {
 							setEmployee(newEmployee);
-							calendarView.setAppointments(DBConnect.getAppointmentsFromEmployee(newEmployee));
+							calendarView.setAppointments(DBConnect.getActiveAppointmentsFromEmployee(newEmployee));
 							calendarView.update();
 						}
 					}
@@ -366,7 +366,7 @@ public class CalendarMain extends Application {
 		notificationBtn.setTooltip(new Tooltip("Notifications"));
 		backToCalendarBtn.setTooltip(new Tooltip("Back to calendar"));
 		
-		calendarView.setAppointments(DBConnect.getAppointmentsFromEmployee(Login.getCurrentUser()));
+		calendarView.setAppointments(DBConnect.getActiveAppointmentsFromEmployee(Login.getCurrentUser()));
 		
 		for(CheckBox cb : groupListView.getItems()){
 			
@@ -384,12 +384,11 @@ public class CalendarMain extends Application {
 					}
 					appointments.clear();
 					if(!selectedGroups.isEmpty()){
-						appointments.clear();
 						for(Group g : selectedGroups){
 							appointments = (ArrayList<Appointment>) ListOperations.union(appointments, DBConnect.getGroupApp(g));
 						}
 					} else {
-						appointments = DBConnect.getAppointmentsFromEmployee(employee);
+						appointments = DBConnect.getActiveAppointmentsFromEmployee(employee);
 					}
 					calendarView.setAppointments(appointments);
 					calendarView.update();
@@ -544,7 +543,7 @@ public class CalendarMain extends Application {
 			pane.setAnimated(false);
 			accordion.getPanes().add(pane);
 		}
-		for(Appointment p : DBConnect.getAppointmentsFromEmployee(Login.getCurrentUser())){
+		for(Appointment p : DBConnect.getActiveAppointmentsFromEmployee(Login.getCurrentUser())){
 			if(LocalDate.now().equals(p.getAppDate())){
 				if(p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() < 3600 &&
 						p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() > 0){

@@ -124,8 +124,8 @@ public class Employee {
 		return getName();
 	}
 
-	public void invite(int appid) {
-		DBConnect.inviteEmployee(this, appid);
+	public boolean invite(int appid) {
+		return DBConnect.inviteEmployee(this, appid);
 	}
 	
 	@Override
