@@ -136,6 +136,10 @@ public class CalendarView extends GridPane {
 		update();
 	}
 	
+	Date getDate() {
+		return calendar.getTime();
+	}
+	
 	private ArrayList<Appointment> in = new ArrayList<Appointment>();
 	public void setAppointments(ArrayList<Appointment> input){
 		in = input;

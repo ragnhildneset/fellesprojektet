@@ -6,8 +6,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -109,8 +112,12 @@ public class CalendarMain extends Application {
 	private boolean calendarShown = true;
 	
 	private Popup notificationMenu = null;
+	
 	private Accordion accordion = null;
 
+	private ArrayList<Appointment> appointments = new ArrayList<Appointment>(); 
+	
+	private ArrayList<Group> selectedGroups = new ArrayList<Group>();
 	
 	public CalendarMain() {
 		// DEBUG: Use first employee
@@ -156,15 +163,18 @@ public class CalendarMain extends Application {
 		dayPlanView = new DayPlanView(this);
 
 		setEmployee(employee);
-		//showCalendar(new Date());
 		updateGroups();
+		
 		accordion = new Accordion();
 		notificationMenu = new Popup();
 		notificationMenu.setAutoHide(true);
 		notificationMenu.getContent().add(accordion);
-		setupNotifications();
-		updateNotif();
+		
+		updateNotifications();
+		
 		stage.show();
+		
+		refresh();
 		redraw();
 		
 		selectAllGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -400,10 +410,6 @@ public class CalendarMain extends Application {
 		calendarView.update();
 	}
 	
-	private ArrayList<Appointment> appointments = new ArrayList<Appointment>(); 
-	
-	private ArrayList<Group> selectedGroups = new ArrayList<Group>();
-	
 	void showCalendar(Date date) {
 		calendarShown = true;
 		
@@ -485,27 +491,60 @@ public class CalendarMain extends Application {
 		groupListView.setItems(items);
 	}
 
-	private void setupNotifications() {
-		int c = 0;
-		for(Notif n : DBConnect.getInvites()) {
-			if(n.status > 0){
+	private void updateNotifications() {
+		for(Appointment appointment : DBConnect.getAppointmentsFromEmployee(Login.getCurrentUser())){
+			boolean found = false;
+			for(TitledPane pane : accordion.getPanes()) {
+				if(pane.getUserData() instanceof Appointment && ((Appointment)pane.getUserData()).getID() == appointment.getID()) {
+					found = true;
+					break;
+				}
+			}
+			
+			if(found) {
 				continue;
 			}
-			c++;
-			NotificationView notificationView = new NotificationView(n);
+			
+			if(LocalDate.now().equals(appointment.getAppDate())){
+				if(appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() < 3600 &&
+						appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() > 0){
+					Label label = new Label("Appointment " + appointment.getTitle() + " in " + String.valueOf((appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay())/60) + " minutes.");
+					TitledPane pane = new TitledPane("Alarm for " + appointment.getTitle(), label);
+					pane.setUserData(appointment);
+					accordion.getPanes().add(pane);
+				}
+			}
+		}
+		
+		for(Notif notif : DBConnect.getInvites()) {
+			if(notif.status > 0){
+				continue;
+			}
+			
+			boolean found = false;
+			for(TitledPane pane : accordion.getPanes()) {
+				if(pane.getUserData() instanceof Notif && ((Notif)pane.getUserData()).appid == notif.appid) {
+					found = true;
+					break;
+				}
+			}
+			
+			if(found) {
+				continue;
+			}
+			
+			NotificationView notificationView = new NotificationView(notif);
 			TitledPane pane = new TitledPane("", notificationView);
 			
-			Label titleLabel = new Label("Invitation for '" + n.title + "'");
+			Label titleLabel = new Label("Invitation for " + notif.title);
 			titleLabel.setPrefWidth(250.0);
 			
 			Runnable onAccept = new Runnable() {
 				@Override
 				public void run() {
-					n.accept();
+					notif.accept();
 					accordion.getPanes().remove(pane);
-					n_count--;
-					updateNotif();
-					//DBConnect.acceptNotification(n);
+					updateNotificationCounter();
 				}
 			};
 			notificationView.setOnAccept(onAccept);
@@ -513,10 +552,9 @@ public class CalendarMain extends Application {
 			Runnable onDecline = new Runnable() {
 				@Override
 				public void run() {
-					n.decline();
-					n_count--;
-					updateNotif();
+					notif.decline();
 					accordion.getPanes().remove(pane);
+					updateNotificationCounter();
 				}
 			};
 			notificationView.setOnDecline(onDecline);
@@ -537,36 +575,25 @@ public class CalendarMain extends Application {
 			
 			HBox hbox = new HBox(titleLabel, acceptBtn, declineBtn);
 			hbox.setAlignment(Pos.CENTER_LEFT);
-
-			HBox.setMargin(hbox.getChildren().get(0), new Insets(0.0, 0.0, 0.0, 10.0));
 			
+			pane.setUserData(notif);
 			pane.setGraphic(hbox);
 			pane.setAnimated(false);
 			accordion.getPanes().add(pane);
 		}
-		for(Appointment p : DBConnect.getAppointmentsFromEmployee(Login.getCurrentUser())){
-			if(LocalDate.now().equals(p.getAppDate())){
-				if(p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() < 3600 &&
-						p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() > 0){
-					Label l = new Label("Appointment " + p.getTitle() + " in " + String.valueOf(p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay()) + " seconds.");
-					TitledPane pd = new TitledPane("Alarm for " + p.getTitle(), l);
-					accordion.getPanes().add(pd);
-					c++;
-				}
-			}
-		}
-		n_count = c;
+		updateNotificationCounter();
 	}
-	private int n_count = 0;
-	private void updateNotif(){
-		if(n_count==0){
+	
+	private void updateNotificationCounter() {
+		int notificationCount = accordion.getPanes().size();
+		if(notificationCount == 0) {
 			notificationLabel.setVisible(false);
 			notificationCircle.setVisible(false);
 		} else {
 			notificationLabel.setVisible(true);
 			notificationCircle.setVisible(true);
-			if(n_count < 10){
-				notificationLabel.setText(String.valueOf(n_count));
+			if(notificationCount < 10) {
+				notificationLabel.setText(String.valueOf(notificationCount));
 			} else {
 				notificationLabel.setText("9+");
 			}
@@ -598,6 +625,32 @@ public class CalendarMain extends Application {
 	
 	public Employee getEmployee() {
 		return employee;
+	}
+	
+	public void refresh() {
+		if(calendarShown) {
+			showCalendar(calendarView.getDate());
+		}
+		else {
+			showDayPlan(dayPlanView.getDate());
+		}
+		updateNotifications();
+		
+		new Timer().schedule( 
+	        new TimerTask() {
+	            @Override
+	            public void run() {
+	            	Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							refresh();
+						}
+	            	});
+	            	
+	            }
+	        },
+	        30000
+		);
 	}
 	
 	public void redraw() {
