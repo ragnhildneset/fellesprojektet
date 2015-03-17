@@ -48,9 +48,9 @@ public class CalendarView extends GridPane {
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.HOUR, 0);
 
-		setMinHeight(Double.MAX_VALUE);
-		setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		setPrefSize(800, 600);
+		setMinSize(798, 636);
+		setMaxSize(798, 636);
+		setPrefSize(798, 636);
 		
 		// Day row (Mon, tue, etc)
 		for(int i = 0; i < 7; ++i) {

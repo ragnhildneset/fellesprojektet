@@ -147,7 +147,7 @@ public class CalendarMain extends Application {
 		fxmlLoader.setLocation(url);
 		fxmlLoader.setController(this);
 		try {
-			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1005, 750);
+			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1002, 741);
 			scene.getRoot().setStyle("-fx-background-color: linear-gradient(#FFFFFF, #EEEEEE)");
 			scene.getStylesheets().add("/com/gruppe16/main/CalendarView.css");
 			
