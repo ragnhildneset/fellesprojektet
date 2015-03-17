@@ -37,7 +37,13 @@ public class EmployeePicker implements Initializable {
 	private Button addBtn;
 	
 	@FXML
+	private Button addAllBtn;
+	
+	@FXML
 	private Button removeBtn;
+	
+	@FXML
+	private Button removeAllBtn;
 	
 	@FXML
 	private ChoiceBox<String> e_group;
@@ -55,7 +61,6 @@ public class EmployeePicker implements Initializable {
 	private ListView<Employee> attendingListView;
 	
 	private ArrayList<Employee> _availableEmployees = DBConnect.getEmployees();
-	
 	private static Stage stage;
 	private static AddAppointment addAppointment;
 	
@@ -116,11 +121,23 @@ public class EmployeePicker implements Initializable {
 			}
 		});
 		
+		addAllBtn.setOnAction(event -> {
+			for(Employee e : employeeListView.getItems()) {
+				attendingListView.getItems().add(e);
+			}
+			employeeListView.getItems().clear();
+		});
+		
 		removeBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 				removeSelectedEmployee();
 			}
+		});
+		
+		removeAllBtn.setOnAction(event -> {
+			attendingListView.getItems().clear();
+			updateEmployeeList();
 		});
 		
 		employeeListView.setOnMouseClicked(event -> {
