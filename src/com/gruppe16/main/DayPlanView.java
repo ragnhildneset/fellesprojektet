@@ -159,6 +159,11 @@ public class DayPlanView extends VBox {
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	
+	public void addAppointment(Appointment appointment){
+		AppointmentBox appointmentBox = new AppointmentBox(appointment, this);
+		appointmentPane.getChildren().add(appointmentBox);
+	}
+	
 	private void arrangeAppointments() {
 		//Create Array of AppointmentBoxes currently in Pane.
 		ArrayList<AppointmentBox> appointmentBoxes = new ArrayList<AppointmentBox>();
@@ -329,40 +334,69 @@ public class DayPlanView extends VBox {
 		
 	}
 	
+	private ArrayList<Appointment> inputApp = new ArrayList<Appointment>();
+	public void setAppointments(ArrayList<Appointment> input){
+		inputApp = input;
+	}
+	
 	public void showAppointments(){
 		Employee e = Login.getCurrentUser();
 		showAppointments(e);
 	}
 	
-	public void showAppointments(Employee e) {
+	public void showAppointments(Employee e){
+		showAppointments(e, false);
+	}
+	
+	public void showAppointments(Employee e, boolean group) {
 		employee = e;
 		removeAppointments();
 		ArrayList<AppointmentAndEmployee> AppAndEmp = DBConnect.getAppointmentAndEmployee();
-		HashMap<Integer, Appointment> appointments = DBConnect.getAppointments();
 		LocalDate date = this.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		for (AppointmentAndEmployee currentApp : AppAndEmp){
-			if(e.getEmployeeID() == currentApp.getEmployeeid() && currentApp.getStatus() == 1){
-				int appID = currentApp.getAppid();
-				for (Appointment app : appointments.values()){
-					if(appID == app.getID() && app.getAppDate().equals(date)){
-						boolean notContained = true;
-						for (Node aBoxes : appointmentPane.getChildren()) {
-							if(aBoxes instanceof AppointmentBox) {
-								if(((AppointmentBox) aBoxes).getID() == app.getID()){
-									notContained = false;
-									break;
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+		for(Appointment a : inputApp){
+			if(date.equals(a.getAppDate())) appointments.add(a);
+		}
+		if(!group){
+			for (AppointmentAndEmployee currentApp : AppAndEmp){
+				if(e.getEmployeeID() == currentApp.getEmployeeid() && currentApp.getStatus() == 1){
+					int appID = currentApp.getAppid();
+					for (Appointment app : appointments){
+						if(appID == app.getID() && app.getAppDate().equals(date)){
+							boolean notContained = true;
+							for (Node aBoxes : appointmentPane.getChildren()) {
+								if(aBoxes instanceof AppointmentBox) {
+									if(((AppointmentBox) aBoxes).getID() == app.getID()){
+										notContained = false;
+										break;
+									}
 								}
+							}	
+							if(notContained) addAppointment(app, currentApp);
+						}
+					}
+					
+				}
+			}
+			arrangeAppointments();
+		}
+		else{
+			for (Appointment app : appointments){
+				if(app.getAppDate().equals(date)){
+					boolean notContained = true;
+					for (Node aBoxes : appointmentPane.getChildren()) {
+						if(aBoxes instanceof AppointmentBox) {
+							if(((AppointmentBox) aBoxes).getID() == app.getID()){
+								notContained = false;
+								break;
 							}
 						}
-						String color = currentApp.getColor();
-						
-						if(notContained) addAppointment(app, currentApp);
 					}
+					if (notContained) addAppointment(app);
 				}
-				
 			}
+			arrangeAppointments();
 		}
-		arrangeAppointments();
 	}
 
 	

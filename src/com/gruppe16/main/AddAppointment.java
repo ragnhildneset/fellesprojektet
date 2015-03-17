@@ -98,6 +98,7 @@ public class AddAppointment implements Initializable {
 		}
 		
 		descriptionTextArea.setWrapText(true);
+		roomTextField.setDisable(true);
 		
 		if(editMode) datePicker.setValue(appointment.getAppDate());
 		else if(startDate != null) datePicker.setValue(startDate);
@@ -116,6 +117,7 @@ public class AddAppointment implements Initializable {
 		
 		roomTextField.setEditable(true);
 		sendBtn.setOnAction(new EventHandler<ActionEvent>(){
+			@SuppressWarnings("deprecation")
 			@Override
 			public void handle(ActionEvent event) {
 				boolean valid = true;
@@ -157,6 +159,7 @@ public class AddAppointment implements Initializable {
 				
 				if (!checkRoom(datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin))){
 					errorMessage.setText("Room is now reserved, please choose again.");
+					sendBtn.setDisable(true);
 					valid = false;
 				}
 				
@@ -519,6 +522,7 @@ public class AddAppointment implements Initializable {
 //		return attendees;
 //	}
 	
+	@SuppressWarnings("deprecation")
 	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
 		AddAppointment.editMode = false;
 		AddAppointment.stage = stage;
