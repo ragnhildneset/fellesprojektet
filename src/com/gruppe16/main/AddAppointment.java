@@ -117,6 +117,7 @@ public class AddAppointment implements Initializable {
 		
 		roomTextField.setEditable(true);
 		sendBtn.setOnAction(new EventHandler<ActionEvent>(){
+			@SuppressWarnings("deprecation")
 			@Override
 			public void handle(ActionEvent event) {
 				boolean valid = true;
@@ -521,6 +522,7 @@ public class AddAppointment implements Initializable {
 //		return attendees;
 //	}
 	
+	@SuppressWarnings("deprecation")
 	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
 		AddAppointment.editMode = false;
 		AddAppointment.stage = stage;

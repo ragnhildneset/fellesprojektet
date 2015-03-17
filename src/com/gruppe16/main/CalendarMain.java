@@ -19,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -340,7 +339,6 @@ public class CalendarMain extends Application {
 					calendar.start(new Stage());
 					stage.close();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -442,6 +440,7 @@ public class CalendarMain extends Application {
 		});
 	}
 	
+	@SuppressWarnings("deprecation")
 	void showDayPlan(Date date) {
 		calendarShown = false;
 		

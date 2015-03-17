@@ -145,6 +145,7 @@ public class CalendarView extends GridPane {
 		in = input;
 	}
 	
+	@SuppressWarnings("deprecation")
 	void update() {
 		Date beforeTime = calendar.getTime();
 		Date nowDate = new Date();
