@@ -356,6 +356,9 @@ public class CalendarMain extends Application {
 						if(newEmployee != null) {
 							setEmployee(newEmployee);
 							calendarView.setAppointments(DBConnect.getAppointmentsFromEmployee(newEmployee));
+							for(CheckBox cb : groupListView.getItems()){
+								cb.setSelected(false);
+							}
 							calendarView.update();
 						}
 					}
