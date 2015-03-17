@@ -110,7 +110,7 @@ public class CalendarMain extends Application {
 	
 	private Popup notificationMenu = null;
 	private Accordion accordion = null;
-
+	boolean group = false;
 	
 	public CalendarMain() {
 		// DEBUG: Use first employee
@@ -377,6 +377,7 @@ public class CalendarMain extends Application {
 				@Override
 				public void changed(ObservableValue<? extends Boolean> arg0,
 						Boolean arg1, Boolean arg2) {
+
 					if(arg2&&!selectedGroups.contains(g)){
 						selectedGroups.add(g);
 					} else {
@@ -384,15 +385,20 @@ public class CalendarMain extends Application {
 					}
 					appointments.clear();
 					if(!selectedGroups.isEmpty()){
+						group = true;
 						appointments.clear();
 						for(Group g : selectedGroups){
 							appointments = (ArrayList<Appointment>) ListOperations.union(appointments, DBConnect.getGroupApp(g));
 						}
 					} else {
+						group = false;
 						appointments = DBConnect.getAppointmentsFromEmployee(employee);
 					}
 					calendarView.setAppointments(appointments);
+					dayPlanView.setAppointments(appointments);
+					
 					calendarView.update();
+					if(dayPlanView.getDate() != null) dayPlanView.showAppointments(employee, group);
 				}
 				
 			});
@@ -438,9 +444,10 @@ public class CalendarMain extends Application {
 	
 	void showDayPlan(Date date) {
 		calendarShown = false;
-		
+		if(appointments.isEmpty()) appointments = DBConnect.getAppointmentsFromEmployee(employee);
 		dayPlanView.setDate(date);
-		dayPlanView.showAppointments(employee);
+		dayPlanView.setAppointments(appointments);
+		dayPlanView.showAppointments(employee, group);
 		mainPane.setCenter(dayPlanView);
 		
 		backToCalendarBtn.setVisible(true);
