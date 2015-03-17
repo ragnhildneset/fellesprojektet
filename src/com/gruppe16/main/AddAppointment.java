@@ -117,6 +117,7 @@ public class AddAppointment implements Initializable {
 		
 		roomTextField.setEditable(true);
 		sendBtn.setOnAction(new EventHandler<ActionEvent>(){
+			@SuppressWarnings("deprecation")
 			@Override
 			public void handle(ActionEvent event) {
 				boolean valid = true;
@@ -487,7 +488,7 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					EmployeePicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this);
+					EmployeePicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this, attendees);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -498,6 +499,7 @@ public class AddAppointment implements Initializable {
 	public ArrayList<Employee> attendees = new ArrayList<Employee>(); 
 
 	public void setAttendees(Collection<Employee> employees) {
+		attendees.clear();
 		attendeesTextField.clear();
 		int i = 0;
 		for(Employee e : employees) {
@@ -521,6 +523,7 @@ public class AddAppointment implements Initializable {
 //		return attendees;
 //	}
 	
+	@SuppressWarnings("deprecation")
 	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
 		AddAppointment.editMode = false;
 		AddAppointment.stage = stage;

@@ -39,4 +39,12 @@ public class ListOperations {
     	return list;
     }
     
+    public static <T> boolean contains(List<T> parent, List<T> sub){
+    	for(T t : sub){
+    		if(!parent.contains(t))
+    			return false;
+    	}
+    	return true;
+    }
+    
 }

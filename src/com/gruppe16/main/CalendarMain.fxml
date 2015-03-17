@@ -62,26 +62,18 @@
       </VBox>
    </left>
    <top>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <VBox BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="calendarNameLabel" prefHeight="27.0" prefWidth="180.0">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <HBox alignment="BOTTOM_LEFT" prefWidth="290.0">
+            <HBox BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="backToCalendarBtn" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-graphic: url(file:img/calendar.png); -fx-background-color: transparent;" />
-               </children>
-               <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" top="10.0" />
-               </HBox.margin>
-            </HBox>
-            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="221.0">
-               <children>
+                  <Label fx:id="calendarNameLabel" prefHeight="27.0" prefWidth="568.0">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                   <Label fx:id="yearLabel" text="2015">
                      <font>
                         <Font size="18.0" />
@@ -89,52 +81,61 @@
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
                   </Label>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <ImageView fx:id="prevDateBtn" fitHeight="24.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../img/arrow_left.png" />
-                           </image>
-                        </ImageView>
-                        <Label fx:id="monthLabel" alignment="CENTER" maxWidth="100.0" minWidth="130.0" text="September">
-                           <HBox.margin>
-                              <Insets left="10.0" right="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                        <ImageView fx:id="nextDateBtn" fitHeight="24.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../img/arrow_right.png" />
-                           </image>
-                        </ImageView>
-                     </children>
+                  <HBox alignment="BOTTOM_RIGHT" prefWidth="270.0">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
                   </HBox>
                </children>
-            </VBox>
-            <HBox alignment="BOTTOM_RIGHT" prefWidth="270.0">
-               <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </HBox.margin>
+               <BorderPane.margin>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+               </BorderPane.margin>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0">
                <children>
-                  <Pane>
+                  <Button fx:id="backToCalendarBtn" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-graphic: url(file:img/calendar.png); -fx-background-color: transparent;">
+                     <HBox.margin>
+                        <Insets left="200.0" right="263.0" />
+                     </HBox.margin>
+                  </Button>
+                  <ImageView fx:id="prevDateBtn" fitHeight="24.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../img/arrow_left.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="monthLabel" alignment="CENTER" maxWidth="100.0" minWidth="130.0" text="September">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="nextDateBtn" fitHeight="24.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../img/arrow_right.png" />
+                     </image>
+                  </ImageView>
+                  <AnchorPane maxHeight="305.0" minWidth="305.0" prefWidth="305.0">
                      <children>
-                        <Button fx:id="notificationBtn" layoutX="110.0" layoutY="40.0" maxHeight="32.0" maxWidth="24.0" minHeight="32.0" minWidth="24.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="24.0" style="-fx-graphic: url(file:img/bell.png); -fx-background-color: transparent;" />
-                        <Circle fx:id="notificationCircle" fill="#c2d3ff" layoutX="131.0" layoutY="69.0" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
-                        <Label fx:id="notificationLabel" alignment="CENTER" layoutX="124.0" layoutY="60.0" prefWidth="15.0" text="+9" />
+                        <Button fx:id="notificationBtn" maxHeight="32.0" maxWidth="24.0" minHeight="32.0" minWidth="24.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="24.0" style="-fx-graphic: url(file:img/bell.png); -fx-background-color: transparent;" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+                        <Circle fx:id="notificationCircle" fill="#c2d3ff" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        <Label fx:id="notificationLabel" alignment="CENTER" prefWidth="16.0" text="9" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
-                  </Pane>
+                  </AnchorPane>
                </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </HBox>
          </children>
          <BorderPane.margin>
-            <Insets left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </BorderPane.margin>
-      </HBox>
+      </VBox>
    </top>
 </BorderPane>

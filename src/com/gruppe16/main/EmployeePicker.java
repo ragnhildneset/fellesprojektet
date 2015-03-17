@@ -37,7 +37,13 @@ public class EmployeePicker implements Initializable {
 	private Button addBtn;
 	
 	@FXML
+	private Button addAllBtn;
+	
+	@FXML
 	private Button removeBtn;
+	
+	@FXML
+	private Button removeAllBtn;
 	
 	@FXML
 	private ChoiceBox<String> e_group;
@@ -53,11 +59,11 @@ public class EmployeePicker implements Initializable {
 	
 	@FXML
 	private ListView<Employee> attendingListView;
-	
+
 	private ArrayList<Employee> _availableEmployees = DBConnect.getEmployees();
-	
 	private static Stage stage;
 	private static AddAppointment addAppointment;
+	private static ArrayList<Employee> defaultAttendees;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -84,8 +90,15 @@ public class EmployeePicker implements Initializable {
 				}
 				updateEmployeeList();
 			}
-			
 		});
+		
+		for(Employee e : defaultAttendees) {
+			for(Employee e2 : _availableEmployees) {
+				if(e.getEmployeeID() == e2.getEmployeeID()) {
+					attendingListView.getItems().add(e2);
+				}
+			}
+		}
 		
 		OKBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -116,11 +129,23 @@ public class EmployeePicker implements Initializable {
 			}
 		});
 		
+		addAllBtn.setOnAction(event -> {
+			for(Employee e : employeeListView.getItems()) {
+				attendingListView.getItems().add(e);
+			}
+			employeeListView.getItems().clear();
+		});
+		
 		removeBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 				removeSelectedEmployee();
 			}
+		});
+		
+		removeAllBtn.setOnAction(event -> {
+			attendingListView.getItems().clear();
+			updateEmployeeList();
 		});
 		
 		employeeListView.setOnMouseClicked(event -> {
@@ -158,7 +183,7 @@ public class EmployeePicker implements Initializable {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		for(Employee e : _availableEmployees) {
 			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(surNameTextField.getText().toLowerCase()) &&
-					!attendingListView.getItems().contains(e)) {
+					!attendingListView.getItems().contains(e) && e.getEmployeeID() != Login.getCurrentUserID()) {
 				employees.add(e);
 			}
 		}
@@ -166,9 +191,10 @@ public class EmployeePicker implements Initializable {
 		employeeListView.getSelectionModel().select(0);
 	}
 	
-	public static void start(Stage stage, Window owner, AddAppointment addApp) throws IOException {
+	public static void start(Stage stage, Window owner, AddAppointment addApp, ArrayList<Employee> attendees) throws IOException {
 		EmployeePicker.stage = stage;
 		EmployeePicker.addAppointment = addApp;
+		EmployeePicker.defaultAttendees = attendees;
 		//EmployeePicker.currentAttendees = addApp.getAttendees();
 		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/EmployeePicker.fxml")));
 		stage.setResizable(false);

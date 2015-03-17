@@ -91,6 +91,21 @@ public class AppointmentBox extends AnchorPane{
 		relocate(0, appointmentStart);
 		updateLabels();
 		}
+	public AppointmentBox(Appointment appointment, DayPlanView dpv){
+		setId("appBox");
+		this.e = null;
+		this.appointment = appointment;
+		LocalTime start = this.appointment.getFromTime();
+		LocalTime end = this.appointment.getToTime();
+		this.color = panelColors.BLUE;
+		this.dpv = dpv;
+		getStylesheets().add("/com/gruppe16/main/listView.css");
+		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
+		int appointmentStart = start.toSecondOfDay()/60;
+		setPrefSize(PANEL_WIDTH_PARENT, Math.max(appointmentTime, 40));
+		relocate(0, appointmentStart);
+		updateLabels();
+		}
 	
 	public void updateLabels(){
 		ArrayList<Label> labels = new ArrayList<Label>();
@@ -337,7 +352,7 @@ public class AppointmentBox extends AnchorPane{
 					else {
 						participantPane.setVisible(true);
 					}
-					if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
+					if (e == null || e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
 					else if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
 						AnchorPane.setRightAnchor(colorPicker, 118.0);
 						getChildren().addAll(delBtn, editBtn, showBtn, colorPicker);
