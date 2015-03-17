@@ -5,11 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
 
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.main.Login;
-import com.mysql.jdbc.ResultSet;
 
 public class Appointment {
 	

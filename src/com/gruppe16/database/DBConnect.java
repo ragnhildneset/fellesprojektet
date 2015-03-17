@@ -36,7 +36,6 @@ public class DBConnect {
 				int employeeid = rs.getInt("E.employeeid");
 				int groupid = rs.getInt("G.groupID");
 				String name = rs.getString("G.name");
-				System.out.println(String.valueOf(employeeid) + "; " + String.valueOf(groupid) + "; " + name);
 				Employee.addToGroup(groupid, name, employeeid);
 			}
 		} catch (SQLException e) {
@@ -323,13 +322,17 @@ public class DBConnect {
 	}
 
 	public static void inviteEmployee(Employee employee, int appid) {
+		int status = 0;
+		if(employee.getEmployeeID() == Login.getCurrentUserID()){
+			status = 1;
+		}
 		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(q);
 			s.setInt(1, appid);
 			s.setInt(2, employee.getEmployeeID());
-			s.setInt(3, 0);
-			s.setInt(4, 0);
+			s.setInt(3, status);
+			s.setInt(4, 1);
 			s.setString(5, "BLUE");
 			s.execute();
 		} catch (SQLException e) {
@@ -350,6 +353,17 @@ public class DBConnect {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static boolean setColorOfAppointment(Employee employee, int appid, String color){
+		String query = "UPDATE AppointmentAndEmployee SET farge='"+color+"' WHERE appID='"+appid+"' AND employeeid='"+employee.getEmployeeID()+"';";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(query);
+			return s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	private static HashMap<Integer, ArrayList<Appointment>> groupApp = null;

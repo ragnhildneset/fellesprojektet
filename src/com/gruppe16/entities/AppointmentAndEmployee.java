@@ -1,6 +1,5 @@
 package com.gruppe16.entities;
 import java.util.HashMap;
-import java.util.Map;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

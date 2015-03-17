@@ -13,7 +13,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -22,7 +21,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -66,7 +64,6 @@ public class AppointmentBox extends AnchorPane{
 	}
 	
 	private Appointment appointment;
-	private AppointmentAndEmployee appAndEmp;
 	private double panelWidth;
 	private double panelHeight;
 	private double panelX;
@@ -82,7 +79,6 @@ public class AppointmentBox extends AnchorPane{
 	public AppointmentBox(Appointment appointment, AppointmentAndEmployee appAndEmp, DayPlanView dpv){
 		setId("appBox");
 		this.e = Employee.getEmployee(appAndEmp.getEmployeeid());
-		this.appAndEmp = appAndEmp;
 		this.appointment = appointment;
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
@@ -279,7 +275,8 @@ public class AppointmentBox extends AnchorPane{
 				colorPicker.setValue(color);
 				colorPicker.setOnAction(new EventHandler<ActionEvent>(){
 					public void handle(ActionEvent event) {
-						//TODO ColorPicker actually working
+						DBConnect.setColorOfAppointment(Login.getCurrentUser(), appointment.getID(), toStringColor(colorPicker.getValue()));
+						dpv.showAppointments();
 					}
 				});
 				 
@@ -340,11 +337,11 @@ public class AppointmentBox extends AnchorPane{
 					else {
 						participantPane.setVisible(true);
 					}
-					if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
+					if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
+					else if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
 						AnchorPane.setRightAnchor(colorPicker, 118.0);
 						getChildren().addAll(delBtn, editBtn, showBtn, colorPicker);
 					}
-					else if (e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
 					else {
 						AnchorPane.setRightAnchor(colorPicker, 65.0);
 						getChildren().addAll(showBtn, leaveBtn, colorPicker);
@@ -490,6 +487,19 @@ public class AppointmentBox extends AnchorPane{
     	else if(color.equals("ORANGE")) return panelColors.ORANGE;
     	else if(color.equals("TURQUOISE")) return panelColors.TURQUOISE;
     	else if(color.equals("GREY")) return panelColors.GREY;
-    	else return panelColors.GREEN;
+    	else return panelColors.BLUE;
+    }
+    
+    public String toStringColor(panelColors color){
+    	if(color == panelColors.RED) return "RED";
+    	else if(color == panelColors.GREEN) return "GREEN";
+    	else if(color == panelColors.BLUE) return "BLUE";
+    	else if(color == panelColors.YELLOW) return "YELLOW";
+    	else if(color == panelColors.BROWN) return "BROWN";
+    	else if(color == panelColors.PURPLE) return "PURPLE";
+    	else if(color == panelColors.ORANGE) return "ORANGE";
+    	else if(color == panelColors.TURQUOISE) return "TURQUOISE";
+    	else if(color == panelColors.GREY) return "GREY";
+    	else return "BLUE";
     }
 }
