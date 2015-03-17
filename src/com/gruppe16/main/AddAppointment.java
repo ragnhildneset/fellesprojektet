@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -38,7 +37,6 @@ import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Room;
-import com.gruppe16.entities.RoomReservation;
 
 public class AddAppointment implements Initializable {
 	@FXML
@@ -158,7 +156,6 @@ public class AddAppointment implements Initializable {
 				}
 				
 				if (!checkRoom(datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin))){
-					System.out.println(room.getName());
 					errorMessage.setText("Room is now reserved, please choose again.");
 					valid = false;
 				}

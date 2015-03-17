@@ -23,10 +23,6 @@ public class Building {
 		buildings.put(key, this);
 	}
 	
-	public static void main(String[] args){
-		System.out.println(getBuildings());
-	}
-	
 	public String getName() {
 		return name.get();
 	}
@@ -45,7 +41,6 @@ public class Building {
 		int c = 0;
 		for(Map.Entry<Integer, Building> e : buildings.entrySet()){
 			ls[c] = e.getValue().getName();
-			System.out.println(e.getValue().getName());
 			c++;
 		}
 		return ls;

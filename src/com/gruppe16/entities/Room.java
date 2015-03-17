@@ -1,15 +1,10 @@
 package com.gruppe16.entities;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-
-import com.gruppe16.database.DBConnect;
-import com.mysql.jdbc.ResultSet;
 
 public class Room {
 	

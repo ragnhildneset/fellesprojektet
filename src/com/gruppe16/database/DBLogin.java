@@ -21,8 +21,9 @@ public class DBLogin {
 	private static ArrayList<String> ls = new ArrayList<String>();
 	
 	public static void login() {
+		BufferedReader r = null;
 		try {
-			BufferedReader r = new BufferedReader(new FileReader(path));
+			r = new BufferedReader(new FileReader(path));
 			String line;
 			while((line = r.readLine()) != null){
 				ls.add(line);
@@ -31,15 +32,19 @@ public class DBLogin {
 			System.err.println("You do not have login.txt!");
 		} catch (IOException e) {
 			System.err.println("login.txt was found, but the file may be currupt.");
+		} finally {
+			try {
+				r.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		try{
 			user = ls.get(0);
 			pass = ls.get(1);
 			url = ls.get(2);
 			System.out.println("Username, password and url to db is now set.");
-			System.out.println("User:\t" + user);
-			System.out.println("Pass:\t" + pass);
-			System.out.println("URL:\t" + url);
 		} catch (IndexOutOfBoundsException e) {
 			System.err.println("login.txt was found, but it's not correctly formatted.");
 		}

@@ -36,12 +36,10 @@ public class CalendarView extends GridPane {
 	
 	static String[] DAY_NAMES = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
-	private final CalendarMain calendarMain;
 	private Calendar calendar;
 	private VBox[][] dayVBoxes = new VBox[7][6];
 	
 	CalendarView(CalendarMain calendarMain) {
-		this.calendarMain = calendarMain;
 		
 		calendar = Calendar.getInstance();
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -157,7 +155,6 @@ public class CalendarView extends GridPane {
 					}
 					appointmentDateMap.get(date.toString()).add(a);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

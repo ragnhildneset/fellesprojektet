@@ -1,18 +1,15 @@
 package com.gruppe16.main;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -21,13 +18,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -35,12 +30,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Building;
-import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Room;
-import com.gruppe16.entities.RoomReservation;
-import com.gruppe16.util.Tuple;
-import com.sun.xml.internal.ws.util.StringUtils;
 
 public class RoomPicker implements Initializable {
 

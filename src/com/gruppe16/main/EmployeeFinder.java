@@ -1,12 +1,8 @@
 package com.gruppe16.main;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import com.gruppe16.database.DBConnect;
-import com.gruppe16.entities.Employee;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,6 +21,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+
+import com.gruppe16.database.DBConnect;
+import com.gruppe16.entities.Employee;
 
 public class EmployeeFinder {
 	@FXML

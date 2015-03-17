@@ -6,10 +6,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -35,7 +33,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -548,7 +545,6 @@ public class CalendarMain extends Application {
 			accordion.getPanes().add(pane);
 		}
 		for(Appointment p : DBConnect.getAppointmentsFromEmployee(Login.getCurrentUser())){
-			System.out.println(p);
 			if(LocalDate.now().equals(p.getAppDate())){
 				if(p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() < 3600 &&
 						p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() > 0){
@@ -563,7 +559,6 @@ public class CalendarMain extends Application {
 	}
 	private int n_count = 0;
 	private void updateNotif(){
-		System.out.println("c: " + n_count);
 		if(n_count==0){
 			notificationLabel.setVisible(false);
 			notificationCircle.setVisible(false);

@@ -13,7 +13,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -22,7 +21,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -66,7 +64,6 @@ public class AppointmentBox extends AnchorPane{
 	}
 	
 	private Appointment appointment;
-	private AppointmentAndEmployee appAndEmp;
 	private double panelWidth;
 	private double panelHeight;
 	private double panelX;
@@ -82,7 +79,6 @@ public class AppointmentBox extends AnchorPane{
 	public AppointmentBox(Appointment appointment, AppointmentAndEmployee appAndEmp, DayPlanView dpv){
 		setId("appBox");
 		this.e = Employee.getEmployee(appAndEmp.getEmployeeid());
-		this.appAndEmp = appAndEmp;
 		this.appointment = appointment;
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();

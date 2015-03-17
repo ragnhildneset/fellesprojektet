@@ -5,10 +5,8 @@ import java.util.Map;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 
 import com.gruppe16.database.DBConnect;
-import com.mysql.jdbc.ResultSet;
 
 public class Employee {
 	

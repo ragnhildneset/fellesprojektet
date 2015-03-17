@@ -1,6 +1,6 @@
 package com.gruppe16.util;
 
-public class Tuple<Value extends Comparable>{
+public class Tuple<Value extends Comparable<Value>>{
 	
 	public Value a;
 	public Value b;
@@ -10,7 +10,7 @@ public class Tuple<Value extends Comparable>{
 		this.b = b;
 	}
 	
-	public boolean equals(Tuple b){
+	public boolean equals(Tuple<Value> b){
 		if(b.a.equals(this.a)&&b.b.equals(this.b))
 			return true;
 		return false;

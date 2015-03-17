@@ -36,7 +36,6 @@ public class DBConnect {
 				int employeeid = rs.getInt("E.employeeid");
 				int groupid = rs.getInt("G.groupID");
 				String name = rs.getString("G.name");
-				System.out.println(String.valueOf(employeeid) + "; " + String.valueOf(groupid) + "; " + name);
 				Employee.addToGroup(groupid, name, employeeid);
 			}
 		} catch (SQLException e) {
@@ -326,7 +325,6 @@ public class DBConnect {
 		int status = 0;
 		if(employee.getEmployeeID() == Login.getCurrentUserID()){
 			status = 1;
-			System.out.println("jejeje");
 		}
 		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
 		try{
