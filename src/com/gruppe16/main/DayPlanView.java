@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -359,7 +358,7 @@ public class DayPlanView extends VBox {
 		}
 		if(!group){
 			for (AppointmentAndEmployee currentApp : AppAndEmp){
-				if(e.getEmployeeID() == currentApp.getEmployeeid() && currentApp.getStatus() == 1){
+				if(e.getID() == currentApp.getEmployeeid() && currentApp.getStatus() == 1){
 					int appID = currentApp.getAppid();
 					for (Appointment app : appointments){
 						if(appID == app.getID() && app.getAppDate().equals(date)){

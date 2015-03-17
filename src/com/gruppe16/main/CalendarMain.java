@@ -621,7 +621,7 @@ public class CalendarMain extends Application {
 		this.employee = employee;
 		
 		// Update calendar label and title
-		if(employee.getEmployeeID() == Login.getCurrentUserID()) {
+		if(employee.getID() == Login.getCurrentUserID()) {
 			stage.setTitle("My Calendar");
 			calendarNameLabel.setText("Welcome, " + employee.getFirstName() + "!");
 		}
@@ -640,7 +640,6 @@ public class CalendarMain extends Application {
 	}
 	
 	public void refresh() {
-		DBConnect.update();
 		if(calendarShown) {
 			showCalendar(calendarView.getDate());
 		}

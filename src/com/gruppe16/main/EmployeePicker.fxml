@@ -54,11 +54,11 @@
             <Insets />
          </VBox.margin>
       </ListView>
-      <HBox alignment="CENTER_LEFT">
+      <HBox alignment="BOTTOM_LEFT">
          <children>
-            <Button fx:id="OKBtn" layoutX="221.0" layoutY="10.0" minWidth="40.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="OK">
+            <Button fx:id="OKBtn" layoutX="221.0" layoutY="10.0" minWidth="60.0" mnemonicParsing="false" prefWidth="60.0" text="OK">
                <HBox.margin>
-                  <Insets right="50.0" />
+                  <Insets right="70.0" />
                </HBox.margin>
             </Button>
             <VBox>

@@ -85,15 +85,15 @@ public class AddAppointment implements Initializable {
 	private static ArrayList<Employee> participants = null;
 	public static boolean editMode = false;
 	public Room room;
-	private static ArrayList<Employee> _availableEmployees = null;
+	private static ArrayList<Employee> availableEmployees = null;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		_availableEmployees = new ArrayList<Employee>();
+		availableEmployees = new ArrayList<Employee>();
 		sendBtn.setDisable(true);
-		for(Employee e : DBConnect.getEmployees()) {
+		for(Employee e : DBConnect.getEmployeeList()) {
 			if(!e.equals(Login.getCurrentUser())){
-				_availableEmployees.add(e);
+				availableEmployees.add(e);
 			}
 		}
 		

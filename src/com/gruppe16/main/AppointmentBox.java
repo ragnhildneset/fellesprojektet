@@ -74,7 +74,7 @@ public class AppointmentBox extends AnchorPane{
 	private DayPlanView dpv;
 	private Employee e;
 	
-	static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
+	static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployeeList());
 	
 	public AppointmentBox(Appointment appointment, AppointmentAndEmployee appAndEmp, DayPlanView dpv){
 		setId("appBox");
@@ -224,19 +224,19 @@ public class AppointmentBox extends AnchorPane{
 								Label statusLabel = new Label();
 								AnchorPane.setLeftAnchor(nameLabel, 5.0);
 								AnchorPane.setRightAnchor(statusLabel, 5.0);
-								if(a.getEmployeeID() == appointment.getOwnerID()) {
+								if(a.getID() == appointment.getOwnerID()) {
 									statusLabel.setText("Owner");
 									statusLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 								}
-								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getEmployeeID()).getStatus() == 1) {
+								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getID()).getStatus() == 1) {
 									statusLabel.setText("Attending");
 									statusLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 								}
-								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getEmployeeID()).getStatus() == 2) {
+								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getID()).getStatus() == 2) {
 									statusLabel.setText("Declined");
 									statusLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 								}
-								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getEmployeeID()).getStatus() == 0) {
+								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getID()).getStatus() == 0) {
 									statusLabel.setText("Pending");
 									statusLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 								}
@@ -352,8 +352,8 @@ public class AppointmentBox extends AnchorPane{
 					else {
 						participantPane.setVisible(true);
 					}
-					if (e == null || e.getEmployeeID() != Login.getCurrentUser().getEmployeeID()) getChildren().add(showBtn);
-					else if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
+					if (e == null || e.getID() != Login.getCurrentUser().getID()) getChildren().add(showBtn);
+					else if(Login.getCurrentUser().getID() == appointment.getOwnerID()){
 						AnchorPane.setRightAnchor(colorPicker, 118.0);
 						getChildren().addAll(delBtn, editBtn, showBtn, colorPicker);
 					}
@@ -433,7 +433,7 @@ public class AppointmentBox extends AnchorPane{
 		yesBtn.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent event) {
 				if(delete) DBConnect.deleteAppointment(appointment.getID());
-				else DBConnect.deleteAppointmentAndEmployee(appointment.getID(), Login.getCurrentUser().getEmployeeID());
+				else DBConnect.deleteAppointmentAndEmployee(appointment.getID(), Login.getCurrentUser().getID());
 				
 				dpv.showAppointments(Login.getCurrentUser());
 				dialogStage.close();
@@ -473,7 +473,7 @@ public class AppointmentBox extends AnchorPane{
 	public ArrayList<Employee> getParticipants() {
 	    ArrayList<AppointmentAndEmployee> AppAndEmp = DBConnect.getAppointmentAndEmployee();
 	    ArrayList<Employee> participants = new ArrayList<Employee>();
-	    if(Login.getCurrentUser().getEmployeeID() == appointment.getOwnerID()){
+	    if(Login.getCurrentUser().getID() == appointment.getOwnerID()){
 		    for(AppointmentAndEmployee aae : AppAndEmp) {
 		    	if(aae.getAppid() == appointment.getID()) {
 		    		participants.add(employeedata.get(aae.getEmployeeid()));

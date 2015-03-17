@@ -3,6 +3,7 @@ package com.gruppe16.main;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -60,7 +61,7 @@ public class EmployeePicker implements Initializable {
 	@FXML
 	private ListView<Employee> attendingListView;
 
-	private ArrayList<Employee> _availableEmployees = DBConnect.getEmployees();
+	private Collection<Employee> availableEmployees = DBConnect.getEmployeeList();
 	private static Stage stage;
 	private static AddAppointment addAppointment;
 	private static ArrayList<Employee> defaultAttendees;
@@ -82,23 +83,17 @@ public class EmployeePicker implements Initializable {
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
 				if((Integer) arg2 == 0){
-					_availableEmployees = DBConnect.getEmployees();
+					availableEmployees = DBConnect.getEmployeeList();
 				} else {					
 					String f = e_group.getItems().get((Integer) arg2);
 					Group g = Employee.getFromName(f);
-					_availableEmployees = g.getMembers();
+					availableEmployees = g.getMembers();
 				}
 				updateEmployeeList();
 			}
 		});
 		
-		for(Employee e : defaultAttendees) {
-			for(Employee e2 : _availableEmployees) {
-				if(e.getEmployeeID() == e2.getEmployeeID()) {
-					attendingListView.getItems().add(e2);
-				}
-			}
-		}
+		attendingListView.getItems().addAll(defaultAttendees);
 		
 		OKBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -181,10 +176,10 @@ public class EmployeePicker implements Initializable {
 	
 	private void updateEmployeeList() {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
-		for(Employee e : _availableEmployees) {
-			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(surNameTextField.getText().toLowerCase()) &&
-					!attendingListView.getItems().contains(e) && e.getEmployeeID() != Login.getCurrentUserID()) {
-				employees.add(e);
+		for(Employee employee : availableEmployees) {
+			if(employee.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && employee.getLastName().toLowerCase().contains(surNameTextField.getText().toLowerCase()) &&
+					!attendingListView.getItems().contains(employee) && !employee.equals(Login.getCurrentUser())) {
+				employees.add(employee);
 			}
 		}
 		employeeListView.setItems(FXCollections.observableArrayList(employees));

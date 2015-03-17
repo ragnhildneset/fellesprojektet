@@ -43,7 +43,7 @@ public abstract class Login {
 	}
 	
 	public static int getCurrentUserID() {
-		return login.getEmployeeID();
+		return login.getID();
 	}
 	
 	public static boolean isAdmin(){

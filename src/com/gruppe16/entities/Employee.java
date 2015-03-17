@@ -9,8 +9,15 @@ import javafx.beans.property.SimpleStringProperty;
 import com.gruppe16.database.DBConnect;
 
 public class Employee {
+
+	private SimpleStringProperty firstName;
+	private SimpleStringProperty lastName;
+	private SimpleStringProperty email;
+	private SimpleStringProperty username;
+	private SimpleIntegerProperty id;
 	
 	private static HashMap<Integer, Group> map = null;
+	
 	public static void addToGroup(int groupID, String g_name, int employeeid){
 		if(!map.containsKey(groupID)){
 			map.put(groupID, new Group(groupID, g_name));
@@ -55,12 +62,6 @@ public class Employee {
 		}
 		return e;
 	}
-
-	SimpleStringProperty firstName;
-	SimpleStringProperty lastName;
-	SimpleStringProperty email;
-	SimpleStringProperty username;
-	SimpleIntegerProperty employeeid;
 	
 	private static HashMap<Integer, Employee> employees = new HashMap<Integer, Employee>();
 	
@@ -89,7 +90,7 @@ public class Employee {
 	
 	public Employee(int key, String firstName, String lastName, String email, String username) {
 		employees.put(key, this);
-		this.employeeid =  new SimpleIntegerProperty(key);
+		this.id =  new SimpleIntegerProperty(key);
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName =  new SimpleStringProperty(lastName);
 		this.email =  new SimpleStringProperty(email);
@@ -116,8 +117,8 @@ public class Employee {
 		return username.get();
 	}
 
-	public int getEmployeeID() {
-		return employeeid.get();
+	public int getID() {
+		return id.get();
 	}
 
 	public String toString(){
@@ -129,16 +130,7 @@ public class Employee {
 	}
 	
 	@Override
-	public boolean equals(Object other){
-		if(other == null){
-			return false;
-		}
-		Employee e = (Employee) other;
-		if(e.getEmployeeID() == this.getEmployeeID()){
-			return true;
-		}
-		return false;
+	public boolean equals(Object other) {
+		return other == null ? false : ((Employee)other).getID() == this.getID();
 	}
-		
-	
 }

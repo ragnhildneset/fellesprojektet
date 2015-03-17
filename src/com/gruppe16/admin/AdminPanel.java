@@ -85,7 +85,7 @@ public class AdminPanel extends Application implements Initializable {
     
 
     static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
-    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployees());
+    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployeeList());
     	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -122,7 +122,7 @@ public class AdminPanel extends Application implements Initializable {
 	    			@Override
 	    			public void handle(MouseEvent mouseEvent){
 	    				Employee r = (Employee) DeleteEmployeeCell.this.getTableView().getItems().get(DeleteEmployeeCell.this.getIndex());
-	    				DBConnect.deleteEmployee(r.getEmployeeID());
+	    				DBConnect.deleteEmployee(r.getID());
 	    				roomdata.remove(r);
 	    				System.out.println("HELLO");
 	    			}
@@ -165,7 +165,7 @@ public class AdminPanel extends Application implements Initializable {
         });
 	
 		
-		employeeIDCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("employeeID"));
+		employeeIDCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("ID"));
 		firstNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("firstName"));
 		lastNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("lastName"));
 		usernameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("username"));
