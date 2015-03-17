@@ -59,10 +59,11 @@ public class EmployeePicker implements Initializable {
 	
 	@FXML
 	private ListView<Employee> attendingListView;
-	
+
 	private ArrayList<Employee> _availableEmployees = DBConnect.getEmployees();
 	private static Stage stage;
 	private static AddAppointment addAppointment;
+	private static ArrayList<Employee> defaultAttendees;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -89,8 +90,15 @@ public class EmployeePicker implements Initializable {
 				}
 				updateEmployeeList();
 			}
-			
 		});
+		
+		for(Employee e : defaultAttendees) {
+			for(Employee e2 : _availableEmployees) {
+				if(e.getEmployeeID() == e2.getEmployeeID()) {
+					attendingListView.getItems().add(e2);
+				}
+			}
+		}
 		
 		OKBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -175,7 +183,7 @@ public class EmployeePicker implements Initializable {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		for(Employee e : _availableEmployees) {
 			if(e.getFirstName().toLowerCase().contains(givenNameTextField.getText().toLowerCase()) && e.getLastName().toLowerCase().contains(surNameTextField.getText().toLowerCase()) &&
-					!attendingListView.getItems().contains(e)) {
+					!attendingListView.getItems().contains(e) && e.getEmployeeID() != Login.getCurrentUserID()) {
 				employees.add(e);
 			}
 		}
@@ -183,9 +191,10 @@ public class EmployeePicker implements Initializable {
 		employeeListView.getSelectionModel().select(0);
 	}
 	
-	public static void start(Stage stage, Window owner, AddAppointment addApp) throws IOException {
+	public static void start(Stage stage, Window owner, AddAppointment addApp, ArrayList<Employee> attendees) throws IOException {
 		EmployeePicker.stage = stage;
 		EmployeePicker.addAppointment = addApp;
+		EmployeePicker.defaultAttendees = attendees;
 		//EmployeePicker.currentAttendees = addApp.getAttendees();
 		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/EmployeePicker.fxml")));
 		stage.setResizable(false);

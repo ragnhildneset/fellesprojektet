@@ -488,7 +488,7 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					EmployeePicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this);
+					EmployeePicker.start(new Stage(), stage.getScene().getWindow(), AddAppointment.this, attendees);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -499,6 +499,7 @@ public class AddAppointment implements Initializable {
 	public ArrayList<Employee> attendees = new ArrayList<Employee>(); 
 
 	public void setAttendees(Collection<Employee> employees) {
+		attendees.clear();
 		attendeesTextField.clear();
 		int i = 0;
 		for(Employee e : employees) {

@@ -503,23 +503,24 @@ public class CalendarMain extends Application {
 
 	private void updateNotifications() {
 		for(Appointment appointment : DBConnect.getActiveAppointmentsFromEmployee(Login.getCurrentUser())){
-			boolean found = false;
+			TitledPane newPane = null;
 			for(TitledPane pane : accordion.getPanes()) {
 				if(pane.getUserData() instanceof Appointment && ((Appointment)pane.getUserData()).getID() == appointment.getID()) {
-					found = true;
+					newPane = pane;
 					break;
 				}
 			}
 			
-			if(found) {
+			String alarmStr = "Appointment " + appointment.getTitle() + " in " + String.valueOf((appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay())/60) + " minutes.";
+			if(newPane != null) {
+				((Label)newPane.getContent()).setText(alarmStr);
 				continue;
 			}
 			
 			if(LocalDate.now().equals(appointment.getAppDate())){
 				if(appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() < 3600 &&
-						appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() > 0){
-					Label label = new Label("Appointment " + appointment.getTitle() + " in " + String.valueOf((appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay())/60) + " minutes.");
-					TitledPane pane = new TitledPane("Alarm for " + appointment.getTitle(), label);
+						appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() > 0) {
+					TitledPane pane = new TitledPane("Alarm for " + appointment.getTitle(), new Label(alarmStr));
 					pane.setUserData(appointment);
 					accordion.getPanes().add(pane);
 				}
@@ -591,16 +592,7 @@ public class CalendarMain extends Application {
 			pane.setAnimated(false);
 			accordion.getPanes().add(pane);
 		}
-		for(Appointment p : DBConnect.getActiveAppointmentsFromEmployee(Login.getCurrentUser())){
-			if(LocalDate.now().equals(p.getAppDate())){
-				if(p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() < 3600 &&
-						p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() > 0){
-					Label l = new Label("Appointment " + p.getTitle() + " in " + String.valueOf(p.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay()) + " seconds.");
-					TitledPane pd = new TitledPane("Alarm for " + p.getTitle(), l);
-					accordion.getPanes().add(pd);
-				}
-			}
-		}
+		
 		updateNotificationCounter();
 	}
 	
@@ -648,6 +640,7 @@ public class CalendarMain extends Application {
 	}
 	
 	public void refresh() {
+		DBConnect.update();
 		if(calendarShown) {
 			showCalendar(calendarView.getDate());
 		}
