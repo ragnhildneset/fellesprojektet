@@ -68,7 +68,7 @@ public class RoomPicker implements Initializable {
 			public void handle(ActionEvent event) {
 				Room r = roomlistTable.getSelectionModel().getSelectedItem();
 				if(r != null) {
-					addAppointment.roomTextField.setText(r.getName());
+					addAppointment.roomTextField.setText(r.getName() + ", in building: " + r.getBuildingname());
 					addAppointment.room = r;
 					stage.close();
 				}
