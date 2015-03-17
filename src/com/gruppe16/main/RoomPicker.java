@@ -118,10 +118,15 @@ public class RoomPicker implements Initializable {
 	}
 
 
-	public static void start(Stage stage, Window owner, AddAppointment addApp, LocalDate date, LocalTime fromTime, LocalTime toTime ) throws IOException {
+	public static void start(Stage stage, Window owner, AddAppointment addApp, LocalDate date, LocalTime fromTime, LocalTime toTime) throws IOException {
 		RoomPicker.stage = stage;
 		RoomPicker.addAppointment = addApp;
-		RoomPicker.availableRooms = DBConnect.findRoom(date, fromTime, toTime);
+		if(addApp.editMode){
+			RoomPicker.availableRooms = DBConnect.findRoom(date, fromTime, toTime, AddAppointment.appointment);
+		}
+		else{
+			RoomPicker.availableRooms = DBConnect.findRoom(date, fromTime, toTime);
+		}
 		//RoomPicker.currentRoom = addApp.getRoom();
 		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/RoomPicker.fxml")));
 		stage.setResizable(false);

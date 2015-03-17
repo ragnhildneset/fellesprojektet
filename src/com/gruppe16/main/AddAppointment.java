@@ -81,9 +81,9 @@ public class AddAppointment implements Initializable {
 	private static Stage stage;
 	private static LocalDate startDate = null;
 	private static int startTime = 0;
-	private static Appointment appointment = null;
+	public static Appointment appointment = null;
 	private static ArrayList<Employee> participants = null;
-	private static boolean editMode = false;
+	public static boolean editMode = false;
 	public Room room;
 	private static ArrayList<Employee> _availableEmployees = null;
 	
@@ -537,7 +537,13 @@ public class AddAppointment implements Initializable {
 		stage.show();
 	}
 	public boolean checkRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime){
-		List<Room> rooms = DBConnect.findRoom(appdate, fromtime, totime);
+		List<Room> rooms;
+		if (editMode){
+			rooms = DBConnect.findRoom(appdate, fromtime, totime, appointment);
+		}
+		else{
+			rooms = DBConnect.findRoom(appdate, fromtime, totime);
+		}
 		Boolean check = false;
 		for (Room r: rooms){
 			if (r.getBuildingID() == room.getBuildingID() && r.getID() == room.getID()){
