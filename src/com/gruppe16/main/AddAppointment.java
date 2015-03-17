@@ -100,6 +100,7 @@ public class AddAppointment implements Initializable {
 		}
 		
 		descriptionTextArea.setWrapText(true);
+		roomTextField.setDisable(true);
 		
 		if(editMode) datePicker.setValue(appointment.getAppDate());
 		else if(startDate != null) datePicker.setValue(startDate);
@@ -160,6 +161,7 @@ public class AddAppointment implements Initializable {
 				if (!checkRoom(datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin))){
 					System.out.println(room.getName());
 					errorMessage.setText("Room is now reserved, please choose again.");
+					sendBtn.setDisable(true);
 					valid = false;
 				}
 				
