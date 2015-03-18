@@ -84,6 +84,7 @@ public class AppointmentBox extends AnchorPane{
 		this.e = Employee.getEmployee(appAndEmp.getEmployeeid());
 		this.appointment = appointment;
 		this.room = DBConnect.getRoom(appointment);
+		System.out.println(room);
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
 		this.color = toEnumColor(appAndEmp.getColor());
@@ -98,6 +99,7 @@ public class AppointmentBox extends AnchorPane{
 	public AppointmentBox(Appointment appointment, DayPlanView dpv){
 		setId("appBox");
 		this.e = null;
+		this.room = DBConnect.getRoom(appointment);
 		this.appointment = appointment;
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();

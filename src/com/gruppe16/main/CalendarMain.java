@@ -215,6 +215,10 @@ public class CalendarMain extends Application {
 					AddAppointment.start(newStage, scene.getWindow(), calendarShown ? new Date() : dayPlanView.getDate());
 				} catch (Exception e) {
 					e.printStackTrace();
+				} finally {
+					if(calendarShown) calendarView.update();
+					else dayPlanView.showAppointments(employee);
+					redraw();
 				}
 			}
 		});
@@ -408,7 +412,6 @@ public class CalendarMain extends Application {
 					}
 					calendarView.setAppointments(appointments);
 					dayPlanView.setAppointments(appointments);
-					
 					calendarView.update();
 					if(dayPlanView.getDate() != null) dayPlanView.showAppointments(employee, group);
 				}
@@ -416,6 +419,8 @@ public class CalendarMain extends Application {
 			});
 		}
 		calendarView.update();
+		
+		
 	}
 	
 	void showCalendar(Date date) {
