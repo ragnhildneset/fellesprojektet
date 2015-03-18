@@ -498,7 +498,8 @@ public class AppointmentBox extends AnchorPane{
 			@Override
 			public int compare(Employee o1, Employee o2) {
 				if(o1.getID() == appointment.getOwnerID()) return -1;
-				else return 0;
+				else if(o2.getID() == appointment.getOwnerID()) return 1;
+				else return DBConnect.getStatus(appointment.getID(), o1.getID()) - DBConnect.getStatus(appointment.getID(), o2.getID());
 			}
 	    	
 	    });
