@@ -476,7 +476,6 @@ public class DBConnect {
 			if(ListOperations.contains(ejeje, group.getMembers())
 					&& ListOperations.contains(group.getMembers(), ejeje)){
 				hello.add(p);
-				System.out.println(p);
 			}
 		}
 		return hello;

@@ -137,6 +137,7 @@ public class CalendarMain extends Application {
 			@Override
 			public void handle(WindowEvent arg0) {
 				System.out.println("Closing window.");
+				System.exit(0);
 			}
 			
 		});
