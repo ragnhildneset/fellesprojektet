@@ -145,15 +145,15 @@ public class DBConnect {
 		}return null;
 	}
 	
-	public static String getRoom(Appointment a){
-		String q = "SELECT roomName, roomid, roomNumber, appid  FROM Room, RoomReservation WHERE roomid = roomNumber AND appid = '" + a.getID() +"';";
-		String roomName = null;
+	public static Room getRoom(Appointment a){
+		String q = "SELECT roomNumber, capacity, roomName, R. description, R.buildingID, B.name, appid FROM Room as R, RoomReservation, Building as B WHERE B.BuildingID = R.buildingID AND roomid = roomNumber AND appid = '" + a.getID() +"';";
+		Room room = null;
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
 			while(rs.next()){
-				roomName = rs.getString("roomName");
-			}return roomName;
+				room = new Room(rs.getInt("roomNumber"), rs.getInt("capacity"), rs.getString("roomName"), rs.getString("R.description"), rs.getInt("buildingID"), rs.getString("B.name"));
+			}return room;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}return null;

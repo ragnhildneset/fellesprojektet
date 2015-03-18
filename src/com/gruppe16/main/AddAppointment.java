@@ -84,6 +84,7 @@ public class AddAppointment implements Initializable {
 	private static int startTime = 0;
 	public static Appointment appointment = null;
 	private static ArrayList<Employee> participants = null;
+	private static Room oldRoom;
 	public static boolean editMode = false;
 	public Room room;
 	private static ArrayList<Employee> availableEmployees = null;
@@ -109,6 +110,9 @@ public class AddAppointment implements Initializable {
 			titleTextField.setText(appointment.getTitle());
 			descriptionTextArea.setText(appointment.getDescription());
 			titleLabel.setText("Edit Appointment");
+			roomTextField.setText(oldRoom.getName());
+			room = oldRoom;
+			sendBtn.setDisable(false);
 			setAttendees(participants);
 		}
 		else{
@@ -571,11 +575,12 @@ public class AddAppointment implements Initializable {
 	}
 	
 	
-	public static void start(Stage stage, Window owner, Appointment appointment, ArrayList<Employee> attendees) throws Exception {
+	public static void start(Stage stage, Window owner, Appointment appointment, ArrayList<Employee> attendees, Room room) throws Exception {
 		AddAppointment.editMode = true;
 		AddAppointment.stage = stage;
 		AddAppointment.appointment = appointment;
 		AddAppointment.participants = attendees;
+		AddAppointment.oldRoom = room;
 		Scene scene = new Scene((Parent)FXMLLoader.load(AddAppointment.class.getResource("/com/gruppe16/main/AddAppointment.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);

@@ -35,6 +35,7 @@ import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.entities.Room;
 
 public class AppointmentBox extends AnchorPane{
 	
@@ -73,6 +74,7 @@ public class AppointmentBox extends AnchorPane{
 	private panelColors color;
 	private DayPlanView dpv;
 	private Employee e;
+	private Room room;
 	
 	static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployeeList());
 	
@@ -80,6 +82,7 @@ public class AppointmentBox extends AnchorPane{
 		setId("appBox");
 		this.e = Employee.getEmployee(appAndEmp.getEmployeeid());
 		this.appointment = appointment;
+		this.room = DBConnect.getRoom(appointment);
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
 		this.color = toEnumColor(appAndEmp.getColor());
@@ -143,7 +146,7 @@ public class AppointmentBox extends AnchorPane{
 		//Room
 		Label roomTitleLabel = new Label("Room:");
 		roomTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-		Label roomLabel = new Label(DBConnect.getRoom(appointment));
+		Label roomLabel = new Label(room.getName());
 		roomLabel.setFont(Font.font("Arial", 16));
 		roomLabel.setLayoutX(55);
 		
@@ -185,7 +188,7 @@ public class AppointmentBox extends AnchorPane{
 							dpv.getMainPane().redraw();
 							}
 					});
-					AddAppointment.start(newStage, dpv.getMainPane().getScene().getWindow(), appointment, getParticipants());
+					AddAppointment.start(newStage, dpv.getMainPane().getScene().getWindow(), appointment, getParticipants(), room);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
