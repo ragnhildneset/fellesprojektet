@@ -171,6 +171,25 @@ public class AddAppointment implements Initializable {
 				if(valid) {
 					if(editMode){
 						DBConnect.editAppointment(appointment.getID(), titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(toHour, toMin, 0), new Time(fromHour, fromMin, 0));
+						if(isChangedTime()){
+							for(Employee e : attendees){
+								DBConnect.deleteAppointmentAndEmployee(appointment.getID(), e.getID());
+								e.invite(appointment.getID());
+							}
+						}else {
+							for(Employee a : attendees){
+								if(!participants.contains(a)){
+									a.invite(appointment.getID());
+								}
+							}
+							for(Employee p : participants){
+								if(!attendees.contains(p)){
+									DBConnect.deleteAppointmentAndEmployee(appointment.getID(), p.getID());
+								}
+							}
+						}
+						DBConnect.deleteRoomReservation(appointment.getID(), oldRoom.getID());
+						DBConnect.addRoomReservation(appointment.getID(), room.getID(), room.getBuildingID());
 						stage.close();
 					}else{
 						int appid = DBConnect.addAppointment(titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(fromHour, fromMin, 0), new Time(toHour, toMin, 0), Login.getCurrentUser());
@@ -179,7 +198,6 @@ public class AddAppointment implements Initializable {
 						for(Employee e : attendees){
 							e.invite(appid);
 						}
-						Login.getCurrentUser().invite(appid);
 						stage.close();
 					}
 
@@ -500,7 +518,13 @@ public class AddAppointment implements Initializable {
 			}
 		});
 	}
-
+	
+	private boolean isChangedTime(){
+		if(!fromTextField.getText().equals(appointment.getFromTime().toString()) || !toTextField.getText().equals(appointment.getToTime().toString()) || !datePicker.getValue().isEqual(appointment.getAppDate())) {
+			return true;
+		}else return false;
+	}
+	
 	public ArrayList<Employee> attendees = new ArrayList<Employee>(); 
 
 	public void setAttendees(Collection<Employee> employees) {

@@ -170,6 +170,17 @@ public class DBConnect {
 		return false;
 	}
 	
+	public static boolean deleteRoomReservation(int appid, int roomid){
+		String q = "delete from RoomReservation where roomid = " + roomid + " AND appid = " + appid + ";";
+		try{
+			PreparedStatement s = getConnection().prepareStatement(q);
+			return s.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public static List<Room> findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime, Appointment app){
 		String dateString = "" + appdate.getYear() + "-" + appdate.getMonthValue() + "-" + appdate.getDayOfMonth();
 		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
