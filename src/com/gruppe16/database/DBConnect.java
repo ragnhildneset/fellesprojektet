@@ -274,6 +274,21 @@ public class DBConnect {
 		return employee;
 	}
 	
+	public static int getStatus(int appid, int empid){
+		String query = "SELECT appid, employeeid, status FROM AppointmentAndEmployee WHERE employeeid = '" + empid + "' AND appid = '" + appid + "';";
+		int state = -1;
+		try{
+			PreparedStatement e = getConnection().prepareStatement(query);
+			ResultSet rs = (ResultSet) e.executeQuery();
+			while(rs.next()){
+				state = rs.getInt("status");
+			}	
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+		return state;
+	}
+	
 	public static int addAppointment(String title, String description, Date date, Time fromTime, Time toTime, Employee host) {
 		String query = "INSERT INTO Appointment (title, description, appdate, fromtime, totime, ownerid) VALUES (?, ?, ?, ?, ?, ?)";
 		try {

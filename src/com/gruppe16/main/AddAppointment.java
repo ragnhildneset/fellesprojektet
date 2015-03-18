@@ -603,8 +603,9 @@ public class AddAppointment implements Initializable {
 		AddAppointment.editMode = true;
 		AddAppointment.stage = stage;
 		AddAppointment.appointment = appointment;
-		AddAppointment.participants = attendees;
 		AddAppointment.oldRoom = room;
+		attendees.remove(0);
+		AddAppointment.participants = attendees;
 		Scene scene = new Scene((Parent)FXMLLoader.load(AddAppointment.class.getResource("/com/gruppe16/main/AddAppointment.fxml")));
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UTILITY);

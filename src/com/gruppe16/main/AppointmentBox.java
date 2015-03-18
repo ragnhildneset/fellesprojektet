@@ -2,6 +2,7 @@ package com.gruppe16.main;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -221,6 +222,7 @@ public class AppointmentBox extends AnchorPane{
 							ObservableList<Employee> attendees = FXCollections.observableArrayList(getParticipants());
 							ObservableList<AnchorPane> attendeeAnchorPane = FXCollections.observableArrayList();
 							
+							
 							for(Employee a : attendees){			
 								AnchorPane attendeePane = new AnchorPane();
 								Label nameLabel = new Label(a.getName());
@@ -231,15 +233,15 @@ public class AppointmentBox extends AnchorPane{
 									statusLabel.setText("Owner");
 									statusLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 								}
-								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getID()).getStatus() == 1) {
+								else if(DBConnect.getStatus(appointment.getID(), a.getID()) == 1) {
 									statusLabel.setText("Attending");
 									statusLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 								}
-								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getID()).getStatus() == 2) {
+								else if(DBConnect.getStatus(appointment.getID(), a.getID()) == 2) {
 									statusLabel.setText("Declined");
 									statusLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 								}
-								else if(AppointmentAndEmployee.getAppointmentAndEmployee(appointment.getID(), a.getID()).getStatus() == 0) {
+								else if(DBConnect.getStatus(appointment.getID(), a.getID()) == 0) {
 									statusLabel.setText("Pending");
 									statusLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 								}
@@ -490,6 +492,16 @@ public class AppointmentBox extends AnchorPane{
 			    	}
 			    }
 	    }
+	    
+	    participants.sort(new Comparator<Employee>(){
+
+			@Override
+			public int compare(Employee o1, Employee o2) {
+				if(o1.getID() == appointment.getOwnerID()) return -1;
+				else return 0;
+			}
+	    	
+	    });
 	    
 		return participants;
 	}
