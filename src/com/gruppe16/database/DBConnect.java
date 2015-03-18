@@ -145,6 +145,20 @@ public class DBConnect {
 		}return null;
 	}
 	
+	public static String getRoom(Appointment a){
+		String q = "SELECT roomName, roomid, roomNumber, appid  FROM Room, RoomReservation WHERE roomid = roomNumber AND appid = '" + a.getID() +"';";
+		String roomName = null;
+		try{
+			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
+			ResultSet rs = (ResultSet) s.executeQuery();
+			while(rs.next()){
+				roomName = rs.getString("roomName");
+			}return roomName;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}return null;
+	}
+	
 	public static boolean deleteRoom(int key){
 		String q = "delete from Room where roomNumber = " + key + ";";
 		try{

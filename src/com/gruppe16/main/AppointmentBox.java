@@ -143,7 +143,7 @@ public class AppointmentBox extends AnchorPane{
 		//Room
 		Label roomTitleLabel = new Label("Room:");
 		roomTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-		Label roomLabel = new Label("None");
+		Label roomLabel = new Label(DBConnect.getRoom(appointment));
 		roomLabel.setFont(Font.font("Arial", 16));
 		roomLabel.setLayoutX(55);
 		
