@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -501,13 +502,26 @@ public class AddAppointment implements Initializable {
 	public void setAttendees(Collection<Employee> employees) {
 		attendees.clear();
 		attendeesTextField.clear();
+
 		int i = 0;
 		for(Employee e : employees) {
 			attendees.add(e);
+		}
+		
+		attendees.sort(new Comparator<Employee>() {
+
+			@Override
+			public int compare(Employee arg0, Employee arg1) {
+				return arg0.getName().compareTo(arg1.getName());
+			}
+			
+		});
+		
+		for(Employee a: attendees) {
 			if(i++ > 0) {
 				attendeesTextField.appendText(", ");
 			}
-			attendeesTextField.appendText(e.getFirstName() + " " + e.getLastName());
+			attendeesTextField.appendText(a.getFirstName() + " " + a.getLastName());
 		}
 	}
 //	public Collection<Employee> getAttendees() {
