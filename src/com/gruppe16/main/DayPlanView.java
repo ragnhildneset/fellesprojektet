@@ -348,7 +348,7 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		if(!group){
 			for (AppointmentAndEmployee currentApp : appAndEmp) {
 				if(currentApp.getStatus() == 1){
-					int appID = currentApp.getAppid();
+					int appID = currentApp.getAppointmentID();
 					for (Appointment app : appointments){
 						if(appID == app.getID() && app.getAppDate().equals(date)){
 							boolean notContained = true;

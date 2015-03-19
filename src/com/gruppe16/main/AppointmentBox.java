@@ -91,7 +91,7 @@ public class AppointmentBox extends AnchorPane{
 	
 	public AppointmentBox(Appointment appointment, AppointmentAndEmployee appAndEmp, DayPlanView dpv){
 		setId("appBox");
-		this.e = Employee.getEmployee(appAndEmp.getEmployeeid());
+		this.e = DBConnect.getEmployees().get(appAndEmp.getEmployeeID());
 		this.appointment = appointment;
 		this.room = DBConnect.getRoom(appointment);
 		LocalTime start = this.appointment.getFromTime();
@@ -491,15 +491,15 @@ public class AppointmentBox extends AnchorPane{
 	    ArrayList<Employee> participants = new ArrayList<Employee>();
 	    if(Login.getCurrentUser().getID() == appointment.getOwnerID()){
 		    for(AppointmentAndEmployee aae : AppAndEmp) {
-		    	if(aae.getAppid() == appointment.getID()) {
-		    		participants.add(employeedata.get(aae.getEmployeeid()));
+		    	if(aae.getAppointmentID() == appointment.getID()) {
+		    		participants.add(employeedata.get(aae.getEmployeeID()));
 		    	}
 		    }
 	    }
 	    else {
 	    	 for(AppointmentAndEmployee aae : AppAndEmp) {
-			    	if(aae.getAppid() == appointment.getID() && aae.getStatus() == 1) {
-			    		participants.add(employeedata.get(aae.getEmployeeid()));
+			    	if(aae.getAppointmentID() == appointment.getID() && aae.getStatus() == 1) {
+			    		participants.add(employeedata.get(aae.getEmployeeID()));
 			    	}
 			    }
 	    }

@@ -39,27 +39,27 @@ public class AdminPanel extends Application implements Initializable {
 		launch(args);
 	}
 
-	@FXML Button e_add;
-	@FXML TextField e_id;
-	@FXML TextField e_fname;
-	@FXML TextField e_lname;
-	@FXML TextField e_mail;
-	@FXML TextField e_user;
-	@FXML PasswordField e_pass;
+	private @FXML Button e_add;
+	private @FXML TextField e_id;
+	private @FXML TextField e_fname;
+	private @FXML TextField e_lname;
+	private @FXML TextField e_mail;
+	private @FXML TextField e_user;
+	private @FXML PasswordField e_pass;
 	
-	@FXML Button r_add;
-	@FXML TextField r_id;
-	@FXML TextField r_name;
-	@FXML TextField r_bid;
-	@FXML TextArea r_desc;
-	@FXML TextField r_cap;
+	private @FXML Button r_add;
+	private @FXML TextField r_id;
+	private @FXML TextField r_name;
+	private @FXML TextField r_bid;
+	private @FXML TextArea r_desc;
+	private @FXML TextField r_cap;
 
-	@FXML Button b_add;
-	@FXML TextField b_id;
-	@FXML TextField b_name;
-	@FXML TextArea b_desc;
-	@FXML TextField b_lat;
-	@FXML TextField b_long;
+	private @FXML Button b_add;
+	private @FXML TextField b_id;
+	private @FXML TextField b_name;
+	private @FXML TextArea b_desc;
+	private @FXML TextField b_lat;
+	private @FXML TextField b_long;
 	
     @FXML private TableView<Room> roomlistTable;
     @FXML private TableColumn<Room, String> roomIDCol;
@@ -84,15 +84,15 @@ public class AdminPanel extends Application implements Initializable {
 //    @FXML private TableColumn<Employee, Boolean> e_delete;
     
 
-    static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
-    static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployeeList());
+    private static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
+    private static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployeeList());
     	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
 		
 		class DeleteRoomCell extends TableCell<Room, Boolean> {
-	    	final Button b = new Button("Delete");
+	    	private final Button b = new Button("Delete");
 	    	DeleteRoomCell(){
 	    		b.setOnMousePressed(new EventHandler<MouseEvent>(){
 	    			@Override
@@ -116,7 +116,7 @@ public class AdminPanel extends Application implements Initializable {
 	    }
 		
 		class DeleteEmployeeCell extends TableCell<Employee, Boolean> {
-	    	final Button b = new Button("Delete");
+	    	private final Button b = new Button("Delete");
 	    	DeleteEmployeeCell(){
 	    		b.setOnMousePressed(new EventHandler<MouseEvent>(){
 	    			@Override
@@ -258,7 +258,7 @@ public class AdminPanel extends Application implements Initializable {
 		}
 	}
 	
-	public static void addUser(int _e_id, String _e_fname, String _e_lname, String _e_mail, String _e_user, String _e_pass){
+	private static void addUser(int _e_id, String _e_fname, String _e_lname, String _e_mail, String _e_user, String _e_pass){
 		try{
 			String e_query = "insert into Employee(employeeid, givenName, surname, email) VALUES ( ?, ?, ?, ? )";
 			PreparedStatement e = DBConnect.getConnection().prepareStatement(e_query);
@@ -280,7 +280,7 @@ public class AdminPanel extends Application implements Initializable {
 		}
 	}
 	
-	public static void addRoom(int _r_id, int _r_bin, int _r_cap, String _r_name, String _r_desc){
+	private static void addRoom(int _r_id, int _r_bin, int _r_cap, String _r_name, String _r_desc){
 		String r_query = "insert into Room(roomNumber, buildingID, capacity, roomName, description) VALUES ( ?, ?, ?, ?, ? )";
 		PreparedStatement e;
 		try {
@@ -298,7 +298,7 @@ public class AdminPanel extends Application implements Initializable {
 		}
 	}
 
-	public static void addBuilding(int _b_id, float _b_lat, float _b_long, String _b_name, String _b_desc){
+	private static void addBuilding(int _b_id, float _b_lat, float _b_long, String _b_name, String _b_desc){
 		try{
 			String b_query = "insert into Building(buildingID, latitude, longitude, name, description) VALUES ( ?, ?, ?, ?, ? )";
 			PreparedStatement e = DBConnect.getConnection().prepareStatement(b_query);
@@ -314,8 +314,6 @@ public class AdminPanel extends Application implements Initializable {
 		}
 	}
 	
-	public static void fillRoomTable(){
-		
-	}
+	
 	
 }
