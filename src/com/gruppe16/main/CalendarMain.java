@@ -73,9 +73,6 @@ public class CalendarMain extends Application {
 	private Button notificationBtn;
 	
 	@FXML
-	private Button refresh;
-	
-	@FXML
 	private Button selectAllGroupsBtn;
 	
 	@FXML
@@ -337,21 +334,6 @@ public class CalendarMain extends Application {
 			}
 		});
 		
-		refresh.setOnMouseClicked(new EventHandler<MouseEvent>(){
-
-			@Override
-			public void handle(MouseEvent event) {
-				try {
-					CalendarMain calendar = new CalendarMain(Login.getCurrentUser());
-					calendar.start(new Stage());
-					stage.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-		});
-		
 		findCalendarBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 				EmployeeFinder employeeFinder = new EmployeeFinder();
@@ -537,14 +519,14 @@ public class CalendarMain extends Application {
 			}
 		}
 		
-		for(Notif notif : DBConnect.getInvites()) {
-			if(notif.status > 0){
+		for(Notif notification : DBConnect.getInvites()) {
+			if(notification.status > 0){
 				continue;
 			}
 			
 			boolean found = false;
 			for(TitledPane pane : accordion.getPanes()) {
-				if(pane.getUserData() instanceof Notif && ((Notif)pane.getUserData()).appid == notif.appid) {
+				if(pane.getUserData() instanceof Notif && ((Notif)pane.getUserData()).appid == notification.appid) {
 					found = true;
 					break;
 				}
@@ -554,16 +536,16 @@ public class CalendarMain extends Application {
 				continue;
 			}
 			
-			NotificationView notificationView = new NotificationView(notif);
+			NotificationView notificationView = new NotificationView(notification);
 			TitledPane pane = new TitledPane("", notificationView);
 			
-			Label titleLabel = new Label("Invitation for " + notif.title);
+			Label titleLabel = new Label("Invitation for " + notification.title);
 			titleLabel.setPrefWidth(250.0);
 			
 			Runnable onAccept = new Runnable() {
 				@Override
 				public void run() {
-					notif.accept();
+					notification.accept();
 					accordion.getPanes().remove(pane);
 					updateNotificationCounter();
 				}
@@ -573,7 +555,7 @@ public class CalendarMain extends Application {
 			Runnable onDecline = new Runnable() {
 				@Override
 				public void run() {
-					notif.decline();
+					notification.decline();
 					accordion.getPanes().remove(pane);
 					updateNotificationCounter();
 				}
@@ -597,7 +579,7 @@ public class CalendarMain extends Application {
 			HBox hbox = new HBox(titleLabel, acceptBtn, declineBtn);
 			hbox.setAlignment(Pos.CENTER_LEFT);
 			
-			pane.setUserData(notif);
+			pane.setUserData(notification);
 			pane.setGraphic(hbox);
 			pane.setAnimated(false);
 			accordion.getPanes().add(pane);

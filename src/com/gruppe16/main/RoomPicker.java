@@ -88,7 +88,6 @@ public class RoomPicker implements Initializable {
 
 		cancelButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event){
-				addAppointment.rpClosed();
 				stage.close();
 			}
 		});

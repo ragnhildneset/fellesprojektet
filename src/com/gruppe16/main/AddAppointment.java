@@ -92,7 +92,6 @@ public class AddAppointment implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		availableEmployees = new ArrayList<Employee>();
-		//sendBtn.setDisable(true);
 		for(Employee e : DBConnect.getEmployeeList()) {
 			if(!e.equals(Login.getCurrentUser())){
 				availableEmployees.add(e);
@@ -113,7 +112,6 @@ public class AddAppointment implements Initializable {
 			titleLabel.setText("Edit Appointment");
 			roomTextField.setText(oldRoom.getName());
 			room = oldRoom;
-			//sendBtn.setDisable(false);
 			setAttendees(participants);
 		}
 		else{
@@ -218,7 +216,6 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
 				if(newValue) datePicker.setEffect(null);
-				//sendBtn.setDisable(true);
 			}
 		});
 		
@@ -344,7 +341,6 @@ public class AddAppointment implements Initializable {
 					fromTextField.selectForward();
 					fromTextField.selectForward();
 				}
-				//sendBtn.setDisable(true);
 			}
 		});
 		
@@ -501,9 +497,6 @@ public class AddAppointment implements Initializable {
 						rr.printStackTrace();
 					}
 				}
-				
-				//sendBtn.setDisable(false);
-				
 			}
 		});
 		
@@ -555,18 +548,6 @@ public class AddAppointment implements Initializable {
 			attendeesTextField.appendText(a.getFirstName() + " " + a.getLastName());
 		}
 	}
-//	public Collection<Employee> getAttendees() {
-//		for(String fullName : attendeesTextField.getText().split(", ")) {
-//			String[] names = fullName.split(" ");
-//			for(Employee e : _availableEmployees) {
-//				if(names[0].equals(e.getFirstName()) && names[1].equals(e.getLastName())) {
-//					attendees.add(e);
-//					break;
-//				}
-//			}
-//		}
-//		return attendees;
-//	}
 	
 	@SuppressWarnings("deprecation")
 	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
@@ -622,9 +603,5 @@ public class AddAppointment implements Initializable {
 		}
 		stage.setScene(scene);
 		stage.show();
-	}
-
-	public void rpClosed() {
-		//sendBtn.setDisable(true);
 	}
 }

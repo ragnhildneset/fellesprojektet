@@ -44,12 +44,8 @@ public class DBConnect {
 		}
 	}
 	
-	private static ArrayList<Notif> notifs = null;
 	public static ArrayList<Notif> getInvites(){
-		if(notifs != null){
-			return notifs;
-		}
-		notifs = new ArrayList<Notif>();
+		ArrayList<Notif> notifications = new ArrayList<Notif>();
 		String q = "select A.Title, A.description, A.totime, A.fromtime, A.appdate, E.givenName, E.surname, R.status, R.alarm, R.appid\n"
 				+ "from AppointmentAndEmployee as R, Appointment as A, Employee as E\n"
 				+ "where R.employeeid = "+Login.getCurrentUserID()+" and A.appointmentID = R.appid and E.employeeid = A.ownerid;";
@@ -57,7 +53,7 @@ public class DBConnect {
 			PreparedStatement p = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) p.executeQuery();
 			while(rs.next()){
-				notifs.add(new Notif(rs.getString("A.Title"),
+				notifications.add(new Notif(rs.getString("A.Title"),
 						rs.getString("A.description"),
 						rs.getTime("A.totime").toString(),
 						rs.getTime("A.fromtime").toString(),
@@ -67,7 +63,7 @@ public class DBConnect {
 						rs.getInt("R.appid"),
 						rs.getInt("R.status")));
 			}
-			return notifs;
+			return notifications;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -457,15 +453,11 @@ public class DBConnect {
 		}
 		return false;
 	}
-	
-	private static HashMap<Integer, ArrayList<Appointment>> groupApp = null;
-	public static ArrayList<Appointment> getGroupApp(Group group){
+
+	public static ArrayList<Appointment> getGroupApp(Group group) {
 		HashMap<Integer, Appointment> appointments = getAppointments();
-//		if(groupApp!=null) {
-//			return groupApp.get(group.id);
-//		}
-		groupApp = new HashMap<Integer, ArrayList<Appointment>>();
-		try{
+		HashMap<Integer, ArrayList<Appointment>> groupAppointments = new HashMap<Integer, ArrayList<Appointment>>();
+		try {
 			String q = "select distinct GM.groupID, A.appointmentID\n"+
 					"from Appointment as A, AppointmentAndEmployee as AAE, Employee as E, GroupMember as GM\n"+
 					"where AAE.appid = A.appointmentID\n"+
@@ -473,26 +465,26 @@ public class DBConnect {
 					"and GM.employeeid = E.employeeid;\n";
 			PreparedStatement p = getConnection().prepareStatement(q);
 			ResultSet rs = p.executeQuery();
-			while(rs.next()){
-				int g_id = rs.getInt("GM.groupID");
-				if(!groupApp.containsKey(g_id)){
-					groupApp.put(g_id, new ArrayList<Appointment>());
+			while(rs.next()) {
+				int id = rs.getInt("GM.groupID");
+				if(!groupAppointments.containsKey(id)) {
+					groupAppointments.put(id, new ArrayList<Appointment>());
 				}
 				Appointment app = appointments.get(rs.getInt("A.appointmentID"));
-				groupApp.get(g_id).add(app);
+				groupAppointments.get(id).add(app);
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		ArrayList<Appointment> hello = new ArrayList<Appointment>();
-		for(Appointment p : groupApp.get(group.id)){
+		for(Appointment p : groupAppointments.get(group.id)) {
 			ArrayList<Employee> ejeje = getEmployeesFromAppointment(p);
-			if(ListOperations.contains(ejeje, group.getMembers())
-					&& ListOperations.contains(group.getMembers(), ejeje)){
+			if(ListOperations.contains(ejeje, group.getMembers()) && ListOperations.contains(group.getMembers(), ejeje)) {
 				hello.add(p);
 			}
 		}
+		
 		return hello;
 	}
 	
@@ -532,11 +524,6 @@ public class DBConnect {
 			wae.printStackTrace();
 		}
 		return app;
-	}
-	
-	public static void update(){
-		groupApp.clear();
-		notifs.clear();
 	}
 	
 //	public static void close(){
