@@ -45,7 +45,7 @@ public class AppointmentBox extends AnchorPane{
 	private static int PANEL_WIDTH_OPEN = 450;
 	private static int PANEL_HEIGHT_OPEN = 255;
 	
-	public enum panelColors {
+	public enum PanelColors {
 	    RED("#FFCCCC", "#FFAAAA", "#FF0000"),
 	    GREEN("#CCFFCC", "#AAFFAA", "#00FF00"),
 	    BLUE("#CCCCFF", "#AAAAFF", "#0000FF"),
@@ -57,11 +57,21 @@ public class AppointmentBox extends AnchorPane{
 	    GREY("#CCCCCC", "#AAAAAA", "#000000")
 	    ;
 	    
-	    private String getStyle;
-	    private String cMain;
-	    panelColors(String cMain, String cSecondary, String cBorder){
-	    	getStyle = "cMain: " + cMain + "; cSecondary: " + cSecondary + "; cBorder: " + cBorder + ";";
-	    	this.cMain = cMain;
+	    private String style;
+	    
+	    private String mainColor;
+	    
+	    PanelColors(String cMain, String cSecondary, String cBorder){
+	    	this.style = "cMain: " + cMain + "; cSecondary: " + cSecondary + "; cBorder: " + cBorder + ";";
+	    	this.mainColor = cMain;
+	    }
+	    
+	    public String getStyle() {
+	    	return style;
+	    }
+	    
+	    public String getMainColor() {
+	    	return mainColor;
 	    }
 	}
 	
@@ -72,7 +82,7 @@ public class AppointmentBox extends AnchorPane{
 	private double panelY;
 	private boolean active = false;
 	private boolean show = false;
-	private panelColors color;
+	private PanelColors color;
 	private DayPlanView dpv;
 	private Employee e;
 	private Room room;
@@ -103,7 +113,7 @@ public class AppointmentBox extends AnchorPane{
 		this.appointment = appointment;
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
-		this.color = panelColors.BLUE;
+		this.color = PanelColors.BLUE;
 		this.dpv = dpv;
 		getStylesheets().add("/com/gruppe16/main/listView.css");
 		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
@@ -121,7 +131,7 @@ public class AppointmentBox extends AnchorPane{
 			}
 		}
 		getChildren().removeAll(labels);
-		setStyle(color.getStyle);
+		setStyle(color.getStyle());
 
 		//Title
 		Label titleLabel = new Label(appointment.getTitle());
@@ -265,29 +275,29 @@ public class AppointmentBox extends AnchorPane{
 				});
 		
 		//Colors dropDownMenu
-				 ComboBox<panelColors> colorPicker = new ComboBox<panelColors>();
-				 colorPicker.setStyle(color.getStyle);
+				 ComboBox<PanelColors> colorPicker = new ComboBox<PanelColors>();
+				 colorPicker.setStyle(color.style);
 				 colorPicker.getItems().addAll(
-				     panelColors.RED,
-				     panelColors.GREEN,
-				     panelColors.BLUE,
-				     panelColors.YELLOW,
-				     panelColors.BROWN,
-				     panelColors.PURPLE,
-				     panelColors.ORANGE,
-				     panelColors.TURQUOISE,
-				     panelColors.GREY);
+				     PanelColors.RED,
+				     PanelColors.GREEN,
+				     PanelColors.BLUE,
+				     PanelColors.YELLOW,
+				     PanelColors.BROWN,
+				     PanelColors.PURPLE,
+				     PanelColors.ORANGE,
+				     PanelColors.TURQUOISE,
+				     PanelColors.GREY);
 
-				 colorPicker.setCellFactory(new Callback<ListView<panelColors>, ListCell<panelColors>>() {
-				     @Override public ListCell<panelColors> call(ListView<panelColors> p) {
-				         return new ListCell<panelColors>() {		
-				             @Override protected void updateItem(panelColors item, boolean empty) {
+				 colorPicker.setCellFactory(new Callback<ListView<PanelColors>, ListCell<PanelColors>>() {
+				     @Override public ListCell<PanelColors> call(ListView<PanelColors> p) {
+				         return new ListCell<PanelColors>() {		
+				             @Override protected void updateItem(PanelColors item, boolean empty) {
 				                 super.updateItem(item, empty);
 				                 
 				                 if (item == null || empty) {
-				                     setStyle("-fx-background-color: " + panelColors.BLUE.cMain);
+				                     setStyle("-fx-background-color: " + PanelColors.BLUE.mainColor);
 				                 } else {
-				                	 setStyle("-fx-background-color: " + item.cMain);
+				                	 setStyle("-fx-background-color: " + item.mainColor);
 				                 }
 				            }
 				       };
@@ -454,7 +464,7 @@ public class AppointmentBox extends AnchorPane{
 		});
 	}
 	
-	public void setColor(panelColors color){
+	public void setColor(PanelColors color){
 		this.color = color;
 	}
 	
@@ -509,30 +519,30 @@ public class AppointmentBox extends AnchorPane{
 		return participants;
 	}
 	
-    public panelColors toEnumColor(String color){
+    static public PanelColors toEnumColor(String color){
     	color.toUpperCase();
-    	if(color.equals("RED")) return panelColors.RED;
-    	else if(color.equals("GREEN")) return panelColors.GREEN;
-    	else if(color.equals("BLUE")) return panelColors.BLUE;
-    	else if(color.equals("YELLOW")) return panelColors.YELLOW;
-    	else if(color.equals("BROWN")) return panelColors.BROWN;
-    	else if(color.equals("PURPLE")) return panelColors.PURPLE;
-    	else if(color.equals("ORANGE")) return panelColors.ORANGE;
-    	else if(color.equals("TURQUOISE")) return panelColors.TURQUOISE;
-    	else if(color.equals("GREY")) return panelColors.GREY;
-    	else return panelColors.BLUE;
+    	if(color.equals("RED")) return PanelColors.RED;
+    	else if(color.equals("GREEN")) return PanelColors.GREEN;
+    	else if(color.equals("BLUE")) return PanelColors.BLUE;
+    	else if(color.equals("YELLOW")) return PanelColors.YELLOW;
+    	else if(color.equals("BROWN")) return PanelColors.BROWN;
+    	else if(color.equals("PURPLE")) return PanelColors.PURPLE;
+    	else if(color.equals("ORANGE")) return PanelColors.ORANGE;
+    	else if(color.equals("TURQUOISE")) return PanelColors.TURQUOISE;
+    	else if(color.equals("GREY")) return PanelColors.GREY;
+    	else return PanelColors.BLUE;
     }
     
-    public String toStringColor(panelColors color){
-    	if(color == panelColors.RED) return "RED";
-    	else if(color == panelColors.GREEN) return "GREEN";
-    	else if(color == panelColors.BLUE) return "BLUE";
-    	else if(color == panelColors.YELLOW) return "YELLOW";
-    	else if(color == panelColors.BROWN) return "BROWN";
-    	else if(color == panelColors.PURPLE) return "PURPLE";
-    	else if(color == panelColors.ORANGE) return "ORANGE";
-    	else if(color == panelColors.TURQUOISE) return "TURQUOISE";
-    	else if(color == panelColors.GREY) return "GREY";
+    static public String toStringColor(PanelColors color){
+    	if(color == PanelColors.RED) return "RED";
+    	else if(color == PanelColors.GREEN) return "GREEN";
+    	else if(color == PanelColors.BLUE) return "BLUE";
+    	else if(color == PanelColors.YELLOW) return "YELLOW";
+    	else if(color == PanelColors.BROWN) return "BROWN";
+    	else if(color == PanelColors.PURPLE) return "PURPLE";
+    	else if(color == PanelColors.ORANGE) return "ORANGE";
+    	else if(color == PanelColors.TURQUOISE) return "TURQUOISE";
+    	else if(color == PanelColors.GREY) return "GREY";
     	else return "BLUE";
     }
 }

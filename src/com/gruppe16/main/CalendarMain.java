@@ -5,6 +5,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -106,18 +107,16 @@ public class CalendarMain extends Application {
 
 	private DayPlanView dayPlanView;
 	
-	private Employee employee;
+	static private Employee employee;
 
 	private boolean calendarShown = true;
 	
 	private Popup notificationMenu = null;
 	
 	private Accordion accordion = null;
-	boolean group = false;
-
-	private ArrayList<Appointment> appointments = new ArrayList<Appointment>(); 
+	static boolean group = false;
 	
-	private ArrayList<Group> selectedGroups = new ArrayList<Group>();
+	static private ArrayList<Group> selectedGroups = new ArrayList<Group>();
 	
 	public CalendarMain() {
 		// DEBUG: Use first employee
@@ -205,9 +204,11 @@ public class CalendarMain extends Application {
 						@Override
 						public void handle(WindowEvent event) {
 							if(calendarShown) {
+								calendarView.setAppointments(getGroupAppointments());
 								calendarView.update();
 							}
 							else {
+								dayPlanView.setAppointments(getGroupAppointments());
 								dayPlanView.showAppointments(employee);
 							}
 							redraw();
@@ -392,27 +393,15 @@ public class CalendarMain extends Application {
 			cb.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 				@Override
-				public void changed(ObservableValue<? extends Boolean> arg0,
-						Boolean arg1, Boolean arg2) {
-
-					if(arg2&&!selectedGroups.contains(g)){
+				public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+					if(arg2 && !selectedGroups.contains(g)){
 						selectedGroups.add(g);
 					} else {
 						selectedGroups.remove(g);
 					}
-					appointments.clear();
-					if(!selectedGroups.isEmpty()){
-						group = true;
-						appointments.clear();
-						for(Group g : selectedGroups){
-							appointments = (ArrayList<Appointment>) ListOperations.union(appointments, DBConnect.getGroupApp(g));
-						}
-					} else {
-						appointments = DBConnect.getActiveAppointmentsFromEmployee(employee);
-						group = false;
-					}
-					calendarView.setAppointments(appointments);
-					dayPlanView.setAppointments(appointments);
+					
+					calendarView.setAppointments(getGroupAppointments());
+					dayPlanView.setAppointments(getGroupAppointments());
 					calendarView.update();
 					if(dayPlanView.getDate() != null) dayPlanView.showAppointments(employee, group);
 				}
@@ -423,10 +412,26 @@ public class CalendarMain extends Application {
 		
 		
 	}
+
+	public static ArrayList<Appointment> getGroupAppointments() {
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+		if(!selectedGroups.isEmpty()) {
+			group = true;
+			appointments.clear();
+			for(Group g : selectedGroups) {
+				appointments = (ArrayList<Appointment>) ListOperations.union(appointments, DBConnect.getGroupApp(g));
+			}
+		} else {
+			appointments = DBConnect.getActiveAppointmentsFromEmployee(employee);
+			group = false;
+		}
+		return appointments;
+	}
 	
 	void showCalendar(Date date) {
 		calendarShown = true;
 		
+		calendarView.setAppointments(getGroupAppointments());
 		calendarView.setDate(date);
 		mainPane.setCenter(calendarView);
 		
@@ -459,9 +464,8 @@ public class CalendarMain extends Application {
 	@SuppressWarnings("deprecation")
 	void showDayPlan(Date date) {
 		calendarShown = false;
-		if(appointments.isEmpty()) appointments = DBConnect.getActiveAppointmentsFromEmployee(employee);
 		dayPlanView.setDate(date);
-		dayPlanView.setAppointments(appointments);
+		dayPlanView.setAppointments((ArrayList<Appointment>)DBConnect.getActiveAppointmentsFromEmployee(employee));
 		dayPlanView.showAppointments(employee, group);
 		mainPane.setCenter(dayPlanView);
 		

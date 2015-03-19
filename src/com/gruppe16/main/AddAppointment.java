@@ -92,7 +92,7 @@ public class AddAppointment implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		availableEmployees = new ArrayList<Employee>();
-		sendBtn.setDisable(true);
+		//sendBtn.setDisable(true);
 		for(Employee e : DBConnect.getEmployeeList()) {
 			if(!e.equals(Login.getCurrentUser())){
 				availableEmployees.add(e);
@@ -101,6 +101,7 @@ public class AddAppointment implements Initializable {
 		
 		descriptionTextArea.setWrapText(true);
 		roomTextField.setDisable(true);
+		attendeesTextField.setDisable(true);
 		
 		if(editMode) datePicker.setValue(appointment.getAppDate());
 		else if(startDate != null) datePicker.setValue(startDate);
@@ -112,7 +113,7 @@ public class AddAppointment implements Initializable {
 			titleLabel.setText("Edit Appointment");
 			roomTextField.setText(oldRoom.getName());
 			room = oldRoom;
-			sendBtn.setDisable(false);
+			//sendBtn.setDisable(false);
 			setAttendees(participants);
 		}
 		else{
@@ -126,24 +127,6 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				boolean valid = true;
-				if(titleTextField.getText() == null || titleTextField.getText().isEmpty()) {
-					titleTextField.setEffect(new InnerShadow(4.0, Color.RED));
-					valid = false;
-				}
-				
-				LocalDate date = datePicker.getValue();
-				if(date == null || date.isBefore(LocalDate.now())) {
-					datePicker.setEffect(new InnerShadow(4.0, Color.RED));
-					valid = false;
-				}
-				
-				if(descriptionTextArea.getText() == null || descriptionTextArea.getText().isEmpty()) {
-					descriptionTextArea.setEffect(new InnerShadow(4.0, Color.RED));
-					valid = false;
-				}
-				
-				fromTextField.setEffect(null);
-				toTextField.setEffect(null);
 				
 				int fromHour = 0, toHour = 0, fromMin = 0, toMin = 0;
 				if(fromTextField.getText() != null && toTextField.getText() != null && !fromTextField.getText().isEmpty() && !toTextField.getText().isEmpty()) {
@@ -151,26 +134,38 @@ public class AddAppointment implements Initializable {
 					fromMin = Integer.parseInt(fromTextField.getText(3, 5)); toMin = Integer.parseInt(toTextField.getText(3, 5));
 				}
 				
+				if(!checkRoom(datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin))) {
+					roomTextField.setEffect(new InnerShadow(4.0, Color.RED));
+					errorMessage.setText((roomTextField.getText() == null || roomTextField.getText().isEmpty()) ? "Please select a room." : "The room is already reserved. Please find another room.");
+					valid = false;
+				}
+				
+				fromTextField.setEffect(null);
+				toTextField.setEffect(null);
+				
 				if(fromHour > toHour || (fromHour == toHour && fromMin >= toMin)) {
 					toTextField.setEffect(new InnerShadow(4.0, Color.RED));
 					fromTextField.setEffect(new InnerShadow(4.0, Color.RED));
+					errorMessage.setText("Appointment can not end before it begins.");
 					valid = false;
 				}
 				
-				if(roomTextField.getText() == null || roomTextField.getText().isEmpty()) {
-					roomTextField.setEffect(new InnerShadow(4.0, Color.RED));
+				LocalDate date = datePicker.getValue();
+				if(date == null || date.isBefore(LocalDate.now())) {
+					datePicker.setEffect(new InnerShadow(4.0, Color.RED));
+					errorMessage.setText("Please select a date.");
 					valid = false;
 				}
-				
-				if (!checkRoom(datePicker.getValue(), LocalTime.of(fromHour, fromMin, 0), LocalTime.of(toHour, toMin))){
-					errorMessage.setText("Room is now reserved, please choose again.");
-					sendBtn.setDisable(true);
+
+				if(titleTextField.getText() == null || titleTextField.getText().isEmpty()) {
+					titleTextField.setEffect(new InnerShadow(4.0, Color.RED));
+					errorMessage.setText("Please enter a title.");
 					valid = false;
 				}
 				
 				if(valid) {
 					if(editMode){
-						DBConnect.editAppointment(appointment.getID(), titleTextField.getText(), descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(toHour, toMin, 0), new Time(fromHour, fromMin, 0));
+						DBConnect.editAppointment(appointment.getID(), titleTextField.getText(), descriptionTextArea.getText() == null ? "" : descriptionTextArea.getText(), Date.valueOf(datePicker.getValue()), new Time(toHour, toMin, 0), new Time(fromHour, fromMin, 0));
 						if(isChangedTime()){
 							for(Employee e : attendees){
 								DBConnect.deleteAppointmentAndEmployee(appointment.getID(), e.getID());
@@ -223,7 +218,14 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
 				if(newValue) datePicker.setEffect(null);
-				sendBtn.setDisable(true);
+				//sendBtn.setDisable(true);
+			}
+		});
+		
+		datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+			@Override
+			public void changed(ObservableValue<? extends LocalDate> arg0, LocalDate arg1, LocalDate arg2) {
+				invalidateRoom();
 			}
 		});
 
@@ -305,6 +307,7 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(KeyEvent event)
 			{
+				invalidateRoom();
 				
 				char c = event.getCharacter().charAt(0);
 				String beforeText = fromTextField.getText();
@@ -341,7 +344,7 @@ public class AddAppointment implements Initializable {
 					fromTextField.selectForward();
 					fromTextField.selectForward();
 				}
-				sendBtn.setDisable(true);
+				//sendBtn.setDisable(true);
 			}
 		});
 		
@@ -410,8 +413,7 @@ public class AddAppointment implements Initializable {
 			@Override
 			public void handle(KeyEvent event)
 			{
-				
-				sendBtn.setDisable(true);
+				invalidateRoom();
 				
 				char c = event.getCharacter().charAt(0);
 				String beforeText = toTextField.getText();
@@ -462,13 +464,11 @@ public class AddAppointment implements Initializable {
 			}
 		});
 		
-		roomTextField.setOnKeyTyped(new EventHandler<KeyEvent>(){
-
+		roomTextField.textProperty().addListener(new ChangeListener<String>() {
 			@Override
-			public void handle(KeyEvent arg0) {
-				sendBtn.setDisable(true);
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				roomTextField.setEffect(null);
 			}
-			
 		});
 		
 		searchForRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -502,7 +502,7 @@ public class AddAppointment implements Initializable {
 					}
 				}
 				
-				sendBtn.setDisable(false);
+				//sendBtn.setDisable(false);
 				
 			}
 		});
@@ -520,9 +520,12 @@ public class AddAppointment implements Initializable {
 	}
 	
 	private boolean isChangedTime(){
-		if(!fromTextField.getText().equals(appointment.getFromTime().toString()) || !toTextField.getText().equals(appointment.getToTime().toString()) || !datePicker.getValue().isEqual(appointment.getAppDate())) {
-			return true;
-		}else return false;
+		return !fromTextField.getText().equals(appointment.getFromTime().toString()) || !toTextField.getText().equals(appointment.getToTime().toString()) || !datePicker.getValue().isEqual(appointment.getAppDate());
+	}
+
+	private void invalidateRoom() {
+		room = null;
+		roomTextField.setEffect(new InnerShadow(4.0, Color.RED));
 	}
 	
 	public ArrayList<Employee> attendees = new ArrayList<Employee>(); 
@@ -581,7 +584,10 @@ public class AddAppointment implements Initializable {
 		stage.setScene(scene);
 		stage.show();
 	}
+	
 	public boolean checkRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime){
+		if(room == null) return false;
+		
 		List<Room> rooms;
 		if (editMode){
 			rooms = DBConnect.findRoom(appdate, fromtime, totime, appointment);
@@ -589,7 +595,8 @@ public class AddAppointment implements Initializable {
 		else{
 			rooms = DBConnect.findRoom(appdate, fromtime, totime);
 		}
-		Boolean check = false;
+		
+		boolean check = false;
 		for (Room r: rooms){
 			if (r.getBuildingID() == room.getBuildingID() && r.getID() == room.getID()){
 				check = true;
@@ -618,6 +625,6 @@ public class AddAppointment implements Initializable {
 	}
 
 	public void rpClosed() {
-		sendBtn.setDisable(true);
+		//sendBtn.setDisable(true);
 	}
 }

@@ -62,7 +62,7 @@ public class RoomPicker implements Initializable {
 
 		});
 		
-		capacityField.setText("" + addAppointment.attendees.size());
+		capacityField.setText(Integer.toString(addAppointment.attendees.size() + 1));
 		chooseButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {

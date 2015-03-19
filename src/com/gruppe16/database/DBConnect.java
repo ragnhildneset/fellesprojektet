@@ -241,9 +241,8 @@ public class DBConnect {
 		return available;
 		
 	}
-	
 
-	public static ArrayList<AppointmentAndEmployee> getAppointmentAndEmployee(){
+	public static ArrayList<AppointmentAndEmployee> getAppointmentAndEmployee() {
 		String query = "SELECT * FROM AppointmentAndEmployee";
 		ArrayList<AppointmentAndEmployee> ae = new ArrayList<AppointmentAndEmployee>();
 		try{
@@ -257,6 +256,20 @@ public class DBConnect {
 			e.printStackTrace();
 		}
 		return ae;
+	}
+
+	public static AppointmentAndEmployee getAppointmentAndEmployee(Appointment appointment, Employee employee) {
+		String query = "SELECT * FROM AppointmentAndEmployee WHERE appid = " + appointment.getID() + " AND employeeid = " + employee.getID() + ";";
+		try{
+			PreparedStatement e = getConnection().prepareStatement(query);
+			ResultSet rs = (ResultSet) e.executeQuery();
+			while(rs.next()){
+				return new AppointmentAndEmployee(rs.getInt("appid"), rs.getInt("employeeid"), rs.getInt("status"), rs.getInt("alarm"), rs.getString("farge"));
+			} 
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public static Employee getEmployeeFromID(int id){
@@ -310,25 +323,27 @@ public class DBConnect {
 		return -1;
 	}
 	
-	private static HashMap<Integer, Appointment> appointments = null;
-	public static HashMap<Integer, Appointment> getAppointments(){
-		if(appointments != null){
-			return appointments;
-		}
+	public static HashMap<Integer, Appointment> getAppointments() {
 		String q = "SELECT appointmentID, title, description, appdate, totime, fromtime, ownerid FROM Appointment ";
-		appointments = new HashMap<Integer, Appointment>();
+		HashMap<Integer, Appointment> appointments = new HashMap<Integer, Appointment>();
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
 			ResultSet rs = (ResultSet) s.executeQuery();
-				while(rs.next()){
+				while(rs.next()) {
 					int key = rs.getInt("appointmentID");
 					Appointment a = new Appointment(Integer.parseInt(rs.getString("appointmentID")), rs.getString("title"), rs.getString("description"), LocalDate.parse(rs.getString("appdate")), LocalTime.parse(rs.getString("totime")), LocalTime.parse(rs.getString("fromtime")), Integer.parseInt(rs.getString("ownerid")), LocalTime.now());
 					appointments.put(key, a);
-				}return appointments;
+				}
+				return appointments;
 		}catch (Exception e) {
 			e.printStackTrace();
 			
-		}return null;
+		}
+		return null;
+	}
+	
+	public static Collection<Appointment> getAppointmentList() {
+		return getAppointments().values();
 	}
 	
 	public static Connection getConnection(){
@@ -445,8 +460,8 @@ public class DBConnect {
 	
 	private static HashMap<Integer, ArrayList<Appointment>> groupApp = null;
 	public static ArrayList<Appointment> getGroupApp(Group group){
-		getAppointments();
-//		if(groupApp!=null){
+		HashMap<Integer, Appointment> appointments = getAppointments();
+//		if(groupApp!=null) {
 //			return groupApp.get(group.id);
 //		}
 		groupApp = new HashMap<Integer, ArrayList<Appointment>>();
@@ -482,7 +497,7 @@ public class DBConnect {
 	}
 	
 	public static ArrayList<Appointment> getActiveAppointmentsFromEmployee(Employee e) {
-		getAppointments();
+		HashMap<Integer, Appointment> appointments = getAppointments();
 		String query = "select AAE.appid, AAE.employeeid from AppointmentAndEmployee as "
 				+ "AAE where AAE.employeeid = " + String.valueOf(e.getID()) + " and AAE.status = 1;";
 		ArrayList<Appointment> app = new ArrayList<Appointment>();
@@ -520,7 +535,6 @@ public class DBConnect {
 	}
 	
 	public static void update(){
-		appointments.clear();
 		groupApp.clear();
 		notifs.clear();
 	}

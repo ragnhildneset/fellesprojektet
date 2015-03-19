@@ -103,9 +103,10 @@ public class DayPlanView extends VBox {
 						newStage.setOnHidden(new EventHandler<WindowEvent>() {
 							@Override
 							public void handle(WindowEvent event) {
+								setAppointments(CalendarMain.getGroupAppointments());
 								showAppointments(employee);
 								mPane.redraw();
-								}
+							}
 						});
 						Date dateTime = getDate();
 						dateTime.setHours(hour);

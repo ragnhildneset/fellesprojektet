@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 
 public class CalendarView extends GridPane {
@@ -229,14 +230,15 @@ public class CalendarView extends GridPane {
 					int i = 0;
 					for(Appointment a : appointmentDateMap.get(dateStr)) {
 						Label appLabel = new Label(a.getTitle());
+						appLabel.setId("appointmentBox");
 						appLabel.setFont(new Font("Arial Bold", 12));
 						appLabel.setPrefWidth(Double.MAX_VALUE);
 						appLabel.setPadding(new Insets(4, 4, 4, 4));
+						appLabel.setStyle(AppointmentBox.toEnumColor(DBConnect.getAppointmentAndEmployee(a, Login.getCurrentUser()).getColor()).getStyle());
 						VBox.setMargin(appLabel, new Insets(0, 1, 0, 0));
-						if(i == appointmentDateMap.get(dateStr).size()-1 || i == 2)
-							appLabel.setStyle("-fx-background-color: #CCCCFF; -fx-border-width: 1; -fx-border-color: #0000FF #0000FF #0000FF #0000FF;");
-						else
-							appLabel.setStyle("-fx-background-color: #CCCCFF; -fx-border-width: 1; -fx-border-color: #0000FF #0000FF transparent #0000FF;");
+						if(i == appointmentDateMap.get(dateStr).size()-1 || i == 2) {
+							appLabel.setId("appointmentBoxBottom");
+						}
 						vbox.getChildren().add(appLabel);
 						if(i == 2 && appointmentDateMap.get(dateStr).size() > 3) {
 							appLabel.setText((appointmentDateMap.get(dateStr).size()-i) + " more...");

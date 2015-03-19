@@ -1,3 +1,27 @@
+#appointmentBox
+{
+	cMain: #CCCCFF;
+	cSecondary: #AAAAFF;
+	cBorder: #0000FF;
+	
+	-fx-background-color: cMain; 
+	-fx-border-width: 1; 
+	-fx-border-color: cBorder cBorder transparent cBorder;
+	-fx-cursor: default;
+}
+
+#appointmentBoxBottom
+{
+	cMain: #CCCCFF;
+	cSecondary: #AAAAFF;
+	cBorder: #0000FF;
+	
+	-fx-background-color: cMain; 
+	-fx-border-width: 1; 
+	-fx-border-color: cBorder ;
+	-fx-cursor: default;
+}
+
 .titled-pane 
 {
 -fx-skin: "com.sun.javafx.scene.control.skin.TitledPaneSkin";    
