@@ -2,6 +2,7 @@ package com.gruppe16.main;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.main.AppointmentBox.PanelColors;
 
-public class CalendarView extends GridPane {
+public class CalendarView extends GridPane implements CalendarViewInterface {
 	static String TEXT_DAY_COLOR = "#FFFFFF";
 	static String TEXT_DEFAULT_COLOR = "#000000";
 	static String TEXT_DEFAULT_INACTIVE_COLOR = "#888888";
@@ -111,19 +112,19 @@ public class CalendarView extends GridPane {
 				add(vbox, x, y+1);
 			}
 		}
-		update();
+		showAppointments(CalendarMain.getGroupAppointments());
 
 		requestLayout();
 	}
 
-	void nextMonth() {
+	public void incDate() {
 		calendar.add(Calendar.MONTH, 1);
-		update();
+		showAppointments(CalendarMain.getGroupAppointments());
 	}
 
-	void prevMonth() {
+	public void decDate() {
 		calendar.add(Calendar.MONTH, -1);
-		update();
+		showAppointments(CalendarMain.getGroupAppointments());
 	}
 
 	int getMonth() {
@@ -134,26 +135,20 @@ public class CalendarView extends GridPane {
 		return calendar.get(Calendar.YEAR);
 	}
 
-	void setDate(Date date) {
+	public void setDate(Date date) {
 		calendar.setTime(date);
-		update();
+		showAppointments(CalendarMain.getGroupAppointments());
 	}
 
-	Date getDate() {
+	public Date getDate() {
 		return calendar.getTime();
 	}
 
-	private ArrayList<Appointment> in = new ArrayList<Appointment>();
-	public void setAppointments(ArrayList<Appointment> input){
-		in = input;
-	}
-
 	@SuppressWarnings("deprecation")
-	void update() {
+	public void showAppointments(Collection<Appointment> appointments) {
 		Date beforeTime = calendar.getTime();
 		Date nowDate = new Date();
 
-		ArrayList<Appointment> appointments = in;
 		Map<String, List<Appointment>> appointmentDateMap = new HashMap<String, List<Appointment>>();
 		for(Appointment a : appointments) {
 			try {

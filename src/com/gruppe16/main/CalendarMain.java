@@ -81,6 +81,12 @@ public class CalendarMain extends Application {
 	private Button addAppointmentBtn;
 
 	@FXML
+	private Button myCalendarBtn;
+
+	@FXML
+	private Button refreshBtn;
+
+	@FXML
 	private Label monthLabel;
 
 	@FXML
@@ -88,6 +94,9 @@ public class CalendarMain extends Application {
 
 	@FXML
 	private Label calendarNameLabel;
+	
+	@FXML
+	private Label nowViewingLabel;
 
 	@FXML
 	private Label notificationLabel;
@@ -102,17 +111,20 @@ public class CalendarMain extends Application {
 	private CalendarView calendarView; 
 
 	private DayPlanView dayPlanView;
+	
+	private CalendarViewInterface calendarViewInterface = null;
 
 	static private Employee employee;
-
-	private boolean calendarShown = true;
 
 	private Popup notificationMenu = null;
 
 	private Accordion accordion = null;
+	
 	static boolean group = false;
 
-	static private ArrayList<Group> selectedGroups = new ArrayList<Group>();
+	static private ArrayList<Group> selectedGroups = new ArrayList<Group>(); 
+	
+	public Runnable onUpdateLabels;
 
 	public CalendarMain() {
 		// DEBUG: Run as admin
@@ -124,6 +136,7 @@ public class CalendarMain extends Application {
 		this.employee = employee;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -151,6 +164,8 @@ public class CalendarMain extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		calendarNameLabel.setText("Welcome, " + employee.getFirstName() + "!");
 
 		calendarView = new CalendarView(this);
 		dayPlanView = new DayPlanView(this);
@@ -168,6 +183,7 @@ public class CalendarMain extends Application {
 		stage.show();
 
 		refresh();
+		scheduleRefresh();
 		redraw();
 
 		selectAllGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -196,22 +212,15 @@ public class CalendarMain extends Application {
 					newStage.setOnHidden(new EventHandler<WindowEvent>() {
 						@Override
 						public void handle(WindowEvent event) {
-							if(calendarShown) {
-								calendarView.setAppointments(getGroupAppointments());
-								calendarView.update();
-							}
-							else {
-								dayPlanView.showAppointments(getGroupAppointments());
-							}
+							calendarViewInterface.showAppointments(getGroupAppointments());
 							redraw();
 						}
 					});
-					AddAppointment.start(newStage, scene.getWindow(), calendarShown ? new Date() : dayPlanView.getDate());
+					AddAppointment.start(newStage, scene.getWindow(), calendarViewInterface.getDate());
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
-					if(calendarShown) calendarView.update();
-					else dayPlanView.showAppointments(getGroupAppointments());
+					calendarViewInterface.showAppointments(getGroupAppointments());
 					redraw();
 				}
 			}
@@ -328,6 +337,62 @@ public class CalendarMain extends Application {
 				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
 			}
 		});
+		
+		refreshBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				refreshBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		refreshBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				refreshBtn.setEffect(null);
+			}
+		});
+
+		refreshBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				refreshBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+			}
+		});
+
+		refreshBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				refreshBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		myCalendarBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				myCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
+
+		myCalendarBtn.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				myCalendarBtn.setEffect(null);
+			}
+		});
+
+		myCalendarBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				myCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, -0.2, 0.0));
+			}
+		});
+
+		myCalendarBtn.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				myCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
+			}
+		});
 
 		findCalendarBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
@@ -338,11 +403,10 @@ public class CalendarMain extends Application {
 						Employee newEmployee = employeeFinder.getEmployee();
 						if(newEmployee != null) {
 							setEmployee(newEmployee);
-							calendarView.setAppointments(DBConnect.getActiveAppointmentsFromEmployee(newEmployee));
+							calendarView.showAppointments(DBConnect.getActiveAppointmentsFromEmployee(newEmployee));
 							for(CheckBox cb : groupListView.getItems()){
 								cb.setSelected(false);
 							}
-							calendarView.update();
 						}
 					}
 				});
@@ -360,15 +424,14 @@ public class CalendarMain extends Application {
 
 		notificationBtn.setTooltip(new Tooltip("Notifications"));
 		backToCalendarBtn.setTooltip(new Tooltip("Back to calendar"));
+		refreshBtn.setTooltip(new Tooltip("Refresh"));
+		myCalendarBtn.setTooltip(new Tooltip("Show my calendar"));
 
-		calendarView.setAppointments(DBConnect.getActiveAppointmentsFromEmployee(Login.getCurrentUser()));
+		calendarView.showAppointments(DBConnect.getActiveAppointmentsFromEmployee(Login.getCurrentUser()));
 
 		for(CheckBox cb : groupListView.getItems()){
-
 			Group g = Employee.getFromName(cb.getText());
-
 			cb.selectedProperty().addListener(new ChangeListener<Boolean>() {
-
 				@Override
 				public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
 					if(arg2 && !selectedGroups.contains(g)){
@@ -376,17 +439,38 @@ public class CalendarMain extends Application {
 					} else {
 						selectedGroups.remove(g);
 					}
-
-					calendarView.setAppointments(getGroupAppointments());
-					calendarView.update();
+					calendarView.showAppointments(getGroupAppointments());
 					if(dayPlanView.getDate() != null) dayPlanView.showAppointments(getGroupAppointments(), group);
 				}
 
 			});
 		}
-		calendarView.update();
 
+		nextDateBtn.setOnMouseClicked(event -> {
+			calendarViewInterface.incDate();
+			yearLabel.setText(Integer.toString(calendarViewInterface.getDate().getYear()));
+			onUpdateLabels.run();
+			redraw();
+		});
 
+		prevDateBtn.setOnMouseClicked(event -> {
+			calendarViewInterface.decDate();
+			yearLabel.setText(Integer.toString(calendarViewInterface.getDate().getYear()));
+			onUpdateLabels.run();
+			redraw();
+		});
+
+		backToCalendarBtn.setOnAction(event -> {
+			showCalendar(calendarViewInterface instanceof CalendarView ? new Date() : dayPlanView.getDate());
+		});
+
+		refreshBtn.setOnAction(event -> {
+			refresh();
+		});
+		
+		myCalendarBtn.setOnAction(event -> {
+			setEmployee(Login.getCurrentUser());
+		});
 	}
 
 	public static ArrayList<Appointment> getGroupAppointments() {
@@ -405,73 +489,37 @@ public class CalendarMain extends Application {
 	}
 
 	void showCalendar(Date date) {
-		calendarShown = true;
-
-		calendarView.setAppointments(getGroupAppointments());
+		calendarViewInterface = calendarView;
+		calendarView.showAppointments(getGroupAppointments());
 		calendarView.setDate(date);
 		mainPane.setCenter(calendarView);
-
-		backToCalendarBtn.setVisible(false);
-
-		monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
-		yearLabel.setText(Integer.toString(calendarView.getYear()));
-
-		nextDateBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		onUpdateLabels = new Runnable() {
+			@SuppressWarnings("deprecation")
 			@Override
-			public void handle(MouseEvent evnet) {
-				calendarView.nextMonth();
-				monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
+			public void run() {
+				monthLabel.setText(MONTH_NAMES[calendarViewInterface.getDate().getMonth()]);
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
-				redraw();
 			}
-		});
-
-		prevDateBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent evnet) {
-				calendarView.prevMonth();
-				monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
-				yearLabel.setText(Integer.toString(calendarView.getYear()));
-				redraw();
-			}
-		});
+		};
+		onUpdateLabels.run();
 	}
 
 	@SuppressWarnings("deprecation")
 	void showDayPlan(Date date) {
-		calendarShown = false;
+		calendarViewInterface = dayPlanView;
 		dayPlanView.setDate(date);
 		dayPlanView.showAppointments(getGroupAppointments(), group);
 		mainPane.setCenter(dayPlanView);
-
-		backToCalendarBtn.setVisible(true);
-
-		monthLabel.setText(MONTH_NAMES[date.getMonth()] + " " + date.getDate());
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
-
-		backToCalendarBtn.setOnAction(event -> {
-			showCalendar(dayPlanView.getDate());
-		});
-
-		nextDateBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		onUpdateLabels = new Runnable() {
 			@Override
-			public void handle(MouseEvent evnet) {
-				dayPlanView.nextDay();
+			public void run() {
+				Date date = calendarViewInterface.getDate();
 				monthLabel.setText(MONTH_NAMES[date.getMonth()] + " " + date.getDate());
 				yearLabel.setText(Integer.toString(calendarView.getYear()));
-				redraw();
 			}
-		});
-
-		prevDateBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent evnet) {
-				dayPlanView.prevDay();
-				monthLabel.setText(MONTH_NAMES[date.getMonth()] + " " + date.getDate());
-				yearLabel.setText(Integer.toString(calendarView.getYear()));
-				redraw();
-			}
-		});
+		};
+		onUpdateLabels.run();
 	}
 
 	private void updateGroups() {
@@ -607,12 +655,14 @@ public class CalendarMain extends Application {
 
 		// Update calendar label and title
 		if(employee.getID() == Login.getCurrentUserID()) {
+			myCalendarBtn.setVisible(false);
 			stage.setTitle("My Calendar");
-			calendarNameLabel.setText("Welcome, " + employee.getFirstName() + "!");
+			nowViewingLabel.setText("");
 		}
 		else {
+			myCalendarBtn.setVisible(true);
 			stage.setTitle(employee.getFirstName() + " " + employee.getLastName() + "'s Calendar");
-			calendarNameLabel.setText(employee.getName());
+			nowViewingLabel.setText("Now viewing " + employee.getName() + "'s calendar.");
 		}
 
 		// Show calendar and redraw
@@ -623,16 +673,20 @@ public class CalendarMain extends Application {
 	public Employee getEmployee() {
 		return employee;
 	}
+	
+	
 
 	public void refresh() {
-		if(calendarShown) {
+		if(calendarViewInterface instanceof CalendarView) {
 			showCalendar(calendarView.getDate());
 		}
 		else {
 			showDayPlan(dayPlanView.getDate());
 		}
 		updateNotifications();
+	}
 
+	private void scheduleRefresh() {
 		new Timer().schedule( 
 				new TimerTask() {
 					@Override
@@ -641,6 +695,7 @@ public class CalendarMain extends Application {
 							@Override
 							public void run() {
 								refresh();
+								scheduleRefresh();
 							}
 						});
 

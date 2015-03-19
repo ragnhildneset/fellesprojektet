@@ -42,8 +42,8 @@
             </HBox>
             <VBox alignment="CENTER">
                <children>
-                  <Button fx:id="findCalendarBtn" mnemonicParsing="false" text="Find calendar" />
-                  <Button fx:id="addAppointmentBtn" mnemonicParsing="false" text="Add appointment">
+                  <Button fx:id="findCalendarBtn" mnemonicParsing="false" prefWidth="160.0" text="Find calendar" />
+                  <Button fx:id="addAppointmentBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="160.0" text="Add appointment">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
@@ -61,7 +61,7 @@
          <children>
             <HBox BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="calendarNameLabel" prefHeight="27.0" prefWidth="568.0">
+                  <Label fx:id="calendarNameLabel" prefHeight="27.0" prefWidth="568.0" text="Calendar name">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -92,11 +92,11 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0">
                <children>
-                  <Button fx:id="backToCalendarBtn" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-graphic: url(file:img/calendar.png); -fx-background-color: transparent;">
-                     <HBox.margin>
-                        <Insets left="200.0" right="263.0" />
-                     </HBox.margin>
-                  </Button>
+                  <Label fx:id="nowViewingLabel" maxWidth="495.0" minWidth="495.0" prefWidth="495.0" text="Label">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
                   <ImageView fx:id="prevDateBtn" fitHeight="24.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../img/arrow_left.png" />
@@ -120,6 +120,9 @@
                         <Button fx:id="notificationBtn" maxHeight="32.0" maxWidth="24.0" minHeight="32.0" minWidth="24.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="24.0" style="-fx-graphic: url(file:img/bell.png); -fx-background-color: transparent;" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
                         <Circle fx:id="notificationCircle" fill="#c2d3ff" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                         <Label fx:id="notificationLabel" alignment="CENTER" prefWidth="16.0" text="9" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        <Button fx:id="backToCalendarBtn" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-graphic: url(file:img/calendar.png); -fx-background-color: transparent;" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="39.0" />
+                        <Button fx:id="refreshBtn" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-graphic: url(file:img/refresh.png); -fx-background-color: transparent;" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="81.0" />
+                        <Button fx:id="myCalendarBtn" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-graphic: url(file:img/back.png); -fx-background-color: transparent;" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="123.0" />
                      </children>
                   </AnchorPane>
                </children>

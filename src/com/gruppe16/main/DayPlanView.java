@@ -27,7 +27,7 @@ import com.gruppe16.entities.Employee;
 import com.gruppe16.main.AppointmentBox.PanelColors;
 
 
-public class DayPlanView extends VBox {
+public class DayPlanView extends VBox implements CalendarViewInterface {
 	
 	private static String[] DAY_NAMES = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 	private Date date;
@@ -136,14 +136,14 @@ public class DayPlanView extends VBox {
 		return date;
 	}
 	
-	void nextDay() {
+	public void incDate() {
 		Date date = this.date;
 		date.setDate(this.date.getDate()+1);
 		setDate(date);
 		showAppointments(CalendarMain.getGroupAppointments());
 	}
 	
-	void prevDay() {
+	public void decDate() {
 		Date date = this.date;
 		date.setDate(this.date.getDate()-1);
 		setDate(date);
