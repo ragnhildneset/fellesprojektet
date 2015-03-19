@@ -394,7 +394,7 @@ public class DayPlanView extends VBox {
 						}
 					}
 					AppointmentAndEmployee AAE = DBConnect.getAppointmentAndEmployee(app, employee);
-					if (notContained) addAppointment(app, AAE);
+					if(notContained) if(AAE == null) addAppointment(app); else addAppointment(app, AAE);
 				}
 			}
 			arrangeAppointments();
