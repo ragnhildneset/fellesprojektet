@@ -3,6 +3,7 @@ package com.gruppe16.main;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javafx.event.EventHandler;
@@ -32,7 +33,6 @@ public class DayPlanView extends VBox {
 	private Date date;
 	private Pane appointmentPane;
 	private Label dateTitle;
-	private Employee employee;
 	private CalendarMain mPane;
 	
 	public DayPlanView(CalendarMain mainPane){
@@ -104,8 +104,7 @@ public class DayPlanView extends VBox {
 						newStage.setOnHidden(new EventHandler<WindowEvent>() {
 							@Override
 							public void handle(WindowEvent event) {
-								setAppointments(CalendarMain.getGroupAppointments());
-								showAppointments(employee);
+								showAppointments(CalendarMain.getGroupAppointments());
 								mPane.redraw();
 							}
 						});
@@ -141,14 +140,14 @@ public class DayPlanView extends VBox {
 		Date date = this.date;
 		date.setDate(this.date.getDate()+1);
 		setDate(date);
-		showAppointments(employee);
+		showAppointments(CalendarMain.getGroupAppointments());
 	}
 	
 	void prevDay() {
 		Date date = this.date;
 		date.setDate(this.date.getDate()-1);
 		setDate(date);
-		showAppointments(employee);
+		showAppointments(CalendarMain.getGroupAppointments());
 	}
 	
 	public CalendarMain getMainPane() {
@@ -332,35 +331,23 @@ public class DayPlanView extends VBox {
 				i++;
 			}
 		}
-		
 	}
 	
-	private ArrayList<Appointment> inputApp = new ArrayList<Appointment>();
-	public void setAppointments(ArrayList<Appointment> input){
-		inputApp = input;
+	public void showAppointments(Collection<Appointment> appointments) {
+		showAppointments(appointments, false);
 	}
 	
-	public void showAppointments(){
-		Employee e = Login.getCurrentUser();
-		showAppointments(e);
-	}
-	
-	public void showAppointments(Employee e){
-		showAppointments(e, false);
-	}
-	
-	public void showAppointments(Employee e, boolean group) {
-		employee = e;
+	public void showAppointments(Collection<Appointment> appointmentss, boolean group) {
 		removeAppointments();
-		ArrayList<AppointmentAndEmployee> AppAndEmp = DBConnect.getAppointmentAndEmployee();
+		ArrayList<AppointmentAndEmployee> appAndEmp = DBConnect.getAppointmentAndEmployee();
 		LocalDate date = this.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
-		for(Appointment a : inputApp){
+		for(Appointment a : appointmentss){
 			if(date.equals(a.getAppDate())) appointments.add(a);
 		}
 		if(!group){
-			for (AppointmentAndEmployee currentApp : AppAndEmp){
-				if(e.getID() == currentApp.getEmployeeid() && currentApp.getStatus() == 1){
+			for (AppointmentAndEmployee currentApp : appAndEmp) {
+				if(currentApp.getStatus() == 1){
 					int appID = currentApp.getAppid();
 					for (Appointment app : appointments){
 						if(appID == app.getID() && app.getAppDate().equals(date)){
@@ -393,7 +380,7 @@ public class DayPlanView extends VBox {
 							}
 						}
 					}
-					AppointmentAndEmployee AAE = DBConnect.getAppointmentAndEmployee(app, employee);
+					AppointmentAndEmployee AAE = DBConnect.getAppointmentAndEmployee(app, Login.getCurrentUser());
 					if(notContained) if(AAE == null) addAppointment(app); else addAppointment(app, AAE);
 				}
 			}

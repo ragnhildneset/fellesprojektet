@@ -1,4 +1,4 @@
-#appointmentBox
+#appointmentBoxOpen
 {
 	cMain: #CCCCFF;
 	cSecondary: #AAAAFF;
@@ -6,11 +6,11 @@
 	
 	-fx-background-color: cMain; 
 	-fx-border-width: 1; 
-	-fx-border-color: cBorder cBorder transparent cBorder;
+	-fx-border-color: transparent cBorder cBorder cBorder;
 	-fx-cursor: default;
 }
 
-#appointmentBoxBottom
+#appointmentBoxClosed
 {
 	cMain: #CCCCFF;
 	cSecondary: #AAAAFF;
@@ -18,7 +18,7 @@
 	
 	-fx-background-color: cMain; 
 	-fx-border-width: 1; 
-	-fx-border-color: cBorder ;
+	-fx-border-color: cBorder;
 	-fx-cursor: default;
 }
 

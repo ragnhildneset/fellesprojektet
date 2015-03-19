@@ -196,9 +196,9 @@ public class AppointmentBox extends AnchorPane{
 					newStage.setOnHidden(new EventHandler<WindowEvent>() {
 						@Override
 						public void handle(WindowEvent event) {
-							dpv.showAppointments();
+							dpv.showAppointments(CalendarMain.getGroupAppointments());
 							dpv.getMainPane().redraw();
-							}
+						}
 					});
 					AddAppointment.start(newStage, dpv.getMainPane().getScene().getWindow(), appointment, getParticipants(), room);
 				} catch (Exception e) {
@@ -307,7 +307,7 @@ public class AppointmentBox extends AnchorPane{
 				colorPicker.setOnAction(new EventHandler<ActionEvent>(){
 					public void handle(ActionEvent event) {
 						DBConnect.setColorOfAppointment(Login.getCurrentUser(), appointment.getID(), toStringColor(colorPicker.getValue()));
-						dpv.showAppointments();
+						dpv.showAppointments(CalendarMain.getGroupAppointments());
 					}
 				});
 				 
@@ -451,7 +451,7 @@ public class AppointmentBox extends AnchorPane{
 				if(delete) DBConnect.deleteAppointment(appointment.getID());
 				else DBConnect.deleteAppointmentAndEmployee(appointment.getID(), Login.getCurrentUser().getID());
 				
-				dpv.showAppointments(Login.getCurrentUser());
+				dpv.showAppointments(CalendarMain.getGroupAppointments());
 				dialogStage.close();
 			}
 		});

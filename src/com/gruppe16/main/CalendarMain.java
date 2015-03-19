@@ -5,7 +5,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,96 +49,93 @@ import com.gruppe16.util.ListOperations;
 
 public class CalendarMain extends Application {
 	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-	
+
 	@FXML
 	private BorderPane mainPane;
-	
+
 	@FXML
 	private ListView<CheckBox> groupListView;
-	
+
 	@FXML
 	private ImageView nextDateBtn;
-	
+
 	@FXML
 	private ImageView prevDateBtn;
-	
+
 	@FXML
 	private Button findCalendarBtn;
-	
+
 	@FXML
 	private Button backToCalendarBtn;
-	
+
 	@FXML
 	private Button notificationBtn;
-	
+
 	@FXML
 	private Button selectAllGroupsBtn;
-	
+
 	@FXML
 	private Button selectNoneGroupsBtn;
-	
+
 	@FXML
 	private Button addAppointmentBtn;
-	
+
 	@FXML
 	private Label monthLabel;
-	
+
 	@FXML
 	private Label yearLabel;
-	
+
 	@FXML
 	private Label calendarNameLabel;
-	
+
 	@FXML
 	private Label notificationLabel;
-	
+
 	@FXML
 	private Circle notificationCircle;
-	
+
 	private Scene scene;
-	
+
 	private Stage stage;
-	
+
 	private CalendarView calendarView; 
 
 	private DayPlanView dayPlanView;
-	
+
 	static private Employee employee;
 
 	private boolean calendarShown = true;
-	
+
 	private Popup notificationMenu = null;
-	
+
 	private Accordion accordion = null;
 	static boolean group = false;
-	
+
 	static private ArrayList<Group> selectedGroups = new ArrayList<Group>();
-	
+
 	public CalendarMain() {
-		// DEBUG: Use first employee
+		// DEBUG: Run as admin
 		Login.login("admin", "passord");
 		this.employee = Login.getCurrentUser();
 	}
-	
+
 	public CalendarMain(Employee employee) {
 		this.employee = employee;
 	}
-	
+
 	@Override
 	public void start(Stage stage) throws Exception {
-		
-		stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
-
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent arg0) {
 				System.out.println("Closing window.");
 				System.exit(0);
 			}
-			
 		});
-		
+
 		URL url = getClass().getResource("/com/gruppe16/main/CalendarMain.fxml");
-		
+
 		FXMLLoader fxmlLoader = new FXMLLoader();
 		fxmlLoader.setLocation(url);
 		fxmlLoader.setController(this);
@@ -147,7 +143,7 @@ public class CalendarMain extends Application {
 			scene = new Scene((Parent)fxmlLoader.load(url.openStream()), 1002, 741);
 			scene.getRoot().setStyle("-fx-background-color: linear-gradient(#FFFFFF, #EEEEEE)");
 			scene.getStylesheets().add("/com/gruppe16/main/CalendarView.css");
-			
+
 			this.stage = stage;
 			stage.setScene(scene);
 			stage.setResizable(false);
@@ -161,19 +157,19 @@ public class CalendarMain extends Application {
 
 		setEmployee(employee);
 		updateGroups();
-		
+
 		accordion = new Accordion();
 		notificationMenu = new Popup();
 		notificationMenu.setAutoHide(true);
 		notificationMenu.getContent().add(accordion);
-		
+
 		updateNotifications();
-		
+
 		stage.show();
-		
+
 		refresh();
 		redraw();
-		
+
 		selectAllGroupsBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
@@ -191,7 +187,7 @@ public class CalendarMain extends Application {
 				}
 			}
 		});
-		
+
 		addAppointmentBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent evnet) {
@@ -205,8 +201,7 @@ public class CalendarMain extends Application {
 								calendarView.update();
 							}
 							else {
-								dayPlanView.setAppointments(getGroupAppointments());
-								dayPlanView.showAppointments(employee);
+								dayPlanView.showAppointments(getGroupAppointments());
 							}
 							redraw();
 						}
@@ -216,12 +211,12 @@ public class CalendarMain extends Application {
 					e.printStackTrace();
 				} finally {
 					if(calendarShown) calendarView.update();
-					else dayPlanView.showAppointments(employee);
+					else dayPlanView.showAppointments(getGroupAppointments());
 					redraw();
 				}
 			}
 		});
-		
+
 		nextDateBtn.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -333,7 +328,7 @@ public class CalendarMain extends Application {
 				backToCalendarBtn.setEffect(new ColorAdjust(0.0, 0.0, 0.2, 0.0));
 			}
 		});
-		
+
 		findCalendarBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 				EmployeeFinder employeeFinder = new EmployeeFinder();
@@ -354,7 +349,7 @@ public class CalendarMain extends Application {
 				employeeFinder.show(newStage, scene.getWindow());
 			}
 		});
-		
+
 		notificationBtn.setOnAction(event -> {
 			if(notificationMenu.isShowing()) notificationMenu.hide();
 			else /*if(DBConnect.getNotifications().size() > 0)*/ {
@@ -362,16 +357,16 @@ public class CalendarMain extends Application {
 				notificationMenu.show(scene.getWindow(), pos.getX(), pos.getY());
 			}
 		});
-		
+
 		notificationBtn.setTooltip(new Tooltip("Notifications"));
 		backToCalendarBtn.setTooltip(new Tooltip("Back to calendar"));
-		
+
 		calendarView.setAppointments(DBConnect.getActiveAppointmentsFromEmployee(Login.getCurrentUser()));
-		
+
 		for(CheckBox cb : groupListView.getItems()){
-			
+
 			Group g = Employee.getFromName(cb.getText());
-			
+
 			cb.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 				@Override
@@ -381,18 +376,17 @@ public class CalendarMain extends Application {
 					} else {
 						selectedGroups.remove(g);
 					}
-					
+
 					calendarView.setAppointments(getGroupAppointments());
-					dayPlanView.setAppointments(getGroupAppointments());
 					calendarView.update();
-					if(dayPlanView.getDate() != null) dayPlanView.showAppointments(employee, group);
+					if(dayPlanView.getDate() != null) dayPlanView.showAppointments(getGroupAppointments(), group);
 				}
-				
+
 			});
 		}
 		calendarView.update();
-		
-		
+
+
 	}
 
 	public static ArrayList<Appointment> getGroupAppointments() {
@@ -409,16 +403,16 @@ public class CalendarMain extends Application {
 		}
 		return appointments;
 	}
-	
+
 	void showCalendar(Date date) {
 		calendarShown = true;
-		
+
 		calendarView.setAppointments(getGroupAppointments());
 		calendarView.setDate(date);
 		mainPane.setCenter(calendarView);
-		
+
 		backToCalendarBtn.setVisible(false);
-		
+
 		monthLabel.setText(MONTH_NAMES[calendarView.getMonth()]);
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
 
@@ -442,17 +436,16 @@ public class CalendarMain extends Application {
 			}
 		});
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	void showDayPlan(Date date) {
 		calendarShown = false;
 		dayPlanView.setDate(date);
-		dayPlanView.setAppointments(getGroupAppointments());
-		dayPlanView.showAppointments(employee, group);
+		dayPlanView.showAppointments(getGroupAppointments(), group);
 		mainPane.setCenter(dayPlanView);
-		
+
 		backToCalendarBtn.setVisible(true);
-		
+
 		monthLabel.setText(MONTH_NAMES[date.getMonth()] + " " + date.getDate());
 		yearLabel.setText(Integer.toString(calendarView.getYear()));
 
@@ -480,16 +473,16 @@ public class CalendarMain extends Application {
 			}
 		});
 	}
-	
+
 	private void updateGroups() {
-		
+
 		ObservableList<CheckBox> items = FXCollections.observableArrayList();
-		
+
 		for(Group g : Employee.getGroups()){			
 			CheckBox djd = new CheckBox(g.name);
 			items.add(djd);
 		}
-		
+
 		groupListView.setItems(items);
 	}
 
@@ -502,13 +495,13 @@ public class CalendarMain extends Application {
 					break;
 				}
 			}
-			
+
 			String alarmStr = "Appointment " + appointment.getTitle() + " in " + String.valueOf((appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay())/60) + " minutes.";
 			if(newPane != null) {
 				((Label)newPane.getContent()).setText(alarmStr);
 				continue;
 			}
-			
+
 			if(LocalDate.now().equals(appointment.getAppDate())){
 				if(appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() < 3600 &&
 						appointment.getFromTime().toSecondOfDay() - LocalTime.now().toSecondOfDay() > 0) {
@@ -518,12 +511,12 @@ public class CalendarMain extends Application {
 				}
 			}
 		}
-		
+
 		for(Notif notification : DBConnect.getInvites()) {
 			if(notification.status > 0){
 				continue;
 			}
-			
+
 			boolean found = false;
 			for(TitledPane pane : accordion.getPanes()) {
 				if(pane.getUserData() instanceof Notif && ((Notif)pane.getUserData()).appid == notification.appid) {
@@ -531,17 +524,17 @@ public class CalendarMain extends Application {
 					break;
 				}
 			}
-			
+
 			if(found) {
 				continue;
 			}
-			
+
 			NotificationView notificationView = new NotificationView(notification);
 			TitledPane pane = new TitledPane("", notificationView);
-			
+
 			Label titleLabel = new Label("Invitation for " + notification.title);
 			titleLabel.setPrefWidth(250.0);
-			
+
 			Runnable onAccept = new Runnable() {
 				@Override
 				public void run() {
@@ -551,7 +544,7 @@ public class CalendarMain extends Application {
 				}
 			};
 			notificationView.setOnAccept(onAccept);
-			
+
 			Runnable onDecline = new Runnable() {
 				@Override
 				public void run() {
@@ -568,26 +561,26 @@ public class CalendarMain extends Application {
 			acceptBtn.setOnMouseClicked(event -> {
 				onAccept.run();
 			});
-			
+
 			Button declineBtn = new Button();
 			declineBtn.setTooltip(new Tooltip("Decline"));
 			declineBtn.setGraphic(new ImageView("http://findicons.com/files/icons/1715/gion/16/dialog_cancel.png"));
 			declineBtn.setOnMouseClicked(event -> {
 				onDecline.run();
 			});
-			
+
 			HBox hbox = new HBox(titleLabel, acceptBtn, declineBtn);
 			hbox.setAlignment(Pos.CENTER_LEFT);
-			
+
 			pane.setUserData(notification);
 			pane.setGraphic(hbox);
 			pane.setAnimated(false);
 			accordion.getPanes().add(pane);
 		}
-		
+
 		updateNotificationCounter();
 	}
-	
+
 	private void updateNotificationCounter() {
 		int notificationCount = accordion.getPanes().size();
 		if(notificationCount == 0) {
@@ -603,15 +596,15 @@ public class CalendarMain extends Application {
 			}
 		}
 	}
-	
+
 	public Scene getScene(){
 		return scene;
 	}
-	
+
 	// HAX
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
-		
+
 		// Update calendar label and title
 		if(employee.getID() == Login.getCurrentUserID()) {
 			stage.setTitle("My Calendar");
@@ -621,16 +614,16 @@ public class CalendarMain extends Application {
 			stage.setTitle(employee.getFirstName() + " " + employee.getLastName() + "'s Calendar");
 			calendarNameLabel.setText(employee.getName());
 		}
-		
+
 		// Show calendar and redraw
 		showCalendar(new Date());
 		redraw();
 	}
-	
+
 	public Employee getEmployee() {
 		return employee;
 	}
-	
+
 	public void refresh() {
 		if(calendarShown) {
 			showCalendar(calendarView.getDate());
@@ -639,30 +632,30 @@ public class CalendarMain extends Application {
 			showDayPlan(dayPlanView.getDate());
 		}
 		updateNotifications();
-		
+
 		new Timer().schedule( 
-	        new TimerTask() {
-	            @Override
-	            public void run() {
-	            	Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							refresh();
-						}
-	            	});
-	            	
-	            }
-	        },
-	        30000
-		);
+				new TimerTask() {
+					@Override
+					public void run() {
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								refresh();
+							}
+						});
+
+					}
+				},
+				30000
+				);
 	}
-	
+
 	public void redraw() {
-		// HAX
+		// Hack: This will force a redraw
 		stage.setScene(null);
 		stage.setScene(scene);
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
