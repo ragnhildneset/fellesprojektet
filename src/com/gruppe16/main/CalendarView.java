@@ -22,6 +22,8 @@ import javafx.scene.text.Font;
 
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
+import com.gruppe16.entities.AppointmentAndEmployee;
+import com.gruppe16.main.AppointmentBox.PanelColors;
 
 public class CalendarView extends GridPane {
 	static String TEXT_DAY_COLOR = "#FFFFFF";
@@ -234,7 +236,8 @@ public class CalendarView extends GridPane {
 						appLabel.setFont(new Font("Arial Bold", 12));
 						appLabel.setPrefWidth(Double.MAX_VALUE);
 						appLabel.setPadding(new Insets(4, 4, 4, 4));
-						appLabel.setStyle(AppointmentBox.toEnumColor(DBConnect.getAppointmentAndEmployee(a, Login.getCurrentUser()).getColor()).getStyle());
+						AppointmentAndEmployee aae = DBConnect.getAppointmentAndEmployee(a, Login.getCurrentUser());
+						appLabel.setStyle(aae == null ? PanelColors.BLUE.getStyle() : AppointmentBox.toEnumColor(aae.getColor()).getStyle());
 						VBox.setMargin(appLabel, new Insets(0, 1, 0, 0));
 						if(i == appointmentDateMap.get(dateStr).size()-1 || i == 2) {
 							appLabel.setId("appointmentBoxBottom");
