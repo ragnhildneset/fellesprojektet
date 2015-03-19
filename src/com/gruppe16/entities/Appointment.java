@@ -52,7 +52,7 @@ public class Appointment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Added addpointment.");
+		System.out.println("Added appointment.");
 	}
 	
 	public String getTitle() {

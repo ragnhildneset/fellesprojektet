@@ -447,7 +447,7 @@ public class CalendarMain extends Application {
 	void showDayPlan(Date date) {
 		calendarShown = false;
 		dayPlanView.setDate(date);
-		dayPlanView.setAppointments((ArrayList<Appointment>)DBConnect.getActiveAppointmentsFromEmployee(employee));
+		dayPlanView.setAppointments(getGroupAppointments());
 		dayPlanView.showAppointments(employee, group);
 		mainPane.setCenter(dayPlanView);
 		

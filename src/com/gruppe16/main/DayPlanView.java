@@ -23,6 +23,7 @@ import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.entities.Employee;
+import com.gruppe16.main.AppointmentBox.PanelColors;
 
 
 public class DayPlanView extends VBox {
@@ -392,7 +393,8 @@ public class DayPlanView extends VBox {
 							}
 						}
 					}
-					if (notContained) addAppointment(app);
+					AppointmentAndEmployee AAE = DBConnect.getAppointmentAndEmployee(app, employee);
+					if (notContained) addAppointment(app, AAE);
 				}
 			}
 			arrangeAppointments();
