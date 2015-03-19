@@ -24,10 +24,18 @@ import com.gruppe16.entities.Room;
 import com.gruppe16.main.Login;
 import com.gruppe16.util.ListOperations;
 
+/**
+ * The Class DBConnect. Connects to the database, after getting log in information.
+ * Has several functions for changing and retrieving data from the database.
+ */
 public class DBConnect {
 	
+	/** The connection url. */
 	private static Connection con = null;
 
+	/**
+	 * Gets the groups.
+	 */
 	public static void getGroups(){
 		try{
 			String q = "select G.groupID, G.name, E.employeeid from Grouup as G, GroupMember as E, Employee as D where D.employeeid = E.employeeid and E.groupid = G.groupid;";
@@ -44,6 +52,11 @@ public class DBConnect {
 		}
 	}
 	
+	/**
+	 * Gets the invited employees in the database.
+	 *
+	 * @return the invited employees
+	 */
 	public static ArrayList<Notif> getInvites(){
 		ArrayList<Notif> notifications = new ArrayList<Notif>();
 		String q = "select A.Title, A.description, A.totime, A.fromtime, A.appdate, E.givenName, E.surname, R.status, R.alarm, R.appid\n"
@@ -70,6 +83,11 @@ public class DBConnect {
 		return null;
 	}
 	
+	/**
+	 * Gets the employees from the database.
+	 *
+	 * @return the employees
+	 */
 	public static HashMap<Integer, Employee> getEmployees() {
 //		if(_employees != null){
 //			return (ArrayList<Employee>) ListOperations.hashToList(_employees);
@@ -91,16 +109,28 @@ public class DBConnect {
 		return null;
 	}
 	
+	/**
+	 * Gets a list of employees.
+	 *
+	 * @return the employee list
+	 */
 	public static Collection<Employee> getEmployeeList() {
 		return getEmployees().values();
 	}
 	
-	public static void addRoomReservation(int appid, int roomid, int BuildingID){
+	/**
+	 * Adds a room reservation to the database, setting the appointment ID, room ID and building ID.
+	 *
+	 * @param appointmentID the appointment ID
+	 * @param roomID the room ID
+	 * @param BuildingID the building ID
+	 */
+	public static void addRoomReservation(int appointmentID, int roomID, int BuildingID){
 		String q = "INSERT INTO RoomReservation(appid, roomid, BuildingID) VALUES (?, ?, ?)";
 		try {
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
-			s.setInt(1, appid);
-			s.setInt(2, roomid);
+			s.setInt(1, appointmentID);
+			s.setInt(2, roomID);
 			s.setInt(3,  BuildingID);
 			s.execute();
 		} catch (SQLException e) {
@@ -108,6 +138,11 @@ public class DBConnect {
 		}
 	}
 	
+	/**
+	 * Gets the buildings from the database.
+	 *
+	 * @return the buildings
+	 */
 	public static HashMap<Integer, Building> getBuildings(){
 		String q = "SELECT buildingID, name, description FROM Building;";
 		HashMap<Integer, Building> map = new HashMap<Integer, Building>();
@@ -125,6 +160,11 @@ public class DBConnect {
 	}
 	
 	
+	/**
+	 * Gets the rooms from the database.
+	 *
+	 * @return the rooms
+	 */
 	public static HashMap<Integer, Room> getRooms(){
 		String q = "SELECT roomNumber, capacity, roomName, R. description, R.buildingID, B.name FROM Room as R, Building as B WHERE B.BuildingID = R.buildingID;";
 		HashMap<Integer, Room> map = new HashMap<Integer, Room>();
@@ -141,8 +181,14 @@ public class DBConnect {
 		}return null;
 	}
 	
-	public static Room getRoom(Appointment a){
-		String q = "SELECT roomNumber, capacity, roomName, R. description, R.buildingID, B.name, appid FROM Room as R, RoomReservation, Building as B WHERE B.BuildingID = R.buildingID AND roomid = roomNumber AND appid = '" + a.getID() +"';";
+	/**
+	 * Gets the room reserved for an appointment.
+	 *
+	 * @param appointment the appointment
+	 * @return the room
+	 */
+	public static Room getRoom(Appointment  appointment){
+		String q = "SELECT roomNumber, capacity, roomName, R. description, R.buildingID, B.name, appid FROM Room as R, RoomReservation, Building as B WHERE B.BuildingID = R.buildingID AND roomid = roomNumber AND appid = '" + appointment.getID() +"';";
 		Room room = null;
 		try{
 			PreparedStatement s = DBConnect.getConnection().prepareStatement(q);
@@ -155,8 +201,14 @@ public class DBConnect {
 		}return null;
 	}
 	
-	public static boolean deleteRoom(int key){
-		String q = "delete from Room where roomNumber = " + key + ";";
+	/**
+	 * Delete the room with the room ID.
+	 *
+	 * @param roomID the room ID
+	 * @return true, if successful
+	 */
+	public static boolean deleteRoom(int roomID){
+		String q = "delete from Room where roomNumber = " + roomID + ";";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(q);
 			return s.execute();
@@ -166,8 +218,15 @@ public class DBConnect {
 		return false;
 	}
 	
-	public static boolean deleteRoomReservation(int appid, int roomid){
-		String q = "delete from RoomReservation where roomid = " + roomid + " AND appid = " + appid + ";";
+	/**
+	 * Delete a room reservation, specified with the appointment ID and the room ID.
+	 *
+	 * @param appointmentID the appointment ID
+	 * @param roomID the room ID
+	 * @return true, if successful
+	 */
+	public static boolean deleteRoomReservation(int appointmentID, int roomID){
+		String q = "delete from RoomReservation where roomid = " + roomID + " AND appid = " + appointmentID + ";";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(q);
 			return s.execute();
@@ -177,10 +236,20 @@ public class DBConnect {
 		return false;
 	}
 	
-	public static List<Room> findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime, Appointment app){
-		String dateString = "" + appdate.getYear() + "-" + appdate.getMonthValue() + "-" + appdate.getDayOfMonth();
-		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
-		String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
+	/**
+	 * Finds available rooms within the specified time frame. 
+	 * Also specifies the current appointment, so said appointment is available for reservation during edit.
+	 *
+	 * @param appointmentDate the appointment date
+	 * @param fromTime the time the appointment is scheduled to begin
+	 * @param toTime the time the appointment is scheduled to end
+	 * @param appointment the appointment
+	 * @return a list of available rooms
+	 */
+	public static List<Room> findRoom(LocalDate appointmentDate, LocalTime fromTime, LocalTime toTime, Appointment appointment){
+		String dateString = "" + appointmentDate.getYear() + "-" + appointmentDate.getMonthValue() + "-" + appointmentDate.getDayOfMonth();
+		String totimeString = "" + toTime.getHour() + ":" + toTime.getMinute() + ":" + toTime.getSecond();
+		String fromtimeString = "" + fromTime.getHour() + ":" + fromTime.getMinute() + ":" + fromTime.getSecond();
 		List<Room> available = new ArrayList<Room>();
 		String q = "select *\n"+
 				"from Room as D\n"+
@@ -191,7 +260,7 @@ public class DBConnect {
 				"and E.BuildingID = R.BuildingID\n"+
 				"and E.roomid = R.roomNumber\n"+
 				"and A.appdate = '"+dateString+"'\n"+
-				"and E.appid != '"+ app.getID() +"'\n"+
+				"and E.appid != '"+ appointment.getID() +"'\n"+
 				"and ('"+fromtimeString+"' between A.fromtime and A.totime or '"+totimeString+"' between A.fromtime and A.totime)\n"+ 
 				");";
 		try{
@@ -208,10 +277,18 @@ public class DBConnect {
 		
 	}
 	
-	public static List<Room> findRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime){
-		String dateString = "" + appdate.getYear() + "-" + appdate.getMonthValue() + "-" + appdate.getDayOfMonth();
-		String totimeString = "" + totime.getHour() + ":" + totime.getMinute() + ":" + totime.getSecond();
-		String fromtimeString = "" + fromtime.getHour() + ":" + fromtime.getMinute() + ":" + fromtime.getSecond();
+	/**
+	 * Finds available rooms within the specified time frame. 
+	 *
+	 * @param appointmentDate the appointment date
+	 * @param fromTime the time the appointment is scheduled to begin
+	 * @param toTime the time the appointment is scheduled to end
+	 * @return a list of available rooms
+	 */
+	public static List<Room> findRoom(LocalDate appointmentDate, LocalTime fromTime, LocalTime toTime){
+		String dateString = "" + appointmentDate.getYear() + "-" + appointmentDate.getMonthValue() + "-" + appointmentDate.getDayOfMonth();
+		String totimeString = "" + toTime.getHour() + ":" + toTime.getMinute() + ":" + toTime.getSecond();
+		String fromtimeString = "" + fromTime.getHour() + ":" + fromTime.getMinute() + ":" + fromTime.getSecond();
 		List<Room> available = new ArrayList<Room>();
 		String q = "select *\n"+
 				"from Room as D\n"+
@@ -238,6 +315,11 @@ public class DBConnect {
 		
 	}
 
+	/**
+	 * Gets an ArrayList of AppointmentAndEmployee relations.
+	 *
+	 * @return an ArrayList of AppointmentAndEmployee
+	 */
 	public static ArrayList<AppointmentAndEmployee> getAppointmentAndEmployee() {
 		String query = "SELECT * FROM AppointmentAndEmployee";
 		ArrayList<AppointmentAndEmployee> ae = new ArrayList<AppointmentAndEmployee>();
@@ -254,6 +336,13 @@ public class DBConnect {
 		return ae;
 	}
 
+	/**
+	 * Gets one specific AppointmentAndEmployee relation, according to the appointment and the employee.
+	 *
+	 * @param appointment the appointment
+	 * @param employee the employee
+	 * @return an AppointmentAndEmployee object.
+	 */
 	public static AppointmentAndEmployee getAppointmentAndEmployee(Appointment appointment, Employee employee) {
 		String query = "SELECT * FROM AppointmentAndEmployee WHERE appid = " + appointment.getID() + " AND employeeid = " + employee.getID() + ";";
 		try{
@@ -268,23 +357,15 @@ public class DBConnect {
 		return null;
 	}
 	
-	public static Employee getEmployeeFromID(int id){
-		String query = "SELECT * FROM Employee JOIN UserAndID ON(Employee.employeeid = UserAndID.employeeid) WHERE Employee.employeeid = '" + id + "'";
-		Employee employee = null;
-		try{
-			PreparedStatement e = getConnection().prepareStatement(query);
-			ResultSet rs = (ResultSet) e.executeQuery();
-			while(rs.next()){
-				employee = new Employee(rs.getInt("employeeid"), rs.getString("givenName"), rs.getString("surname"), rs.getString("email"), rs.getString("username"));
-			}	
-		} catch (SQLException e){
-			e.printStackTrace();
-		}
-		return employee;
-	}
-	
-	public static int getStatus(int appid, int empid){
-		String query = "SELECT appid, employeeid, status FROM AppointmentAndEmployee WHERE employeeid = '" + empid + "' AND appid = '" + appid + "';";
+	/**
+	 * Gets the status of an invitation for the appointment to the employee.
+	 *
+	 * @param appointmentID the appointment ID
+	 * @param employeeID the employee ID
+	 * @return the status
+	 */
+	public static int getStatus(int appointmentID, int employeeID){
+		String query = "SELECT appid, employeeid, status FROM AppointmentAndEmployee WHERE employeeid = '" + employeeID + "' AND appid = '" + appointmentID + "';";
 		int state = -1;
 		try{
 			PreparedStatement e = getConnection().prepareStatement(query);
@@ -298,7 +379,18 @@ public class DBConnect {
 		return state;
 	}
 	
-	public static int addAppointment(String title, String description, Date date, Time fromTime, Time toTime, Employee host) {
+	/**
+	 * Adds an appointment to the database.
+	 *
+	 * @param title the title of the appointment
+	 * @param description the description of the appointment
+	 * @param date the date the appointment is scheduled for
+	 * @param fromTime the time the appointment will begin
+	 * @param toTime the time the appointment will end
+	 * @param owner the owner of the appointment
+	 * @return the key to the appointment
+	 */
+	public static int addAppointment(String title, String description, Date date, Time fromTime, Time toTime, Employee owner) {
 		String query = "INSERT INTO Appointment (title, description, appdate, fromtime, totime, ownerid) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement e = getConnection().prepareStatement(query);
@@ -307,7 +399,7 @@ public class DBConnect {
 			e.setDate(3, date);
 			e.setTime(4, fromTime);
 			e.setTime(5, toTime);
-			e.setInt(6, host.getID());
+			e.setInt(6, owner.getID());
 			e.execute();
 			ResultSet rs = e.getGeneratedKeys();
 			if(rs.next()){
@@ -319,6 +411,11 @@ public class DBConnect {
 		return -1;
 	}
 	
+	/**
+	 * Gets all the appointments in the database.
+	 *
+	 * @return a HashMap of the appointments
+	 */
 	public static HashMap<Integer, Appointment> getAppointments() {
 		String q = "SELECT appointmentID, title, description, appdate, totime, fromtime, ownerid FROM Appointment ";
 		HashMap<Integer, Appointment> appointments = new HashMap<Integer, Appointment>();
@@ -338,10 +435,20 @@ public class DBConnect {
 		return null;
 	}
 	
+	/**
+	 * Gets a list of appointments
+	 *
+	 * @return the appointment list
+	 */
 	public static Collection<Appointment> getAppointmentList() {
 		return getAppointments().values();
 	}
 	
+	/**
+	 * Gets a connection to the database, by using DBLogin.
+	 *
+	 * @return the connection
+	 */
 	public static Connection getConnection(){
 		
 		if(con == null){
@@ -362,8 +469,19 @@ public class DBConnect {
 		return con;
 	}
 	
-	public static boolean editAppointment(int appointmentid, String title, String description, Date appdate, Time totime, Time fromtime){
-		String query = "UPDATE Appointment SET title='"+title+"',description='"+description+"',appdate='"+appdate+"',totime='"+totime+"',fromtime='"+fromtime+"' WHERE appointmentID='"+appointmentid+"';";
+	/**
+	 * Edits a specific appointment, indicated by the appointment ID.
+	 *
+	 * @param appointmentID the appointment ID of the appointment to be edited
+	 * @param title the title to be edited
+	 * @param description the description to be edited
+	 * @param appointmentDate the date to be edited
+	 * @param toTime the time the appointment begins to be edited
+	 * @param fromTime the time the appointment ends to be edited
+	 * @return true, if successful
+	 */
+	public static boolean editAppointment(int appointmentID, String title, String description, Date appointmentDate, Time toTime, Time fromTime){
+		String query = "UPDATE Appointment SET title='"+title+"',description='"+description+"',appdate='"+appointmentDate+"',totime='"+toTime+"',fromtime='"+fromTime+"' WHERE appointmentID='"+appointmentID+"';";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(query);
 			return s.execute();
@@ -374,6 +492,12 @@ public class DBConnect {
 	}
 
 	
+	/**
+	 * Delete an employee from the database.
+	 *
+	 * @param employeeID the employee ID of the employee to be deleted
+	 * @return true, if successful
+	 */
 	public static boolean deleteEmployee(int employeeID) {
 		String q = "delete from Employee where employeeid = " + employeeID + ";";
 		try{
@@ -385,6 +509,12 @@ public class DBConnect {
 		return false;
 	}
 	
+	/**
+	 * Delete appointment from the database.
+	 *
+	 * @param appointmentID the appointment ID of the appointment to be deleted
+	 * @return true, if successful
+	 */
 	public static boolean deleteAppointment(int appointmentID) {
 		String q = "delete from Appointment where appointmentID = " + appointmentID + ";";
 		try{
@@ -396,8 +526,15 @@ public class DBConnect {
 		return false;
 	}
 	
-	public static boolean deleteAppointmentAndEmployee(int appID, int empID) {
-		String q = "delete from AppointmentAndEmployee where appid = " + appID + " AND employeeid = " + empID + ";";
+	/**
+	 * Delete an AppointmentAndEmployee relation from the database.
+	 *
+	 * @param appointmentID the appointment ID
+	 * @param employeeID the employee ID
+	 * @return true, if successful
+	 */
+	public static boolean deleteAppointmentAndEmployee(int appointmentID, int employeeID) {
+		String q = "delete from AppointmentAndEmployee where appid = " + appointmentID + " AND employeeid = " + employeeID + ";";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(q);
 			return s.execute();
@@ -407,7 +544,14 @@ public class DBConnect {
 		return false;
 	}
 
-	public static boolean inviteEmployee(Employee employee, int appid) {
+	/**
+	 * Invite an employee to an appointment.
+	 *
+	 * @param employee the employee to be invited
+	 * @param appointmentID the appointment ID of the appointment the employee is invited to
+	 * @return true, if successful
+	 */
+	public static boolean inviteEmployee(Employee employee, int appointmentID) {
 		int status = 0;
 		if(employee.getID() == Login.getCurrentUserID()){
 			status = 1;
@@ -415,7 +559,7 @@ public class DBConnect {
 		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(q);
-			s.setInt(1, appid);
+			s.setInt(1, appointmentID);
 			s.setInt(2, employee.getID());
 			s.setInt(3, status);
 			s.setInt(4, 1);
@@ -428,11 +572,17 @@ public class DBConnect {
 		return false;
 	}
 	
-	public static void setOwnerOfAppointment(Employee employee, int appid) {
+	/**
+	 * Sets the owner of an appointment in the database.
+	 *
+	 * @param employee the employee to be set as owner
+	 * @param appointmentID the appointment ID
+	 */
+	public static void setOwnerOfAppointment(Employee employee, int appointmentID) {
 		String q = "insert into AppointmentAndEmployee (appid, employeeid, status, alarm, farge) values (?, ?, ?, ?, ?);";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(q);
-			s.setInt(1, appid);
+			s.setInt(1, appointmentID);
 			s.setInt(2, employee.getID());
 			s.setInt(3, 1);
 			s.setInt(4, 0);
@@ -443,8 +593,16 @@ public class DBConnect {
 		}
 	}
 	
-	public static boolean setColorOfAppointment(Employee employee, int appid, String color){
-		String query = "UPDATE AppointmentAndEmployee SET farge='"+color+"' WHERE appID='"+appid+"' AND employeeid='"+employee.getID()+"';";
+	/**
+	 * Sets the color of an AppointmentAndEmployee relation as a string in the database.
+	 *
+	 * @param employee the employee
+	 * @param appointmentID the appointment ID
+	 * @param color the color for the appointment
+	 * @return true, if successful
+	 */
+	public static boolean setColorOfAppointment(Employee employee, int appointmentID, String color){
+		String query = "UPDATE AppointmentAndEmployee SET farge='"+color+"' WHERE appID='"+appointmentID+"' AND employeeid='"+employee.getID()+"';";
 		try{
 			PreparedStatement s = getConnection().prepareStatement(query);
 			return s.execute();
@@ -454,6 +612,12 @@ public class DBConnect {
 		return false;
 	}
 
+	/**
+	 * Gets the appointments of a specific group.
+	 *
+	 * @param group the group
+	 * @return an ArrayList of the appointments for the specifed group
+	 */
 	public static ArrayList<Appointment> getGroupApp(Group group) {
 		HashMap<Integer, Appointment> appointments = getAppointments();
 		HashMap<Integer, ArrayList<Appointment>> groupAppointments = new HashMap<Integer, ArrayList<Appointment>>();
@@ -488,10 +652,16 @@ public class DBConnect {
 		return hello;
 	}
 	
-	public static ArrayList<Appointment> getActiveAppointmentsFromEmployee(Employee e) {
+	/**
+	 * Gets the active appointments of an employee.
+	 *
+	 * @param employee the employee
+	 * @return an ArrayList of the active appointments of an employee
+	 */
+	public static ArrayList<Appointment> getActiveAppointmentsFromEmployee(Employee employee) {
 		HashMap<Integer, Appointment> appointments = getAppointments();
 		String query = "select AAE.appid, AAE.employeeid from AppointmentAndEmployee as "
-				+ "AAE where AAE.employeeid = " + String.valueOf(e.getID()) + " and AAE.status = 1;";
+				+ "AAE where AAE.employeeid = " + String.valueOf(employee.getID()) + " and AAE.status = 1;";
 		ArrayList<Appointment> app = new ArrayList<Appointment>();
 		try{
 			PreparedStatement we = getConnection().prepareStatement(query);
@@ -508,10 +678,16 @@ public class DBConnect {
 		return app;
 	}
 	
-	public static ArrayList<Employee> getEmployeesFromAppointment(Appointment e) {
+	/**
+	 * Gets all the employees connected to an appointment.
+	 *
+	 * @param appointment the appointment
+	 * @return an ArrayList of the employees
+	 */
+	public static ArrayList<Employee> getEmployeesFromAppointment(Appointment appointment) {
 		HashMap<Integer, Employee> employees = getEmployees();
 		String query = "select AAE.appid, AAE.employeeid from AppointmentAndEmployee as "
-				+ "AAE where AAE.appid = " + String.valueOf(e.getID()) +";";
+				+ "AAE where AAE.appid = " + String.valueOf(appointment.getID()) +";";
 		ArrayList<Employee> app = new ArrayList<Employee>();
 		try{
 			PreparedStatement we = getConnection().prepareStatement(query);
@@ -526,7 +702,4 @@ public class DBConnect {
 		return app;
 	}
 	
-//	public static void close(){
-//		if(con != null) DBConnect.close();
-//	}
 }
