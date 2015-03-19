@@ -87,7 +87,7 @@ public class AppointmentBox extends AnchorPane{
 	private Employee e;
 	private Room room;
 	
-	static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployeeList());
+	private static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployeeList());
 	
 	public AppointmentBox(Appointment appointment, AppointmentAndEmployee appAndEmp, DayPlanView dpv){
 		setId("appBox");

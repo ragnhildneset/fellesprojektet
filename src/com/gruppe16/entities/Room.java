@@ -1,22 +1,16 @@
 package com.gruppe16.entities;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Room {
 	
-	SimpleStringProperty name;
-	SimpleIntegerProperty capacity;
-	SimpleIntegerProperty roomid;
-	SimpleStringProperty description;
-	SimpleIntegerProperty buildingid;
-	SimpleStringProperty buildingname;
-	
-	
-	private static HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
+	private SimpleStringProperty name;
+	private SimpleIntegerProperty capacity;
+	private SimpleIntegerProperty roomid;
+	private SimpleStringProperty description;
+	private SimpleIntegerProperty buildingid;
+	private SimpleStringProperty buildingname;
 	
 	
 	public Room(int key, int capacity, String name, String descr, int buildingID, String buildingname ){
@@ -27,15 +21,6 @@ public class Room {
 		this.description = new SimpleStringProperty(descr);
 		this.buildingid = new SimpleIntegerProperty(buildingID);
 		this.buildingname = new SimpleStringProperty(buildingname);
-		rooms.put(key, this);
-	}
-	
-	public Room(int key, int capacity, String name, String descr, int buildingID){
-		this(key, capacity, name, descr, buildingID, null);
-	}
-	
-	public static void main(String[] args){
-		System.out.println(getRooms());
 	}
 	
 	public String getName() {
@@ -62,15 +47,5 @@ public class Room {
 		return buildingname.get();
 	}
 	
-	public static String[] getRooms(){
-		String[] ls = new String[rooms.size()];
-		int c = 0;
-		for(Map.Entry<Integer, Room> e : rooms.entrySet()){
-			ls[c] = e.getValue().getName();
-			System.out.println(e.getValue().getName());
-			c++;
-		}
-		return ls;
-	}
 }
 

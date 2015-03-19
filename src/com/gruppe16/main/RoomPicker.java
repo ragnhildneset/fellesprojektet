@@ -46,7 +46,7 @@ public class RoomPicker implements Initializable {
 
 	private static Stage stage;
 	private static AddAppointment addAppointment;
-	static List<Room> availableRooms;
+	private static List<Room> availableRooms;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -96,7 +96,7 @@ public class RoomPicker implements Initializable {
 
 	}
 
-	public void updateRoomdata(){
+	private void updateRoomdata(){
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		try{
 			for(Room r : availableRooms){

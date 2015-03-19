@@ -1,6 +1,4 @@
 package com.gruppe16.entities;
-import java.util.HashMap;
-
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -8,23 +6,13 @@ import javafx.beans.property.SimpleStringProperty;
 public class AppointmentAndEmployee {
 	
 
-	SimpleIntegerProperty appid;
-	SimpleIntegerProperty employeeid;
-	SimpleIntegerProperty status;
-	SimpleIntegerProperty alarm;
-	SimpleStringProperty color;
-	
-	private static HashMap<Integer, HashMap<Integer, AppointmentAndEmployee>> AppointmentAndEmployee = new HashMap<Integer, HashMap<Integer, AppointmentAndEmployee>>();
-	private static HashMap<Integer, AppointmentAndEmployee> AppAndEmp = new HashMap<Integer, AppointmentAndEmployee>();
-	
-	public static AppointmentAndEmployee getAppointmentAndEmployee(int appid, int employeeid){
-		return AppointmentAndEmployee.get(appid).get(employeeid);
-	}
-	
-	
+	private SimpleIntegerProperty appid;
+	private SimpleIntegerProperty employeeid;
+	private SimpleIntegerProperty status;
+	private SimpleIntegerProperty alarm;
+	private SimpleStringProperty color;
+
 	public AppointmentAndEmployee(int appid, int employeeid, int status, int alarm, String color) {
-		AppAndEmp.put(employeeid, this);
-		AppointmentAndEmployee.put(appid, AppAndEmp);
 		this.appid = new SimpleIntegerProperty(appid);
 		this.employeeid = new SimpleIntegerProperty(employeeid);
 		this.status = new SimpleIntegerProperty(status);

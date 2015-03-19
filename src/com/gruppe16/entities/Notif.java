@@ -11,7 +11,7 @@ public class Notif {
 	public String title, desc, to, from, date, alarm, owner;
 	public int appid, status;
 	
-	public final static int WAITING = 0, ACCEPTED = 1, DECLINED = 2;
+	private final static int WAITING = 0, ACCEPTED = 1, DECLINED = 2;
 
 	public Notif(String title, String desc, String to, String from,
 			String date, String alarm, String owner, int appid, int status) {

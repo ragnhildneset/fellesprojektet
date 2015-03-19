@@ -27,6 +27,8 @@ import com.gruppe16.util.ListOperations;
 /**
  * The Class DBConnect. Connects to the database, after getting log in information.
  * Has several functions for changing and retrieving data from the database.
+ * 
+ * @author Gruppe 16
  */
 public class DBConnect {
 	
@@ -143,7 +145,7 @@ public class DBConnect {
 	 *
 	 * @return the buildings
 	 */
-	public static HashMap<Integer, Building> getBuildings(){
+	private static HashMap<Integer, Building> getBuildings(){
 		String q = "SELECT buildingID, name, description FROM Building;";
 		HashMap<Integer, Building> map = new HashMap<Integer, Building>();
 		try{
@@ -416,7 +418,7 @@ public class DBConnect {
 	 *
 	 * @return a HashMap of the appointments
 	 */
-	public static HashMap<Integer, Appointment> getAppointments() {
+	private static HashMap<Integer, Appointment> getAppointments() {
 		String q = "SELECT appointmentID, title, description, appdate, totime, fromtime, ownerid FROM Appointment ";
 		HashMap<Integer, Appointment> appointments = new HashMap<Integer, Appointment>();
 		try{
@@ -424,7 +426,7 @@ public class DBConnect {
 			ResultSet rs = (ResultSet) s.executeQuery();
 				while(rs.next()) {
 					int key = rs.getInt("appointmentID");
-					Appointment a = new Appointment(Integer.parseInt(rs.getString("appointmentID")), rs.getString("title"), rs.getString("description"), LocalDate.parse(rs.getString("appdate")), LocalTime.parse(rs.getString("totime")), LocalTime.parse(rs.getString("fromtime")), Integer.parseInt(rs.getString("ownerid")), LocalTime.now());
+					Appointment a = new Appointment(Integer.parseInt(rs.getString("appointmentID")), rs.getString("title"), rs.getString("description"), LocalDate.parse(rs.getString("appdate")), LocalTime.parse(rs.getString("totime")), LocalTime.parse(rs.getString("fromtime")), Integer.parseInt(rs.getString("ownerid")));
 					appointments.put(key, a);
 				}
 				return appointments;
@@ -433,15 +435,6 @@ public class DBConnect {
 			
 		}
 		return null;
-	}
-	
-	/**
-	 * Gets a list of appointments
-	 *
-	 * @return the appointment list
-	 */
-	public static Collection<Appointment> getAppointmentList() {
-		return getAppointments().values();
 	}
 	
 	/**
@@ -684,7 +677,7 @@ public class DBConnect {
 	 * @param appointment the appointment
 	 * @return an ArrayList of the employees
 	 */
-	public static ArrayList<Employee> getEmployeesFromAppointment(Appointment appointment) {
+	private static ArrayList<Employee> getEmployeesFromAppointment(Appointment appointment) {
 		HashMap<Integer, Employee> employees = getEmployees();
 		String query = "select AAE.appid, AAE.employeeid from AppointmentAndEmployee as "
 				+ "AAE where AAE.appid = " + String.valueOf(appointment.getID()) +";";

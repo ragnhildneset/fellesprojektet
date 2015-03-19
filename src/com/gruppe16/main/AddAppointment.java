@@ -566,7 +566,7 @@ public class AddAppointment implements Initializable {
 		stage.show();
 	}
 	
-	public boolean checkRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime){
+	private boolean checkRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime){
 		if(room == null) return false;
 		
 		List<Room> rooms;

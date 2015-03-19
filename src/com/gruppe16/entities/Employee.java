@@ -34,17 +34,13 @@ public class Employee {
 		return null;
 	}
 	
-	public static Group getFromID(int id){
-		return map.get(id);
-	}
-	
 	public static class Group {
 		public int id; public String name;
 		private ArrayList<Employee> members = new ArrayList<Employee>();
-		Group(int i, String n){
-			this.id = i;
-			this.name = n;
-		}
+		private Group(int i, String n){
+				this.id = i;
+				this.name = n;
+			}
 		@SuppressWarnings("unchecked")
 		public ArrayList<Employee> getMembers() {
 			return (ArrayList<Employee>) members.clone();
@@ -64,24 +60,6 @@ public class Employee {
 	}
 	
 	private static HashMap<Integer, Employee> employees = new HashMap<Integer, Employee>();
-	
-	public static ArrayList<Employee> getAll(){
-		ArrayList<Employee> e = new ArrayList<Employee>();
-		for(Employee r : employees.values()){
-			e.add(r);
-		}
-		return e;
-	}
-	
-	public static String[] getNames(){
-		String[] ls = new String[employees.size()];
-		int c = 0;
-		for(Map.Entry<Integer, Employee> e : employees.entrySet()){
-			ls[c] = e.getValue().getName();
-			c++;
-		}
-		return ls;
-	}
 	
 	public static Employee getEmployee(int key){
 		return employees.get(key);
