@@ -118,14 +118,14 @@ public class Employee {
 	/**
 	 * Instantiates a new employee.
 	 *
-	 * @param key the key
-	 * @param firstName the first name
-	 * @param lastName the last name
-	 * @param email the email
-	 * @param username the username
+	 * @param id the employee ID
+	 * @param firstName the first name of the employee
+	 * @param lastName the last name of the employee
+	 * @param email the email of the employee
+	 * @param username the username of the employee
 	 */
-	public Employee(int key, String firstName, String lastName, String email, String username) {
-		this.id =  new SimpleIntegerProperty(key);
+	public Employee(int id, String firstName, String lastName, String email, String username) {
+		this.id =  new SimpleIntegerProperty(id);
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName =  new SimpleStringProperty(lastName);
 		this.email =  new SimpleStringProperty(email);
@@ -133,16 +133,16 @@ public class Employee {
 	}
 	
 	/**
-	 * Gets the name.
+	 * Gets the employee name.
 	 *
-	 * @return the name
+	 * @return the name in the format: last name, first name
 	 */
 	public String getName(){
 		return lastName.get() + ", " + firstName.get();
 	}
 
 	/**
-	 * Gets the first name.
+	 * Gets the employee's first name.
 	 *
 	 * @return the first name
 	 */
@@ -151,7 +151,7 @@ public class Employee {
 	}
 
 	/**
-	 * Gets the last name.
+	 * Gets the employee's last name.
 	 *
 	 * @return the last name
 	 */
@@ -160,16 +160,16 @@ public class Employee {
 	}
 
 	/**
-	 * Gets the email.
+	 * Gets the employee's e-mail.
 	 *
-	 * @return the email
+	 * @return the e-mail
 	 */
 	public String getEmail() {
 		return email.get();
 	}
 
 	/**
-	 * Gets the username.
+	 * Gets the employee's username.
 	 *
 	 * @return the username
 	 */
@@ -178,9 +178,9 @@ public class Employee {
 	}
 
 	/**
-	 * Gets the id.
+	 * Gets the employee ID.
 	 *
-	 * @return the id
+	 * @return the employee ID
 	 */
 	public int getID() {
 		return id.get();
@@ -194,13 +194,13 @@ public class Employee {
 	}
 
 	/**
-	 * Invite.
+	 * A method to invite the current employee to the appointment specified.
 	 *
-	 * @param appid the appid
+	 * @param appointmentID the appointment ID of the appointment to invite the current employee to
 	 * @return true, if successful
 	 */
-	public boolean invite(int appid) {
-		return DBConnect.inviteEmployee(this, appid);
+	public boolean invite(int appointmentID) {
+		return DBConnect.inviteEmployee(this, appointmentID);
 	}
 	
 	/* (non-Javadoc)

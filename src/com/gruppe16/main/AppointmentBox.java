@@ -105,6 +105,7 @@ public class AppointmentBox extends AnchorPane{
 		relocate(0, appointmentStart);
 		updateLabels();
 		}
+	
 	public AppointmentBox(Appointment appointment, DayPlanView dpv){
 		setId("appBox");
 		this.e = null;

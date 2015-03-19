@@ -23,8 +23,6 @@ import javafx.stage.WindowEvent;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.AppointmentAndEmployee;
-import com.gruppe16.entities.Employee;
-import com.gruppe16.main.AppointmentBox.PanelColors;
 
 
 public class DayPlanView extends VBox implements CalendarViewInterface {
@@ -97,6 +95,7 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 			});
 			
 			timeBoxLeft.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@SuppressWarnings("deprecation")
 				@Override
 				public void handle(MouseEvent evnet) {
 					try {
@@ -126,6 +125,7 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		requestLayout();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void setDate(Date date){
 		this.date = date;
 		this.date.setHours(0);
@@ -136,6 +136,7 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		return date;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void incDate() {
 		Date date = this.date;
 		date.setDate(this.date.getDate()+1);
@@ -143,6 +144,7 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		showAppointments(CalendarMain.getGroupAppointments());
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void decDate() {
 		Date date = this.date;
 		date.setDate(this.date.getDate()-1);
@@ -154,12 +156,12 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		return mPane;
 	}
 	
-	public void addAppointment(Appointment appointment, AppointmentAndEmployee appointmentAndEmployee){
+	private void addAppointment(Appointment appointment, AppointmentAndEmployee appointmentAndEmployee){
 		AppointmentBox appointmentBox = new AppointmentBox(appointment, appointmentAndEmployee, this);
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	
-	public void addAppointment(Appointment appointment){
+	private void addAppointment(Appointment appointment){
 		AppointmentBox appointmentBox = new AppointmentBox(appointment, this);
 		appointmentPane.getChildren().add(appointmentBox);
 	}

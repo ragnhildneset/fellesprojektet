@@ -28,7 +28,7 @@ public class NotificationView extends VBox {
 		VBox.setMargin(hbox, new Insets(10.0, 10.0, 10.0, 10.0));
 
 		label = new Label(); label.setText("Description:"); label.setPrefWidth(100.0); label.setMinWidth(100.0);
-		Label descLabel = new Label(notification.desc);
+		Label descLabel = new Label(notification.description);
 		descLabel.setWrapText(true);
 		hbox = new HBox(label, descLabel);
 		getChildren().add(hbox);
@@ -40,12 +40,12 @@ public class NotificationView extends VBox {
 		VBox.setMargin(hbox, new Insets(10.0, 10.0, 10.0, 10.0));
 		
 		label = new Label(); label.setText("From:"); label.setPrefWidth(100.0);
-		hbox = new HBox(label, new Label(notification.from));
+		hbox = new HBox(label, new Label(notification.fromTime));
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(0.0, 10.0, 10.0, 10.0));
 
 		label = new Label(); label.setText("To:"); label.setPrefWidth(100.0);
-		hbox = new HBox(label, new Label(notification.to));
+		hbox = new HBox(label, new Label(notification.toTime));
 		getChildren().add(hbox);
 		VBox.setMargin(hbox, new Insets(0.0, 10.0, 10.0, 10.0));
 

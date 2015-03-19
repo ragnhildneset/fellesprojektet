@@ -27,18 +27,18 @@ import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.main.AppointmentBox.PanelColors;
 
 public class CalendarView extends GridPane implements CalendarViewInterface {
-	static String TEXT_DAY_COLOR = "#FFFFFF";
-	static String TEXT_DEFAULT_COLOR = "#000000";
-	static String TEXT_DEFAULT_INACTIVE_COLOR = "#888888";
-	static String TEXT_SUNDAY_COLOR = "#FF0000";
-	static String TEXT_SUNDAY_INACTIVE_COLOR = "#FF8888";
-	static String CELL_DAY_COLOR = "#4472C4";
-	static String CELL_DEFAULT_COLOR = "#FFFFFF";
-	static String CELL_WEEKEND_COLOR = "#D9E2F3";
-	static String CELL_CURRENT_COLOR = "#B2C9F5";
-	static String BORDER_COLOR = "#8EAADB";
+	private static String TEXT_DAY_COLOR = "#FFFFFF";
+	private static String TEXT_DEFAULT_COLOR = "#000000";
+	private static String TEXT_DEFAULT_INACTIVE_COLOR = "#888888";
+	private static String TEXT_SUNDAY_COLOR = "#FF0000";
+	private static String TEXT_SUNDAY_INACTIVE_COLOR = "#FF8888";
+	private static String CELL_DAY_COLOR = "#4472C4";
+	private static String CELL_DEFAULT_COLOR = "#FFFFFF";
+	private static String CELL_WEEKEND_COLOR = "#D9E2F3";
+	private static String CELL_CURRENT_COLOR = "#B2C9F5";
+	private static String BORDER_COLOR = "#8EAADB";
 
-	static String[] DAY_NAMES = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+	private static String[] DAY_NAMES = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
 	private Calendar calendar;
 	private VBox[][] dayVBoxes = new VBox[7][6];
@@ -125,10 +125,6 @@ public class CalendarView extends GridPane implements CalendarViewInterface {
 	public void decDate() {
 		calendar.add(Calendar.MONTH, -1);
 		showAppointments(CalendarMain.getGroupAppointments());
-	}
-
-	int getMonth() {
-		return calendar.get(Calendar.MONTH);
 	}
 
 	int getYear() {

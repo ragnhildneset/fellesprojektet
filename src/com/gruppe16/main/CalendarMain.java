@@ -48,7 +48,7 @@ import com.gruppe16.entities.Notif;
 import com.gruppe16.util.ListOperations;
 
 public class CalendarMain extends Application {
-	static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+	private static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
 	@FXML
 	private BorderPane mainPane;
@@ -120,11 +120,11 @@ public class CalendarMain extends Application {
 
 	private Accordion accordion = null;
 	
-	static boolean group = false;
+	private static boolean group = false;
 
 	static private ArrayList<Group> selectedGroups = new ArrayList<Group>(); 
 	
-	public Runnable onUpdateLabels;
+	private Runnable onUpdateLabels;
 
 	public CalendarMain() {
 		// DEBUG: Run as admin
@@ -488,7 +488,7 @@ public class CalendarMain extends Application {
 		return appointments;
 	}
 
-	void showCalendar(Date date) {
+	private void showCalendar(Date date) {
 		calendarViewInterface = calendarView;
 		calendarView.showAppointments(getGroupAppointments());
 		calendarView.setDate(date);
@@ -567,7 +567,7 @@ public class CalendarMain extends Application {
 
 			boolean found = false;
 			for(TitledPane pane : accordion.getPanes()) {
-				if(pane.getUserData() instanceof Notif && ((Notif)pane.getUserData()).appid == notification.appid) {
+				if(pane.getUserData() instanceof Notif && ((Notif)pane.getUserData()).appointmentID == notification.appointmentID) {
 					found = true;
 					break;
 				}
@@ -676,7 +676,7 @@ public class CalendarMain extends Application {
 	
 	
 
-	public void refresh() {
+	private void refresh() {
 		if(calendarViewInterface instanceof CalendarView) {
 			showCalendar(calendarView.getDate());
 		}
