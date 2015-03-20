@@ -3,9 +3,8 @@ package com.gruppe16.entities;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Room.
+ * The Entity Class Room.
  * 
  * @author Gruppe 16
  */

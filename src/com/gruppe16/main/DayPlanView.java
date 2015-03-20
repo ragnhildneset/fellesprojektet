@@ -25,14 +25,33 @@ import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.AppointmentAndEmployee;
 
 
+/**
+ * The Class DayPlanView. The view that shows all the appointments for the selected day, 
+ * 
+ * @author Gruppe 16
+ */
 public class DayPlanView extends VBox implements CalendarViewInterface {
 	
+	/** The name of the days.*/
 	private static String[] DAY_NAMES = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+	
+	/** The current date. */
 	private Date date;
+	
+	/** The Pane where all appointments are added. */
 	private Pane appointmentPane;
+	
+	/** The day, displayed at the top. */
 	private Label dateTitle;
+	
+	/** The main pane CalendarMain. */
 	private CalendarMain mPane;
 	
+	/**
+	 * Instantiates a new day plan view.
+	 *
+	 * @param mainPane the main pane CalendarMain.
+	 */
 	public DayPlanView(CalendarMain mainPane){
 		setPrefSize(800, 625);
 		ScrollPane scrollPane = new ScrollPane();
@@ -125,6 +144,9 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		requestLayout();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.gruppe16.main.CalendarViewInterface#setDate(java.util.Date)
+	 */
 	@SuppressWarnings("deprecation")
 	public void setDate(Date date){
 		this.date = date;
@@ -132,10 +154,16 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		dateTitle.setText(DAY_NAMES[this.date.getDay()]);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.gruppe16.main.CalendarViewInterface#getDate()
+	 */
 	public Date getDate() {
 		return date;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.gruppe16.main.CalendarViewInterface#incDate()
+	 */
 	@SuppressWarnings("deprecation")
 	public void incDate() {
 		Date date = this.date;
@@ -144,6 +172,9 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		showAppointments(CalendarMain.getGroupAppointments());
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.gruppe16.main.CalendarViewInterface#decDate()
+	 */
 	@SuppressWarnings("deprecation")
 	public void decDate() {
 		Date date = this.date;
@@ -152,20 +183,42 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		showAppointments(CalendarMain.getGroupAppointments());
 	}
 	
+	/**
+	 * Gets the main pane.
+	 *
+	 * @return the main pane
+	 */
 	public CalendarMain getMainPane() {
 		return mPane;
 	}
 	
+	/**
+	 * Adds an appointmentBox to the appointment pane with the appointment parameter. Also takes an AppointmentAndEmployee relation for color settings.
+	 *
+	 * @param appointment the appointment to add.
+	 * @param appointmentAndEmployee the AppointmentAndEmployee relation between appointment and employee, for color settings.
+	 */
 	private void addAppointment(Appointment appointment, AppointmentAndEmployee appointmentAndEmployee){
 		AppointmentBox appointmentBox = new AppointmentBox(appointment, appointmentAndEmployee, this);
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	
+	/**
+	 * Adds an appointmentBox to the appointment pane with the appointment parameter.
+	 * Used if no color-information exists.
+	 *
+	 * @param appointment the appointment to add.
+	 */
 	private void addAppointment(Appointment appointment){
 		AppointmentBox appointmentBox = new AppointmentBox(appointment, this);
 		appointmentPane.getChildren().add(appointmentBox);
 	}
 	
+	/**
+	 * Arrange appointments according to time, as well as overlaps. 
+	 * Uses black magic.
+	 * PS. Doesn't actually work for many appointments.
+	 */
 	private void arrangeAppointments() {
 		//Create Array of AppointmentBoxes currently in Pane.
 		ArrayList<AppointmentBox> appointmentBoxes = new ArrayList<AppointmentBox>();
@@ -335,23 +388,33 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.gruppe16.main.CalendarViewInterface#showAppointments(java.util.Collection)
+	 */
 	public void showAppointments(Collection<Appointment> appointments) {
 		showAppointments(appointments, false);
 	}
 	
-	public void showAppointments(Collection<Appointment> appointmentss, boolean group) {
+	/**
+	 * A method that takes a list of appointments, and shows these in the appointment Pane.
+	 * Set group to true if showing a group.
+	 *
+	 * @param appointments the appointments to be shown
+	 * @param group A variable determining if a group is shown.
+	 */
+	public void showAppointments(Collection<Appointment> appointments, boolean group) {
 		removeAppointments();
 		ArrayList<AppointmentAndEmployee> appAndEmp = DBConnect.getAppointmentAndEmployee();
 		LocalDate date = this.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
-		for(Appointment a : appointmentss){
-			if(date.equals(a.getAppDate())) appointments.add(a);
+		ArrayList<Appointment> appointmentsList = new ArrayList<Appointment>();
+		for(Appointment a : appointments){
+			if(date.equals(a.getAppDate())) appointmentsList.add(a);
 		}
 		if(!group){
 			for (AppointmentAndEmployee currentApp : appAndEmp) {
 				if(currentApp.getStatus() == 1){
 					int appID = currentApp.getAppointmentID();
-					for (Appointment app : appointments){
+					for (Appointment app : appointmentsList){
 						if(appID == app.getID() && app.getAppDate().equals(date)){
 							boolean notContained = true;
 							for (Node aBoxes : appointmentPane.getChildren()) {
@@ -371,7 +434,7 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 			arrangeAppointments();
 		}
 		else{
-			for (Appointment app : appointments){
+			for (Appointment app : appointmentsList){
 				if(app.getAppDate().equals(date)){
 					boolean notContained = true;
 					for (Node aBoxes : appointmentPane.getChildren()) {
@@ -391,6 +454,9 @@ public class DayPlanView extends VBox implements CalendarViewInterface {
 	}
 
 	
+	/**
+	 * Removes the appointments from the appointment pane, so new appointments can be added.
+	 */
 	private void removeAppointments(){
 		ArrayList<AppointmentBox> appointmentBoxes = new ArrayList<AppointmentBox>();
 		for (Node aBoxes : appointmentPane.getChildren()) {

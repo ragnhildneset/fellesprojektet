@@ -5,19 +5,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//TODO: Fix documentation for all
 /**
- * The Class ListOperations. Uses magic.
+ * The Class ListOperations.
+ * 
+ * @author Gruppe 16
  */
 public class ListOperations {
 
     /**
-     * Union.
+     * Returns the union of two lists.
      *
      * @param <T> the generic type
-     * @param list1 the list1
-     * @param list2 the list2
-     * @return the list
+     * @param list1 one of the lists
+     * @param list2 one of the lists
+     * @return the union list
      */
     public static <T> List<T> union(List<T> list1, List<T> list2) {
         Set<T> set = new HashSet<T>();
@@ -29,11 +30,11 @@ public class ListOperations {
     }
 
     /**
-     * Contains.
+     * Checks if a sublist is contained in a parent list.
      *
      * @param <T> the generic type
-     * @param parent the parent
-     * @param sub the sub
+     * @param parent the parent list
+     * @param sub the sub list
      * @return true, if successful
      */
     public static <T> boolean contains(List<T> parent, List<T> sub){

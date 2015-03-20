@@ -30,42 +30,69 @@ import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Employee.Group;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EmployeePicker. A GUI for picking employees to invite to an appointment.
+ *
+ * @author Gruppe 16
+ */
 public class EmployeePicker implements Initializable {
+	
+	/** The OK button. Closes the window and adds the currently selected employees to the AddAppointment window.*/
 	@FXML
 	private Button OKBtn;
 	
+	/** The add button. Adds the selected employee from the employees list to the attending employees list. */
 	@FXML
 	private Button addBtn;
 	
+	/** The add all button. Adds all of the currently displayed employees in the employees list to the attending employees list. */
 	@FXML
 	private Button addAllBtn;
 	
+	/** The remove button. Removes the selected employee from the attending employees list.*/
 	@FXML
 	private Button removeBtn;
 	
+	/** The remove all button. Removes all the employees from the attending employees list.*/
 	@FXML
 	private Button removeAllBtn;
 	
+	/** The employee groups. Displays the selected group in the employees list. */
 	@FXML
 	private ChoiceBox<String> e_group;
 	
+	/** The first name text field. */
 	@FXML
 	private TextField givenNameTextField;
 	
+	/** The last name text field. */
 	@FXML
 	private TextField surNameTextField;
 	
+	/** The employees list. */
 	@FXML
 	private ListView<Employee> employeeListView;
 	
+	/** The attending employees list. */
 	@FXML
 	private ListView<Employee> attendingListView;
 
+	/** The available employees, from the database.*/
 	private Collection<Employee> availableEmployees = DBConnect.getEmployeeList();
+	
+	/** The stage. */
 	private static Stage stage;
+	
+	/** The AddAppointment object. */
 	private static AddAppointment addAppointment;
+	
+	/** The default attendees, from the AddAppointment. */
 	private static ArrayList<Employee> defaultAttendees;
 	
+	/* (non-Javadoc)
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -158,6 +185,9 @@ public class EmployeePicker implements Initializable {
 		updateEmployeeList();
 	}
 	
+	/**
+	 * Adds the selected employees.
+	 */
 	private void addSelectedEmployee() {
 		Employee e = employeeListView.getSelectionModel().getSelectedItem();
 		if(e != null) {
@@ -166,6 +196,9 @@ public class EmployeePicker implements Initializable {
 		}
 	}
 	
+	/**
+	 * Removes the selected employees.
+	 */
 	private void removeSelectedEmployee() {
 		Employee e = attendingListView.getSelectionModel().getSelectedItem();
 		if(e != null) {
@@ -174,6 +207,9 @@ public class EmployeePicker implements Initializable {
 		}
 	}
 	
+	/**
+	 * Updates the employees list.
+	 */
 	private void updateEmployeeList() {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		for(Employee employee : availableEmployees) {
@@ -186,9 +222,18 @@ public class EmployeePicker implements Initializable {
 		employeeListView.getSelectionModel().select(0);
 	}
 	
-	public static void start(Stage stage, Window owner, AddAppointment addApp, ArrayList<Employee> attendees) throws IOException {
+	/**
+	 * Start.
+	 *
+	 * @param stage the stage
+	 * @param owner the owner
+	 * @param addAppointment the AddAppointment
+	 * @param attendees the attendees
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static void start(Stage stage, Window owner, AddAppointment addAppointment, ArrayList<Employee> attendees) throws IOException {
 		EmployeePicker.stage = stage;
-		EmployeePicker.addAppointment = addApp;
+		EmployeePicker.addAppointment = addAppointment;
 		EmployeePicker.defaultAttendees = attendees;
 		//EmployeePicker.currentAttendees = addApp.getAttendees();
 		Scene scene = new Scene((Parent)FXMLLoader.load(EmployeePicker.class.getResource("/com/gruppe16/main/EmployeePicker.fxml")));

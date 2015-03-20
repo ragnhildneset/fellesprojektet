@@ -7,7 +7,7 @@ import com.gruppe16.database.DBConnect;
 import com.gruppe16.main.Login;
 
 /**
- * The Class Notif. (Notifications)
+ * The Entity Class Notif. (Notifications)
  * 
  * @author Gruppe 16
  */
@@ -19,8 +19,8 @@ public class Notif {
 	/** Several self-explanatory variables. */
 	public int appointmentID, status;
 	
-	/** Constants for status. */
-	private final static int WAITING = 0, ACCEPTED = 1, DECLINED = 2;
+	/** Constants for status. WAITING = 0 */
+	private final static int ACCEPTED = 1, DECLINED = 2;
 
 	/**
 	 * Instantiates a new notification.

@@ -23,24 +23,39 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 
+/**
+ * The Class Main. The main class of the program.
+ * 
+ * @author Gruppe 16
+ */
 public class Main extends Application implements Initializable {
-	@FXML
-	private TextField user;
 	
+	/** The text field for inputing username */
 	@FXML
-	private PasswordField pass;
+	private TextField username;
 	
+	/** The text field for inputing password. */
+	@FXML
+	private PasswordField password;
+	
+	/** The login button. */
 	@FXML
 	private Button loginBtn;
 	
+	/** The cancel button. */
 	@FXML
 	private Button cancelBtn;
 	
+	/** The pane. */
 	@FXML
 	private Pane pane;
 	
+	/** The stage. */
 	static private Stage stage;
 
+	/* (non-Javadoc)
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -48,7 +63,7 @@ public class Main extends Application implements Initializable {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				if(Login.login(user.getText(), pass.getText())) {
+				if(Login.login(username.getText(), password.getText())) {
 					try {
 						CalendarMain calendar = new CalendarMain(Login.getCurrentUser());
 						calendar.start(new Stage());
@@ -58,8 +73,8 @@ public class Main extends Application implements Initializable {
 					}
 				}
 				else {
-					if(!user.focusedProperty().get()) user.setEffect(new InnerShadow(4.0, Color.RED));
-					if(!pass.focusedProperty().get()) pass.setEffect(new InnerShadow(4.0, Color.RED));
+					if(!username.focusedProperty().get()) username.setEffect(new InnerShadow(4.0, Color.RED));
+					if(!password.focusedProperty().get()) password.setEffect(new InnerShadow(4.0, Color.RED));
 				}
 			}
 		});
@@ -73,23 +88,26 @@ public class Main extends Application implements Initializable {
 			
 		});
 		
-		user.focusedProperty().addListener(new ChangeListener<Boolean>() {
+		username.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
-				if(newValue) user.setEffect(null);
+				if(newValue) username.setEffect(null);
 			}
 		});
 		
-		pass.focusedProperty().addListener(new ChangeListener<Boolean>() {
+		password.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldValue, Boolean newValue) {
-				if(newValue) pass.setEffect(null);
+				if(newValue) password.setEffect(null);
 			}
 		});
 		
 		loginBtn.setDefaultButton(true);
 	}
 	
+	/* (non-Javadoc)
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
 	@Override
 	public void start(Stage stage) throws Exception {
 		Main.stage = stage;
@@ -106,6 +124,11 @@ public class Main extends Application implements Initializable {
 		}
 	}
 	
+	/**
+	 * The main method, for launching the program.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

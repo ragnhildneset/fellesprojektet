@@ -32,22 +32,49 @@ import javafx.stage.Window;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Room;
 
+/**
+ * The Class RoomPicker. A GUI for picking available rooms for an appointment.
+ * 
+ * @author Gruppe 16
+ */
 public class RoomPicker implements Initializable {
 
+	/** A table listing up rooms */
 	@FXML private TableView<Room> roomlistTable;
+	
+	/** The building name column. */
 	@FXML private TableColumn<Room, String> buildingNameCol;
+	
+	/** The room name column. */
 	@FXML private TableColumn<Room, String> roomNameCol;
+	
+	/** The room cap column. */
 	@FXML private TableColumn<Room, String> roomCapCol;
+	
+	/** The room description column. */
 	@FXML private TableColumn<Room, String> roomdescrCol;
-	@FXML private TableColumn<Room, Boolean> rlist_pick;
+	
+	/** The cancel button. Closes the Room Picker without selecting a room.*/
 	@FXML private Button cancelButton;
+	
+	/** The choose button. Closes the Room Picker, choosing the highlighted room. */
 	@FXML private Button chooseButton;
+	
+	/** The capacity field. Takes input for the room capacity.*/
 	@FXML private TextField capacityField;
 
+	/** The stage. */
 	private static Stage stage;
+	
+	/** The add appointment variable. Holds the parent window AddAppointment. */
 	private static AddAppointment addAppointment;
+	
+	/** The available rooms. */
 	private static List<Room> availableRooms;
 
+	/* (non-Javadoc)
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
@@ -96,6 +123,9 @@ public class RoomPicker implements Initializable {
 
 	}
 
+	/**
+	 * A method used to update the list of available rooms.
+	 */
 	private void updateRoomdata(){
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		try{
@@ -104,7 +134,7 @@ public class RoomPicker implements Initializable {
 					rooms.add(r);
 				}
 			}
-			buildingNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingname"));
+			buildingNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("buildingName"));
 			roomCapCol.setCellValueFactory(new PropertyValueFactory<Room, String>("capacity"));
 			roomNameCol.setCellValueFactory(new PropertyValueFactory<Room, String>("name"));
 			roomdescrCol.setCellValueFactory(new PropertyValueFactory<Room, String>("description"));	
@@ -117,10 +147,21 @@ public class RoomPicker implements Initializable {
 	}
 
 
-	public static void start(Stage stage, Window owner, AddAppointment addApp, LocalDate date, LocalTime fromTime, LocalTime toTime) throws IOException {
+	/**
+	 * Starts the Room Picker.
+	 *
+	 * @param stage the stage
+	 * @param owner the owner
+	 * @param addAppointment the AddAppointment object
+	 * @param date the date to look for available rooms
+	 * @param fromTime the from time to look for available rooms
+	 * @param toTime the to time to look for available rooms
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static void start(Stage stage, Window owner, AddAppointment addAppointment, LocalDate date, LocalTime fromTime, LocalTime toTime) throws IOException {
 		RoomPicker.stage = stage;
-		RoomPicker.addAppointment = addApp;
-		if(addApp.editMode){
+		RoomPicker.addAppointment = addAppointment;
+		if(AddAppointment.editMode){
 			RoomPicker.availableRooms = DBConnect.findRoom(date, fromTime, toTime, AddAppointment.appointment);
 		}
 		else{

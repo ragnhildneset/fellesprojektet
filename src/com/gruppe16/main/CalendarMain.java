@@ -48,7 +48,9 @@ import com.gruppe16.entities.Notif;
 import com.gruppe16.util.ListOperations;
 
 /**
- * Main calenar window.
+ * Main calendar window.
+ * 
+ * @author Gruppe 16
  */
 public class CalendarMain extends Application {
 	private static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
@@ -777,7 +779,7 @@ public class CalendarMain extends Application {
 
 	/**
 	 * Set the current employee and show their calendar.
-	 * @param employee
+	 * @param employee the employee
 	 */
 	public void setEmployee(Employee employee) {
 		CalendarMain.employee = employee;

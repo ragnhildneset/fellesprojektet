@@ -12,10 +12,25 @@ import javafx.scene.layout.VBox;
 
 import com.gruppe16.entities.Notif;
 
+/**
+ * The Class NotificationView. Shows information on an invited appointment.
+ * 
+ * @author Gruppe 16
+ */
 public class NotificationView extends VBox {
+	
+	/** a Runnable onAccept, defined in calendarMain. */
 	private Runnable onAccept;
+	
+	/** a Runnable onDecline, defined in calendarMain. */
 	private Runnable onDecline;
 	
+	/**
+	 * Instantiates a new notification view.
+	 * the Accept button accepts the invitation, and the decline button declines the invitation.
+	 *
+	 * @param notification the notification
+	 */
 	public NotificationView(Notif notification) {
 		setPrefWidth(300.0);
 		
@@ -81,11 +96,19 @@ public class NotificationView extends VBox {
 			}
 		});
 	}
-
+	/**
+	 * Sets the onAccept Runnable.
+	 *
+	 * @param onAccept the onAccept Runnable
+	 */
 	void setOnAccept(Runnable onAccept) {
 		this.onAccept = onAccept;
 	}
-	
+	/**
+	 * Sets the onDecline Runnable.
+	 *
+	 * @param onDecline the onDecline Runnable
+	 */
 	void setOnDecline(Runnable onDecline) {
 		this.onDecline = onDecline;
 	}

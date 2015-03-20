@@ -28,6 +28,8 @@ import com.gruppe16.main.AppointmentBox.PanelColors;
 
 /**
  * The graphical calendar view class.
+ * 
+ * @author Gruppe 16
  */
 public class CalendarView extends GridPane implements CalendarViewInterface {
 	private static String TEXT_DAY_COLOR = "#FFFFFF";

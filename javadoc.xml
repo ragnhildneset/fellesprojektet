@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" author="true" classpath="C:\Users\CXu\Downloads\mysql-connector.jar\mysql-connector.jar" destdir="doc" doctitle="Documentation for Fellesprosjektet Calendar" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.gruppe16.main,com.gruppe16.entities,com.gruppe16.util,com.gruppe16.admin,com.gruppe16.database" source="1.8" sourcepath="src" splitindex="true" use="true" version="true"/>
+    </target>
+</project>

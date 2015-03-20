@@ -39,56 +39,95 @@ import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Room;
 
+/**
+ * The Class AddAppointment. A GUI used to add or edit appointments.
+ * 
+ * @author Gruppe 16
+ */
 public class AddAppointment implements Initializable {
+	
+	/** The send button. Creates a new appointment, or edits the currently selected appointment.*/
 	@FXML
 	private Button sendBtn;
 	
+	/** The cancel button. Closes the window without saving.*/
 	@FXML
 	private Button cancelBtn;
 	
+	/** The find employee button. Opens the EmployeePicker.*/
 	@FXML
 	private Button findEmployeeBtn;
 	
+	/** The search for room button. Opens the RoomPicker. */
 	@FXML
 	private Button searchForRoomBtn;
 	
+	/** The date picker. Used to pick the date of the appointment.*/
 	@FXML
 	private DatePicker datePicker;
 	
+	/** The description text area.*/
 	@FXML
 	private TextArea descriptionTextArea;
 	
+	/** The attendees text field.*/
 	@FXML
 	private TextField attendeesTextField;
 
+	/** The from text field. The start of the appointment.*/
 	@FXML
 	private TextField fromTextField;
 	
+	/** The to text field. The end of the appointment. */
 	@FXML
 	private TextField toTextField;
 	
+	/** The room text field. */
 	@FXML
 	protected TextField roomTextField;
 
+	/** The title text field. The title of the appointment.*/
 	@FXML
 	private TextField titleTextField;
 	
+	/** The error message. Displays different error messages depending on the error.*/
 	@FXML
 	private Label errorMessage;
 	
+	/** The title label. */
 	@FXML
 	private Label titleLabel;
 
+	/** The stage. */
 	private static Stage stage;
+	
+	/** The start date of the appointment. */
 	private static LocalDate startDate = null;
+	
+	/** The start time of the appointment. */
 	private static int startTime = 0;
+	
+	/** The appointment. */
 	public static Appointment appointment = null;
+	
+	/** The participants.*/
 	private static ArrayList<Employee> participants = null;
+	
+	/** The old room. */
 	private static Room oldRoom;
+	
+	/** The edit mode. Set to true to enter edit mode.*/
 	public static boolean editMode = false;
+	
+	/** The room. */
 	public Room room;
+	
+	/** The available employees. */
 	private static ArrayList<Employee> availableEmployees = null;
 	
+	/* (non-Javadoc)
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		availableEmployees = new ArrayList<Employee>();
@@ -512,17 +551,31 @@ public class AddAppointment implements Initializable {
 		});
 	}
 	
+	/**
+	 * Checks if the fields concerning time have been changed.
+	 *
+	 * @return true, if time has changed
+	 */
 	private boolean isChangedTime(){
 		return !fromTextField.getText().equals(appointment.getFromTime().toString()) || !toTextField.getText().equals(appointment.getToTime().toString()) || !datePicker.getValue().isEqual(appointment.getAppDate());
 	}
 
+	/**
+	 * Invalidates room.
+	 */
 	private void invalidateRoom() {
 		room = null;
 		roomTextField.setEffect(new InnerShadow(4.0, Color.RED));
 	}
 	
+	/** The attendees of the appointment*/
 	public ArrayList<Employee> attendees = new ArrayList<Employee>(); 
 
+	/**
+	 * Sets the attendees of the appointment.
+	 *
+	 * @param employees the new attendees
+	 */
 	public void setAttendees(Collection<Employee> employees) {
 		attendees.clear();
 		attendeesTextField.clear();
@@ -549,6 +602,14 @@ public class AddAppointment implements Initializable {
 		}
 	}
 	
+	/**
+	 * Start add mode.
+	 *
+	 * @param stage the stage
+	 * @param owner the owner
+	 * @param date the date of the appointment
+	 * @throws Exception the exception
+	 */
 	@SuppressWarnings("deprecation")
 	public static void start(Stage stage, Window owner, java.util.Date date) throws Exception {
 		AddAppointment.editMode = false;
@@ -566,15 +627,23 @@ public class AddAppointment implements Initializable {
 		stage.show();
 	}
 	
-	private boolean checkRoom(LocalDate appdate, LocalTime fromtime, LocalTime totime){
+	/**
+	 * Checks if the selected room is valid.
+	 *
+	 * @param appointmentDate the appointment date
+	 * @param fromTime the from time
+	 * @param toTime the to time
+	 * @return true, if successful
+	 */
+	private boolean checkRoom(LocalDate appointmentDate, LocalTime fromTime, LocalTime toTime){
 		if(room == null) return false;
 		
 		List<Room> rooms;
 		if (editMode){
-			rooms = DBConnect.findRoom(appdate, fromtime, totime, appointment);
+			rooms = DBConnect.findRoom(appointmentDate, fromTime, toTime, appointment);
 		}
 		else{
-			rooms = DBConnect.findRoom(appdate, fromtime, totime);
+			rooms = DBConnect.findRoom(appointmentDate, fromTime, toTime);
 		}
 		
 		boolean check = false;
@@ -587,6 +656,16 @@ public class AddAppointment implements Initializable {
 	}
 	
 	
+	/**
+	 * Start edit mode. Takes in an appointment, attendees and room of the appointment to be edited.
+	 *
+	 * @param stage the stage
+	 * @param owner the owner
+	 * @param appointment the appointment
+	 * @param attendees the attendees
+	 * @param room the room
+	 * @throws Exception the exception
+	 */
 	public static void start(Stage stage, Window owner, Appointment appointment, ArrayList<Employee> attendees, Room room) throws Exception {
 		AddAppointment.editMode = true;
 		AddAppointment.stage = stage;

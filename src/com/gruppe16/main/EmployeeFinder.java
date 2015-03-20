@@ -25,29 +25,52 @@ import javafx.stage.Window;
 import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Employee;
 
+/**
+ * The Class EmployeeFinder. A GUI for finding and selecting an employee.
+ * 
+ * @author Gruppe 16
+ */
 public class EmployeeFinder {
+	
+	/** The OK button. Sets the employee variable to the currently selected employee.*/
 	@FXML
 	private Button OKBtn;
 	
+	/** The cancel button. Closes the window without selecting an employee. */
 	@FXML
 	private Button cancelBtn;
 	
+	/** The first name text field. Used to search for an employee by first name.*/
 	@FXML
 	private TextField givenNameTextField;
 	
+	/** The last name text field. Used to search for an employee by last name. */
 	@FXML
 	private TextField surNameTextField;
 	
+	/** The employee list. */
 	@FXML
 	private ListView<Employee> employeeListView;
 	
+	/** The selected employee. Null before an employee is selected.*/
 	private Employee employee;
+	
+	/** The cached employees. A collection with the current employees in the database, cached.*/
 	private Collection<Employee> cachedEmployees;
 	
+	/**
+	 * Instantiates a new employee finder, and sets employee to null.
+	 */
 	public EmployeeFinder() {
 		employee = null;
 	}
 	
+	/**
+	 * Show.
+	 *
+	 * @param stage the stage
+	 * @param owner the owner
+	 */
 	public void show(Stage stage, Window owner) {
 		FXMLLoader fxmlLoader = new FXMLLoader();
 		fxmlLoader.setController(this);
@@ -108,6 +131,9 @@ public class EmployeeFinder {
 		updateEmployeeList();
 	}
 	
+	/**
+	 * Updates the employee list.
+	 */
 	private void updateEmployeeList() {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		for(Employee e : cachedEmployees) {
@@ -119,6 +145,11 @@ public class EmployeeFinder {
 		employeeListView.getSelectionModel().select(0);
 	}
 	
+	/**
+	 * Gets the employee.
+	 *
+	 * @return the employee
+	 */
 	public Employee getEmployee() {
 		return employee;
 	}

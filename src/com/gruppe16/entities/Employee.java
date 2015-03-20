@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import com.gruppe16.database.DBConnect;
 
 /**
- * The Class Employee.
+ * The Entity Class Employee.
  * 
  * @author Gruppe 16
  */

@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
- * The Class Building.
+ * The Entity Class Building.
  * 
  * @author Gruppe 16
  */

@@ -38,65 +38,146 @@ import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Room;
 
+/**
+ * The Class AppointmentBox. A box containing information about a given appointment.
+ * 
+ * @author Gruppe 16
+ */
 public class AppointmentBox extends AnchorPane{
 	
+	/** The width of the parent panel. */
 	private static int PANEL_WIDTH_PARENT = 710;
+	
+	/** The height of the parent panel. */
 	private static int PANEL_HEIGHT_PARENT = 1250;
+	
+	/** The width when the box is open. */
 	private static int PANEL_WIDTH_OPEN = 450;
+	
+	/** The height when the box is open. */
 	private static int PANEL_HEIGHT_OPEN = 255;
 	
+	/**
+	 * The Enum values for colors.
+	 */
 	public enum PanelColors {
-	    RED("#FFCCCC", "#FFAAAA", "#FF0000"),
-	    GREEN("#CCFFCC", "#AAFFAA", "#00FF00"),
-	    BLUE("#CCCCFF", "#AAAAFF", "#0000FF"),
-	    YELLOW("#FFFFCC", "#FFFFAA", "#DDDD00"),
-	    BROWN("D8C2A0", "#C29653", "#7E4C00"),
-	    PURPLE("#FFCCFF", "#FFAAFF", "#FF00FF"),
-	    ORANGE("#FFB27F", "#FF9900", "#DE8500"),
-	    TURQUOISE("#CCFFFF", "#AAFFFF", "#00FFFF"),
-	    GREY("#CCCCCC", "#AAAAAA", "#000000")
+	    
+    	/** The red. */
+    	RED("#FFCCCC", "#FFAAAA", "#FF0000"),
+	    
+    	/** The green. */
+    	GREEN("#CCFFCC", "#AAFFAA", "#00FF00"),
+	    
+    	/** The blue. */
+    	BLUE("#CCCCFF", "#AAAAFF", "#0000FF"),
+	    
+    	/** The yellow. */
+    	YELLOW("#FFFFCC", "#FFFFAA", "#DDDD00"),
+	    
+    	/** The brown. */
+    	BROWN("D8C2A0", "#C29653", "#7E4C00"),
+	    
+    	/** The purple. */
+    	PURPLE("#FFCCFF", "#FFAAFF", "#FF00FF"),
+	    
+    	/** The orange. */
+    	ORANGE("#FFB27F", "#FF9900", "#DE8500"),
+	    
+    	/** The turquoise. */
+    	TURQUOISE("#CCFFFF", "#AAFFFF", "#00FFFF"),
+	    
+    	/** The grey. */
+    	GREY("#CCCCCC", "#AAAAAA", "#000000")
 	    ;
 	    
-	    private String style;
+	    /** The .css style to use. */
+    	private String style;
 	    
-	    private String mainColor;
+	    /** The main color cMain. */
+    	private String mainColor;
 	    
-	    PanelColors(String cMain, String cSecondary, String cBorder){
+	    /**
+    	 * Instantiates a new panel colors.
+    	 *
+    	 * @param cMain the main color
+    	 * @param cSecondary the secondary color
+    	 * @param cBorder the border color
+    	 */
+    	PanelColors(String cMain, String cSecondary, String cBorder){
 	    	this.style = "cMain: " + cMain + "; cSecondary: " + cSecondary + "; cBorder: " + cBorder + ";";
 	    	this.mainColor = cMain;
 	    }
 	    
-	    public String getStyle() {
+	    /**
+    	 * Gets the .css style.
+    	 *
+    	 * @return the .css style
+    	 */
+    	public String getStyle() {
 	    	return style;
 	    }
 	    
-	    public String getMainColor() {
+	    /**
+    	 * Gets the main color.
+    	 *
+    	 * @return the main color
+    	 */
+    	public String getMainColor() {
 	    	return mainColor;
 	    }
 	}
 	
+	/** The appointment of this appointment box. */
 	private Appointment appointment;
+	
+	/** The panel width, set during arrangeAppointments() from DayPlanView. */
 	private double panelWidth;
+	
+	/** The panel height, set during arrangeAppointments() from DayPlanView. */
 	private double panelHeight;
+	
+	/** The panel x-coordinate, set during arrangeAppointments() from DayPlanView. */
 	private double panelX;
+	
+	/** The panel y-coordinate, set during arrangeAppointments() from DayPlanView. */
 	private double panelY;
+	
+	/** If the panel is active*/
 	private boolean active = false;
+	
+	/** If participants are shown. */
 	private boolean show = false;
+	
+	/** The color of the appointment box. */
 	private PanelColors color;
+	
+	/** The dayPlanView. */
 	private DayPlanView dpv;
-	private Employee e;
+	
+	/** The owner of the current appointment box. Note: not the owner of the appointment. */
+	private Employee employee;
+	
+	/** The room reserved for the appointment. */
 	private Room room;
 	
+	/** A list of employees */
 	private static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployeeList());
 	
-	public AppointmentBox(Appointment appointment, AppointmentAndEmployee appAndEmp, DayPlanView dpv){
+	/**
+	 * Instantiates a new appointment box.
+	 *
+	 * @param appointment the appointment to be shown in this box
+	 * @param appointmentAndEmployee the relation determining color, as well as ownership of appointment
+	 * @param dpv the dayPlanView
+	 */
+	public AppointmentBox(Appointment appointment, AppointmentAndEmployee appointmentAndEmployee, DayPlanView dpv){
 		setId("appBox");
-		this.e = DBConnect.getEmployees().get(appAndEmp.getEmployeeID());
+		this.employee = DBConnect.getEmployees().get(appointmentAndEmployee.getEmployeeID());
 		this.appointment = appointment;
 		this.room = DBConnect.getRoom(appointment);
 		LocalTime start = this.appointment.getFromTime();
 		LocalTime end = this.appointment.getToTime();
-		this.color = toEnumColor(appAndEmp.getColor());
+		this.color = toEnumColor(appointmentAndEmployee.getColor());
 		this.dpv = dpv;
 		getStylesheets().add("/com/gruppe16/main/listView.css");
 		int appointmentTime = (end.toSecondOfDay() - start.toSecondOfDay())/60;
@@ -106,9 +187,15 @@ public class AppointmentBox extends AnchorPane{
 		updateLabels();
 		}
 	
+	/**
+	 * Instantiates a new appointment box. Does not link the box with an owner, and defaults to color BLUE.
+	 *
+	 * @param appointment the appointment to be shown in this box
+	 * @param dpv the dayPlanView
+	 */
 	public AppointmentBox(Appointment appointment, DayPlanView dpv){
 		setId("appBox");
-		this.e = null;
+		this.employee = null;
 		this.room = DBConnect.getRoom(appointment);
 		this.appointment = appointment;
 		LocalTime start = this.appointment.getFromTime();
@@ -123,6 +210,10 @@ public class AppointmentBox extends AnchorPane{
 		updateLabels();
 		}
 	
+	/**
+	 * Update all labels in the appointment box.
+	 * This will update title, description, time, etc, so that the box displays the correct information at all times.
+	 */
 	public void updateLabels(){
 		ArrayList<Label> labels = new ArrayList<Label>();
 		for(Node n : getChildren()){
@@ -369,7 +460,7 @@ public class AppointmentBox extends AnchorPane{
 					else {
 						participantPane.setVisible(true);
 					}
-					if (e == null || e.getID() != Login.getCurrentUser().getID()) getChildren().add(showBtn);
+					if (employee == null || employee.getID() != Login.getCurrentUser().getID()) getChildren().add(showBtn);
 					else if(Login.getCurrentUser().getID() == appointment.getOwnerID()){
 						AnchorPane.setRightAnchor(colorPicker, 118.0);
 						getChildren().addAll(delBtn, editBtn, showBtn, colorPicker);
@@ -411,6 +502,12 @@ public class AppointmentBox extends AnchorPane{
 		
 	}
 	
+	/**
+	 * Dialog box for leaving and deleting an appointment. 
+	 * The parameter b determines which mode the dialog box is set to.
+	 *
+	 * @param b set b to true to delete, and false to leave
+	 */
 	private void deleteLeaveDialog(boolean b) {
 		//To Leave, set False. To Delete, set True;
 		boolean delete = b;
@@ -464,29 +561,63 @@ public class AppointmentBox extends AnchorPane{
 		});
 	}
 	
+	/**
+	 * Sets the color of the appointment box.
+	 *
+	 * @param color the new color of the box
+	 */
 	public void setColor(PanelColors color){
 		this.color = color;
 	}
 	
+	/**
+	 * Gets the start time of the appointment.
+	 *
+	 * @return the start time.
+	 */
 	public LocalTime getStart(){
 		return appointment.getFromTime();
 	}
 	
+	/**
+	 * Gets the end time of the appointment.
+	 *
+	 * @return the end time.
+	 */
 	public LocalTime getEnd(){
 		return appointment.getToTime();
 	}
 	
+	/**
+	 * Sets the appointment box back to its default size.
+	 */
 	public void toDefaultSize(){
 		setPrefWidth(PANEL_WIDTH_PARENT);
 	}
 	
+	/**
+	 * Gets the appointment ID.
+	 *
+	 * @return the appointment ID
+	 */
 	public int getID(){
 		return appointment.getID();
 	}
+	
+	/**
+	 * Gets the duration of the appointment.
+	 *
+	 * @return the duration
+	 */
 	public int getDuration() {
 		return getEnd().getMinute() - getStart().getMinute();
 	}	
 	
+	/**
+	 * Gets the participants of the appointment.
+	 *
+	 * @return the participants
+	 */
 	public ArrayList<Employee> getParticipants() {
 	    ArrayList<AppointmentAndEmployee> AppAndEmp = DBConnect.getAppointmentAndEmployee();
 	    ArrayList<Employee> participants = new ArrayList<Employee>();
@@ -519,6 +650,12 @@ public class AppointmentBox extends AnchorPane{
 		return participants;
 	}
 	
+    /**
+     * A method to convert string colors from the database, to enum panelColors used by the box.
+     *
+     * @param color the color to convert
+     * @return the input color, as enum panelColors
+     */
     static public PanelColors toEnumColor(String color){
     	color.toUpperCase();
     	if(color.equals("RED")) return PanelColors.RED;
@@ -533,6 +670,12 @@ public class AppointmentBox extends AnchorPane{
     	else return PanelColors.BLUE;
     }
     
+    /**
+     * A method to convert enum panelColors colors used by the box, to String colors used by the database.
+     *
+     * @param color the color to convert
+     * @return the input color, as string
+     */
     static public String toStringColor(PanelColors color){
     	if(color == PanelColors.RED) return "RED";
     	else if(color == PanelColors.GREEN) return "GREEN";
