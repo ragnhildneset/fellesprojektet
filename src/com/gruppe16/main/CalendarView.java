@@ -26,6 +26,9 @@ import com.gruppe16.entities.Appointment;
 import com.gruppe16.entities.AppointmentAndEmployee;
 import com.gruppe16.main.AppointmentBox.PanelColors;
 
+/**
+ * The graphical calendar view class.
+ */
 public class CalendarView extends GridPane implements CalendarViewInterface {
 	private static String TEXT_DAY_COLOR = "#FFFFFF";
 	private static String TEXT_DEFAULT_COLOR = "#000000";
@@ -40,9 +43,20 @@ public class CalendarView extends GridPane implements CalendarViewInterface {
 
 	private static String[] DAY_NAMES = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
+	/**
+	 * The calendar object. Keeps track of time.
+	 */
 	private Calendar calendar;
+	
+	/**
+	 * Grid of VBoxes (one for each day). The VBoxes contains the appointments for the current day.
+	 */
 	private VBox[][] dayVBoxes = new VBox[7][6];
 
+	/**
+	 * Constructs the calendar viewer
+	 * @param calendarMain A CalendarMain object.
+	 */
 	CalendarView(CalendarMain calendarMain) {
 
 		calendar = Calendar.getInstance();
@@ -117,29 +131,50 @@ public class CalendarView extends GridPane implements CalendarViewInterface {
 		requestLayout();
 	}
 
+	/**
+	 * Increases the month by one.
+	 */
 	public void incDate() {
 		calendar.add(Calendar.MONTH, 1);
 		showAppointments(CalendarMain.getGroupAppointments());
 	}
 
+	/**
+	 * Decreases the month by one.
+	 */
 	public void decDate() {
 		calendar.add(Calendar.MONTH, -1);
 		showAppointments(CalendarMain.getGroupAppointments());
 	}
 
+	/**
+	 * Gets the current year
+	 * @return Currently show year
+	 */
 	int getYear() {
 		return calendar.get(Calendar.YEAR);
 	}
 
+	/**
+	 * Sets the current date
+	 * @param date The date to show.
+	 */
 	public void setDate(Date date) {
 		calendar.setTime(date);
 		showAppointments(CalendarMain.getGroupAppointments());
 	}
 
+	/**
+	 * Gets the current date.
+	 */
 	public Date getDate() {
 		return calendar.getTime();
 	}
 
+	/**
+	 * Show appointments.
+	 * @param appointments A list of the appointments to show.
+	 */
 	@SuppressWarnings("deprecation")
 	public void showAppointments(Collection<Appointment> appointments) {
 		Date beforeTime = calendar.getTime();

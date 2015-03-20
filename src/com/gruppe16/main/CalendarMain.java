@@ -47,97 +47,198 @@ import com.gruppe16.entities.Employee.Group;
 import com.gruppe16.entities.Notif;
 import com.gruppe16.util.ListOperations;
 
+/**
+ * Main calenar window.
+ */
 public class CalendarMain extends Application {
 	private static String[] MONTH_NAMES = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
+	/**
+	 * The main pane of the window. mainPane.getCenter() is the calendar.
+	 */
 	@FXML
 	private BorderPane mainPane;
 
+	/**
+	 * The group list view. A list view of check boxes.
+	 */
 	@FXML
 	private ListView<CheckBox> groupListView;
 
+	/**
+	 * Next date button. Shows the next month in the calendar view, or the next day in the day planer.
+	 */
 	@FXML
 	private ImageView nextDateBtn;
 
+	/**
+	 * Previous date button. Shows the previous month in the calendar view, or the previous day in the day planer.
+	 */
 	@FXML
 	private ImageView prevDateBtn;
 
+	/**
+	 * Finds another employee's calendar.
+	 */
 	@FXML
 	private Button findCalendarBtn;
 
+	/**
+	 * When in the calendar view, this shows the current month. When in day planer, this jumps back to the calendar.
+	 */
 	@FXML
 	private Button backToCalendarBtn;
 
+	/**
+	 * Notification button. Pressing this will show the notifications in a popup-window.
+	 */
 	@FXML
 	private Button notificationBtn;
 
+	/**
+	 * Button for selecting all the groups.
+	 */
 	@FXML
 	private Button selectAllGroupsBtn;
 
+	/**
+	 * Button for deselecting all the groups.
+	 */
 	@FXML
 	private Button selectNoneGroupsBtn;
 
+	/**
+	 * Add appointment button. Shows the add appointment dialog when clicked.
+	 */
 	@FXML
 	private Button addAppointmentBtn;
 
+	/**
+	 * Goes back to the current user's calendar when clicked.
+	 */
 	@FXML
 	private Button myCalendarBtn;
 
+	/**
+	 * Refresh button. Forces a sync with the application with the database.
+	 */
 	@FXML
 	private Button refreshBtn;
 
+	/**
+	 * Current month/day label.
+	 */
 	@FXML
 	private Label monthLabel;
 
+	/**
+	 * Current year label.
+	 */
 	@FXML
 	private Label yearLabel;
 
+	/**
+	 * Current user label.
+	 */
 	@FXML
 	private Label calendarNameLabel;
 	
+	/**
+	 * Now viewing label.
+	 */
 	@FXML
 	private Label nowViewingLabel;
-
+	
+	/**
+	 * Notification count label.
+	 */
 	@FXML
 	private Label notificationLabel;
 
+	/**
+	 * Notification bubble. Hidden when there's no more notifications.
+	 */
 	@FXML
 	private Circle notificationCircle;
 
+	/**
+	 * Main scene.
+	 */
 	private Scene scene;
 
+	/**
+	 * Main stage.
+	 */
 	private Stage stage;
 
+	/**
+	 * The calendar viewer. Shown by calling mainPane.setCenter(calendarView);
+	 */
 	private CalendarView calendarView; 
 
+	/**
+	 * The day plan viewer. Shown by calling mainPane.setCenter(dayPlanView);
+	 */
 	private DayPlanView dayPlanView;
 	
+	/**
+	 * The current calendar view interface. This is either a CalendarView or a DayPlanView.
+	 */
 	private CalendarViewInterface calendarViewInterface = null;
 
+	/**
+	 * Currently viewed employee.
+	 */
 	static private Employee employee;
 
+	/**
+	 * The notification popup menu.
+	 */
 	private Popup notificationMenu = null;
 
+	/**
+	 * The notifications accordion pane.
+	 */
 	private Accordion accordion = null;
 	
+	/**
+	 * Are we viewing group calendars?
+	 */
 	private static boolean group = false;
 
+	/**
+	 * Selected groups.
+	 */
 	static private ArrayList<Group> selectedGroups = new ArrayList<Group>(); 
 	
+	/**
+	 * Called when monthLabel and yearLabel needs to update.
+	 */
 	private Runnable onUpdateLabels;
 
+	/**
+	 * Default constructor. Logs in as the administrator. Used for debug purposes.
+	 */
 	public CalendarMain() {
 		// DEBUG: Run as admin
 		Login.login("admin", "passord");
-		this.employee = Login.getCurrentUser();
+		CalendarMain.employee = Login.getCurrentUser();
 	}
 
+	/**
+	 * Shows the calendar as employee
+	 * @param employee The employee to show the calendar for
+	 */
 	public CalendarMain(Employee employee) {
-		this.employee = employee;
+		CalendarMain.employee = employee;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
+	/**
+	 * Shows the calendar in the given stage.
+	 * @param stage The stage to use.
+	 */
 	public void start(Stage stage) throws Exception {
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
@@ -473,6 +574,10 @@ public class CalendarMain extends Application {
 		});
 	}
 
+	/**
+	 * Returns the appointments for the given group configuration.
+	 * @return List of the appointments that fit the group configuration.
+	 */
 	public static ArrayList<Appointment> getGroupAppointments() {
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		if(!selectedGroups.isEmpty()) {
@@ -488,6 +593,10 @@ public class CalendarMain extends Application {
 		return appointments;
 	}
 
+	/**
+	 * Shows the calendar in the mainPane.
+	 * @param date The date to show the calendar for.
+	 */
 	private void showCalendar(Date date) {
 		calendarViewInterface = calendarView;
 		calendarView.showAppointments(getGroupAppointments());
@@ -504,6 +613,10 @@ public class CalendarMain extends Application {
 		onUpdateLabels.run();
 	}
 
+	/**
+	 * Shows the day planer in the mainPane.
+	 * @param date The date to show the day planer for.
+	 */
 	@SuppressWarnings("deprecation")
 	void showDayPlan(Date date) {
 		calendarViewInterface = dayPlanView;
@@ -522,6 +635,9 @@ public class CalendarMain extends Application {
 		onUpdateLabels.run();
 	}
 
+	/**
+	 * Updates the group list
+	 */
 	private void updateGroups() {
 
 		ObservableList<CheckBox> items = FXCollections.observableArrayList();
@@ -533,7 +649,10 @@ public class CalendarMain extends Application {
 
 		groupListView.setItems(items);
 	}
-
+	
+	/**
+	 * Updates the notifications.
+	 */
 	private void updateNotifications() {
 		for(Appointment appointment : DBConnect.getActiveAppointmentsFromEmployee(Login.getCurrentUser())){
 			TitledPane newPane = null;
@@ -629,6 +748,9 @@ public class CalendarMain extends Application {
 		updateNotificationCounter();
 	}
 
+	/**
+	 * Updates the notification counter.
+	 */
 	private void updateNotificationCounter() {
 		int notificationCount = accordion.getPanes().size();
 		if(notificationCount == 0) {
@@ -645,13 +767,20 @@ public class CalendarMain extends Application {
 		}
 	}
 
+	/**
+	 * Get the main scene.
+	 * @return The main scene.
+	 */
 	public Scene getScene(){
 		return scene;
 	}
 
-	// HAX
+	/**
+	 * Set the current employee and show their calendar.
+	 * @param employee
+	 */
 	public void setEmployee(Employee employee) {
-		this.employee = employee;
+		CalendarMain.employee = employee;
 
 		// Update calendar label and title
 		if(employee.getID() == Login.getCurrentUserID()) {
@@ -670,12 +799,17 @@ public class CalendarMain extends Application {
 		redraw();
 	}
 
+	/**
+	 * Get the current employee
+	 * @return The current employee
+	 */
 	public Employee getEmployee() {
 		return employee;
 	}
-	
-	
 
+	/**
+	 * Syncs the calendar gui with the content of the database
+	 */
 	private void refresh() {
 		if(calendarViewInterface instanceof CalendarView) {
 			showCalendar(calendarView.getDate());
@@ -686,6 +820,9 @@ public class CalendarMain extends Application {
 		updateNotifications();
 	}
 
+	/**
+	 * Starts the refresh loop
+	 */
 	private void scheduleRefresh() {
 		new Timer().schedule( 
 				new TimerTask() {
@@ -705,12 +842,18 @@ public class CalendarMain extends Application {
 				);
 	}
 
+	/**
+	 * Forces a redraw of the window
+	 */
 	public void redraw() {
-		// Hack: This will force a redraw
 		stage.setScene(null);
 		stage.setScene(scene);
 	}
 
+	/**
+	 * Debug launch function
+	 * @param args Command-line arguments.
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
