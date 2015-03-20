@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 /**
  * The Relation Class AppointmentAndEmployee.
+ * 
  * @author Gruppe 16
  */
 public class AppointmentAndEmployee {

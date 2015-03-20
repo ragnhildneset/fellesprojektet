@@ -33,47 +33,116 @@ import com.gruppe16.database.DBConnect;
 import com.gruppe16.entities.Employee;
 import com.gruppe16.entities.Room;
 
+/**
+ * The Class AdminPanel. A panel used for administrative work.
+ * 
+ * @author Gruppe 16
+ */
 public class AdminPanel extends Application implements Initializable {
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	/** The employee add button. */
 	private @FXML Button e_add;
+	
+	/** The employee ID. */
 	private @FXML TextField e_id;
+	
+	/** The employee first name. */
 	private @FXML TextField e_fname;
+	
+	/** The employee last name. */
 	private @FXML TextField e_lname;
+	
+	/** The employee e-mail. */
 	private @FXML TextField e_mail;
+	
+	/** The employee username. */
 	private @FXML TextField e_user;
+	
+	/** The employee password. */
 	private @FXML PasswordField e_pass;
 	
+	/** The room add button. */
 	private @FXML Button r_add;
+	
+	/** The room ID. */
 	private @FXML TextField r_id;
+	
+	/** The room name. */
 	private @FXML TextField r_name;
+	
+	/** The room's building ID. */
 	private @FXML TextField r_bid;
+	
+	/** The room description. */
 	private @FXML TextArea r_desc;
+	
+	/** The room capacity. */
 	private @FXML TextField r_cap;
 
+	/** The building add button. */
 	private @FXML Button b_add;
+	
+	/** The building ID. */
 	private @FXML TextField b_id;
+	
+	/** The building name. */
 	private @FXML TextField b_name;
+	
+	/** The building description. */
 	private @FXML TextArea b_desc;
+	
+	/** The building latitude (because why not). */
 	private @FXML TextField b_lat;
+	
+	/** The building longitude (because why not). */
 	private @FXML TextField b_long;
 	
+    /** The table of rooms in the database. */
     @FXML private TableView<Room> roomlistTable;
+    
+    /** The room ID column. */
     @FXML private TableColumn<Room, String> roomIDCol;
+    
+    /** The room capacity column. */
     @FXML private TableColumn<Room, String> capacityCol;
+    
+    /** The room name column. */
     @FXML private TableColumn<Room, String> roomnameCol;
+    
+    /** The room description column. */
     @FXML private TableColumn<Room, String> roomdescrCol;
+    
+    /** The room's building ID column. */
     @FXML private TableColumn<Room, String> roombuildingidCol;
+    
+    /** The room delete button column. */
     @FXML private TableColumn<Room, Boolean> r_delete;
   
+    /** The table of employees in the database */
     @FXML private TableView<Employee> employeelistTable;
+    
+    /** The employee ID column. */
     @FXML private TableColumn<Employee, String> employeeIDCol;
+    
+    /** The employee's first name column. */
     @FXML private TableColumn<Employee, String> firstNameCol;
+    
+    /** The employee's last name column. */
     @FXML private TableColumn<Employee, String> lastNameCol;
+    
+    /** The employee's username column. */
     @FXML private TableColumn<Employee, String> usernameCol;
+    
+    /** The employee delete button column. */
     @FXML private TableColumn<Employee, Boolean> e_delete;
     
 //    @FXML private TableView<Employee> buildinglistTable;
@@ -84,9 +153,15 @@ public class AdminPanel extends Application implements Initializable {
 //    @FXML private TableColumn<Employee, Boolean> e_delete;
     
 
-    private static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
+    /** The room data, from the database. */
+private static ObservableList<Room> roomdata = FXCollections.observableArrayList(DBConnect.getRooms().values());
+    
+    /** The employee data, from the database. */
     private static ObservableList<Employee> employeedata = FXCollections.observableArrayList(DBConnect.getEmployeeList());
     	
+	/* (non-Javadoc)
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -246,6 +321,9 @@ public class AdminPanel extends Application implements Initializable {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
 	@Override
 	public void start(Stage arg0) throws Exception {
 		
@@ -258,6 +336,16 @@ public class AdminPanel extends Application implements Initializable {
 		}
 	}
 	
+	/**
+	 * Adds an employee to the database.
+	 *
+	 * @param _e_id the employee ID
+	 * @param _e_fname the employee's first name
+	 * @param _e_lname the employee's last name
+	 * @param _e_mail the employee's e-mail
+	 * @param _e_user the employee's username
+	 * @param _e_pass the employee's password
+	 */
 	private static void addUser(int _e_id, String _e_fname, String _e_lname, String _e_mail, String _e_user, String _e_pass){
 		try{
 			String e_query = "insert into Employee(employeeid, givenName, surname, email) VALUES ( ?, ?, ?, ? )";
@@ -280,6 +368,15 @@ public class AdminPanel extends Application implements Initializable {
 		}
 	}
 	
+	/**
+	 * Adds a room to the database.
+	 *
+	 * @param _r_id the room ID
+	 * @param _r_bin the room's building ID
+	 * @param _r_cap the room capacity
+	 * @param _r_name the room name
+	 * @param _r_desc the room description
+	 */
 	private static void addRoom(int _r_id, int _r_bin, int _r_cap, String _r_name, String _r_desc){
 		String r_query = "insert into Room(roomNumber, buildingID, capacity, roomName, description) VALUES ( ?, ?, ?, ?, ? )";
 		PreparedStatement e;
@@ -298,6 +395,15 @@ public class AdminPanel extends Application implements Initializable {
 		}
 	}
 
+	/**
+	 * Adds a building to the database.
+	 *
+	 * @param _b_id the building ID
+	 * @param _b_lat the building latitude
+	 * @param _b_long the building longitude
+	 * @param _b_name the building name
+	 * @param _b_desc the building description
+	 */
 	private static void addBuilding(int _b_id, float _b_lat, float _b_long, String _b_name, String _b_desc){
 		try{
 			String b_query = "insert into Building(buildingID, latitude, longitude, name, description) VALUES ( ?, ?, ?, ?, ? )";
